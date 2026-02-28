@@ -67,21 +67,18 @@
 }
 
 .wordish-tone-section {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
 	margin: 1.25rem 0;
 }
 
-.wordish-tone-section legend {
+.wordish-tone-section label {
 	font-weight: 600;
-	margin-bottom: 0.5rem;
 }
 
-.wordish-tone-option {
-	display: block;
-	margin-bottom: 0.35rem;
-}
-
-.wordish-tone-option input {
-	margin-right: 0.5rem;
+.wordish-tone-section select {
+	min-width: 12rem;
 }
 
 .wordish-actions {

@@ -32,10 +32,10 @@ class Bootstrap {
 	 * @since 1.0.0
 	 */
 	public static function init(): void {
-		add_action( 'admin_menu', array( __CLASS__, 'register_admin_menu' ) );
-		add_action( 'admin_notices', array( __CLASS__, 'render_credentials_notice' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ), 10, 1 );
-		add_filter( 'linkit_admin_links_status', array( __CLASS__, 'disable_linkit_on_wordish_page' ), 10, 2 );
+		add_action( 'admin_menu', [ __CLASS__, 'register_admin_menu' ] );
+		add_action( 'admin_notices', [ __CLASS__, 'render_credentials_notice' ] );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_admin_assets' ], 10, 1 );
+		add_filter( 'linkit_admin_links_status', [ __CLASS__, 'disable_linkit_on_wordish_page' ], 10, 2 );
 
 		REST_API::init();
 	}
@@ -65,10 +65,10 @@ class Bootstrap {
 
 		wp_admin_notice(
 			$message,
-			array(
+			[
 				'type'        => 'error',
 				'dismissible' => false,
-			)
+			]
 		);
 	}
 
@@ -99,7 +99,7 @@ class Bootstrap {
 			__( 'Wordish', 'wordish' ),
 			'manage_options',
 			self::ADMIN_PAGE_SLUG,
-			array( __CLASS__, 'render_admin_page' )
+			[ __CLASS__, 'render_admin_page' ]
 		);
 	}
 
@@ -118,14 +118,14 @@ class Bootstrap {
 		wp_enqueue_style(
 			'wordish-admin',
 			WORDISH_URL . '/assets/css/admin.css',
-			array(),
+			[],
 			WORDISH_VERSION
 		);
 
 		wp_enqueue_script(
 			'wordish-admin',
 			WORDISH_URL . '/assets/js/admin.js',
-			array(),
+			[],
 			WORDISH_VERSION,
 			true
 		);
@@ -133,21 +133,21 @@ class Bootstrap {
 		wp_localize_script(
 			'wordish-admin',
 			'wordishAdmin',
-			array(
+			[
 				'apiUrl'    => rest_url( 'wordish/v1/generate' ),
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
 				'minLength' => REST_API::INPUT_MIN_LENGTH,
 				'maxLength' => REST_API::INPUT_MAX_LENGTH,
-				'i18n'      => array(
-					'copyLabel'        => __( 'Copy!', 'wordish' ),
-					'copiedLabel'      => __( 'Copied', 'wordish' ),
-					'inputTooShort'    => sprintf(
+				'i18n'      => [
+					'copyLabel'     => __( 'Copy', 'wordish' ),
+					'copiedLabel'   => __( 'Copied', 'wordish' ),
+					'inputTooShort' => sprintf(
 						/* translators: %d: min character count */
 						__( 'Input is too short. Please enter at least %d characters.', 'wordish' ),
 						REST_API::INPUT_MIN_LENGTH
 					),
-				),
-			)
+				],
+			]
 		);
 	}
 

@@ -34,8 +34,8 @@
 	}
 
 	function getTone() {
-		var radio = document.querySelector('input[name="wordish_tone"]:checked');
-		return radio ? radio.value : 'professional';
+		var select = document.querySelector('select[name="wordish_tone"]');
+		return select ? select.value : 'professional';
 	}
 
 	function showMessage(text, type) {

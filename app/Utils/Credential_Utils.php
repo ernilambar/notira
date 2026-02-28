@@ -30,11 +30,11 @@ class Credential_Utils {
 	 *
 	 * @var array<string, string>
 	 */
-	private static $provider_plugin_map = array(
+	private static $provider_plugin_map = [
 		'anthropic' => 'ai-provider-for-anthropic/plugin.php',
 		'google'    => 'ai-provider-for-google/plugin.php',
 		'openai'    => 'ai-provider-for-openai/plugin.php',
-	);
+	];
 
 	/**
 	 * Check if at least one AI provider has credentials and its plugin is active.
@@ -44,17 +44,17 @@ class Credential_Utils {
 	 * @return bool
 	 */
 	public static function has_ai_credentials(): bool {
-		$credentials = get_option( self::WP_AI_CLIENT_CREDENTIALS_OPTION, array() );
+		$credentials = get_option( self::WP_AI_CLIENT_CREDENTIALS_OPTION, [] );
 		if ( ! is_array( $credentials ) ) {
 			return false;
 		}
 
 		$provider_plugin_map = apply_filters( 'wordish_ai_provider_plugin_map', self::$provider_plugin_map );
 
-		$active_plugins = (array) get_option( 'active_plugins', array() );
+		$active_plugins  = (array) get_option( 'active_plugins', [] );
 		$network_plugins = is_multisite()
-			? (array) get_site_option( 'active_sitewide_plugins', array() )
-			: array();
+			? (array) get_site_option( 'active_sitewide_plugins', [] )
+			: [];
 
 		foreach ( $credentials as $provider_id => $value ) {
 			if ( ! is_string( $value ) || '' === $value ) {

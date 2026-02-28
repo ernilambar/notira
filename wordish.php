@@ -14,6 +14,8 @@
  * @package Wordish
  */
 
+use Nilambar\Wordish\Core\Bootstrap;
+
 defined( 'ABSPATH' ) || exit;
 
 // Define.
@@ -30,4 +32,4 @@ if ( file_exists( WORDISH_DIR . '/vendor/autoload.php' ) ) {
 
 require_once WORDISH_DIR . '/app/Core/Bootstrap.php';
 
-Nilambar\Wordish\Core\Bootstrap::init();
+Bootstrap::init();
