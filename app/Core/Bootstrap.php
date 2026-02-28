@@ -125,9 +125,19 @@ class Bootstrap {
 			'wordish-admin',
 			'wordishAdmin',
 			array(
-				'apiUrl'   => rest_url( 'wordish/v1/generate' ),
-				'nonce'    => wp_create_nonce( 'wp_rest' ),
+				'apiUrl'    => rest_url( 'wordish/v1/generate' ),
+				'nonce'     => wp_create_nonce( 'wp_rest' ),
+				'minLength' => RestController::INPUT_MIN_LENGTH,
 				'maxLength' => RestController::INPUT_MAX_LENGTH,
+				'i18n'      => array(
+					'copyLabel'        => __( 'Copy!', 'wordish' ),
+					'copiedLabel'      => __( 'Copied', 'wordish' ),
+					'inputTooShort'    => sprintf(
+						/* translators: %d: min character count */
+						__( 'Input is too short. Please enter at least %d characters.', 'wordish' ),
+						RestController::INPUT_MIN_LENGTH
+					),
+				),
 			)
 		);
 	}
@@ -166,59 +176,67 @@ class Bootstrap {
 				</div>
 			<?php endif; ?>
 
-			<div class="wordish-panel">
-				<div class="wordish-input-section">
-					<label for="wordish-input">
-						<?php esc_html_e( 'Rough notes or bullet points', 'wordish' ); ?>
-					</label>
-					<textarea id="wordish-input"
-						class="wordish-textarea"
-						rows="10"
-						placeholder="<?php esc_attr_e( 'Paste or type your rough notes, bullets, or paragraphs here…', 'wordish' ); ?>"
-						maxlength="<?php echo (int) RestController::INPUT_MAX_LENGTH; ?>"
-						<?php echo $has_key ? '' : ' disabled'; ?>
-					></textarea>
-					<p class="description wordish-char-count">
-						<span class="wordish-char-current">0</span> / <?php echo (int) RestController::INPUT_MAX_LENGTH; ?>
-						<?php esc_html_e( 'characters', 'wordish' ); ?>
-					</p>
-				</div>
-
-				<div class="wordish-tone-section">
-					<fieldset>
-						<legend><?php esc_html_e( 'Tone', 'wordish' ); ?></legend>
-						<?php foreach ( $tones as $value => $label ) : ?>
-							<label class="wordish-tone-option">
-								<input type="radio"
-									name="wordish_tone"
-									value="<?php echo esc_attr( $value ); ?>"
-									<?php checked( $value, 'professional' ); ?>
-									<?php echo $has_key ? '' : ' disabled'; ?>
-								/>
-								<?php echo esc_html( $label ); ?>
+			<div class="wordish-columns">
+				<div class="wordish-column-left">
+					<div class="wordish-panel">
+						<div class="wordish-input-section">
+							<label for="wordish-input">
+								<?php esc_html_e( 'Draft notes or bullet points', 'wordish' ); ?>
 							</label>
-						<?php endforeach; ?>
-					</fieldset>
+							<textarea id="wordish-input"
+								class="wordish-textarea"
+								rows="10"
+								placeholder="<?php esc_attr_e( 'Paste or type your draft notes, bullets, or paragraphs here…', 'wordish' ); ?>"
+								maxlength="<?php echo (int) RestController::INPUT_MAX_LENGTH; ?>"
+								<?php echo $has_key ? '' : ' disabled'; ?>
+							></textarea>
+							<p class="description wordish-char-count">
+								<span class="wordish-char-current">0</span> / <?php echo (int) RestController::INPUT_MAX_LENGTH; ?>
+								<?php esc_html_e( 'characters', 'wordish' ); ?>
+							</p>
+						</div>
+
+						<div class="wordish-tone-section">
+							<fieldset>
+								<legend><?php esc_html_e( 'Tone', 'wordish' ); ?></legend>
+								<?php foreach ( $tones as $value => $label ) : ?>
+									<label class="wordish-tone-option">
+										<input type="radio"
+											name="wordish_tone"
+											value="<?php echo esc_attr( $value ); ?>"
+											<?php checked( $value, 'professional' ); ?>
+											<?php echo $has_key ? '' : ' disabled'; ?>
+										/>
+										<?php echo esc_html( $label ); ?>
+									</label>
+								<?php endforeach; ?>
+							</fieldset>
+						</div>
+
+						<div class="wordish-actions">
+							<button type="button" id="wordish-generate" class="button button-primary" <?php echo $has_key ? '' : ' disabled'; ?>>
+								<?php esc_html_e( 'Generate', 'wordish' ); ?>
+							</button>
+							<span class="spinner" id="wordish-generate-spinner" aria-hidden="true"></span>
+						</div>
+					</div>
+					<div id="wordish-message" class="wordish-message" role="status" aria-live="polite"></div>
 				</div>
 
-				<div class="wordish-actions">
-					<button type="button" id="wordish-generate" class="button button-primary" <?php echo $has_key ? '' : ' disabled'; ?>>
-						<?php esc_html_e( 'Improve & generate HTML', 'wordish' ); ?>
-					</button>
+				<div class="wordish-column-right">
+					<div class="wordish-output-section" id="wordish-output-section">
+						<div class="wordish-output-header">
+							<label><?php esc_html_e( 'Output (HTML)', 'wordish' ); ?></label>
+							<button type="button" id="wordish-copy" class="button">
+								<?php esc_html_e( 'Copy!', 'wordish' ); ?>
+							</button>
+						</div>
+						<div id="wordish-output" class="wordish-output" role="region" aria-live="polite" data-empty="true">
+							<span class="wordish-output-placeholder" aria-hidden="true"><?php esc_html_e( 'Output will appear here.', 'wordish' ); ?></span>
+						</div>
+					</div>
 				</div>
 			</div>
-
-			<div class="wordish-output-section" id="wordish-output-section" style="display: none;">
-				<div class="wordish-output-header">
-					<label><?php esc_html_e( 'Output (HTML)', 'wordish' ); ?></label>
-					<button type="button" id="wordish-copy" class="button">
-						<?php esc_html_e( 'Copy to clipboard', 'wordish' ); ?>
-					</button>
-				</div>
-				<div id="wordish-output" class="wordish-output" role="region" aria-live="polite"></div>
-			</div>
-
-			<div id="wordish-message" class="wordish-message" role="status" aria-live="polite"></div>
 		</div>
 		<?php
 	}

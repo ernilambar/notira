@@ -5,17 +5,22 @@
 (function () {
 	'use strict';
 
-	var maxLength = typeof wordishAdmin !== 'undefined' ? wordishAdmin.maxLength : 4000;
-	var apiUrl = typeof wordishAdmin !== 'undefined' ? wordishAdmin.apiUrl : '';
-	var nonce = typeof wordishAdmin !== 'undefined' ? wordishAdmin.nonce : '';
+	var minLength = wordishAdmin.minLength;
+	var maxLength = wordishAdmin.maxLength;
+	var apiUrl = wordishAdmin.apiUrl;
+	var nonce = wordishAdmin.nonce;
 
 	var inputEl = document.getElementById('wordish-input');
 	var countEl = inputEl ? inputEl.parentNode.querySelector('.wordish-char-current') : null;
 	var generateBtn = document.getElementById('wordish-generate');
+	var generateSpinner = document.getElementById('wordish-generate-spinner');
 	var outputSection = document.getElementById('wordish-output-section');
 	var outputEl = document.getElementById('wordish-output');
 	var copyBtn = document.getElementById('wordish-copy');
 	var messageEl = document.getElementById('wordish-message');
+	var copyLabel = wordishAdmin.i18n.copyLabel;
+	var copiedLabel = wordishAdmin.i18n.copiedLabel;
+	var copyBtnRestoreTimeout = null;
 
 	function updateCount() {
 		if (!inputEl || !countEl) return;
@@ -42,8 +47,18 @@
 	function setOutput(html) {
 		if (!outputEl) return;
 		outputEl.innerHTML = html || '';
-		outputEl.setAttribute('data-html', 'true');
-		if (outputSection) outputSection.style.display = 'block';
+		outputEl.setAttribute('data-html', html ? 'true' : 'false');
+		outputEl.setAttribute('data-empty', html ? 'false' : 'true');
+	}
+
+	function setCopyButtonCopied() {
+		if (!copyBtn) return;
+		if (copyBtnRestoreTimeout) clearTimeout(copyBtnRestoreTimeout);
+		copyBtn.textContent = copiedLabel;
+		copyBtnRestoreTimeout = setTimeout(function () {
+			copyBtn.textContent = copyLabel;
+			copyBtnRestoreTimeout = null;
+		}, 3000);
 	}
 
 	function copyToClipboard() {
@@ -61,7 +76,8 @@
 				new window.ClipboardItem({ 'text/html': blobHtml, 'text/plain': blobText })
 			]).then(
 				function () {
-					showMessage('Copied to clipboard.', 'success');
+					showMessage('', '');
+					setCopyButtonCopied();
 				},
 				function () {
 					fallbackCopyText(text);
@@ -70,7 +86,8 @@
 		} else if (navigator.clipboard && navigator.clipboard.writeText) {
 			navigator.clipboard.writeText(text).then(
 				function () {
-					showMessage('Copied to clipboard (plain text).', 'success');
+					showMessage('', '');
+					setCopyButtonCopied();
 				},
 				function () {
 					fallbackCopyText(text);
@@ -91,7 +108,8 @@
 		ta.select();
 		try {
 			document.execCommand('copy');
-			showMessage('Copied to clipboard.', 'success');
+			showMessage('', '');
+			setCopyButtonCopied();
 		} catch (err) {
 			showMessage('Could not copy. Please select and copy manually.', 'error');
 		}
@@ -104,12 +122,16 @@
 			showMessage('Please enter some text.', 'error');
 			return;
 		}
+		if (raw.length < minLength) {
+			showMessage(wordishAdmin.i18n.inputTooShort, 'error');
+			return;
+		}
 		if (raw.length > maxLength) {
 			showMessage('Text is too long.', 'error');
 			return;
 		}
-		showMessage('Generating…', '');
 		if (generateBtn) generateBtn.disabled = true;
+		if (generateSpinner) generateSpinner.classList.add('is-active');
 
 		var body = JSON.stringify({ input: raw, tone: getTone() });
 		var headers = {
@@ -145,6 +167,7 @@
 			})
 			.finally(function () {
 				if (generateBtn) generateBtn.disabled = false;
+				if (generateSpinner) generateSpinner.classList.remove('is-active');
 			});
 	}
 

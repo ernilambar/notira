@@ -1,7 +1,7 @@
 /* Wordish admin styles. */
 
 .wordish-wrap {
-	max-width: 48rem;
+	max-width: none;
 }
 
 .wordish-notice-not-dismissible {
@@ -12,12 +12,42 @@
 	display: none;
 }
 
+.wordish-columns {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1.5rem;
+	align-items: start;
+	margin-top: 1rem;
+}
+
+@media screen and (max-width: 1024px) {
+	.wordish-columns {
+		grid-template-columns: 1fr;
+	}
+}
+
+.wordish-column-left {
+	min-width: 0;
+}
+
+.wordish-column-right {
+	min-width: 0;
+	position: sticky;
+	top: 32px;
+}
+
+@media screen and (max-width: 782px) {
+	.wordish-column-right {
+		position: static;
+	}
+}
+
 .wordish-panel {
 	background: #fff;
 	border: 1px solid #c3c4c7;
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	padding: 1.5rem;
-	margin: 1rem 0;
+	margin: 0;
 }
 
 .wordish-input-section label,
@@ -55,11 +85,19 @@
 }
 
 .wordish-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
 	margin-top: 1rem;
 }
 
+.wordish-actions .spinner {
+	float: none;
+	margin: 0;
+}
+
 .wordish-output-section {
-	margin-top: 1.5rem;
+	margin: 0;
 }
 
 .wordish-output-header {
@@ -80,10 +118,19 @@
 	background: #f6f7f7;
 	padding: 1rem;
 	min-height: 6rem;
-	max-height: 24rem;
+	max-height: 40vh;
 	overflow: auto;
 	white-space: pre-wrap;
 	word-wrap: break-word;
+}
+
+.wordish-output-placeholder {
+	color: #787c82;
+	font-style: italic;
+}
+
+.wordish-output[data-empty="false"] .wordish-output-placeholder {
+	display: none;
 }
 
 .wordish-output-section .wordish-output {
@@ -91,7 +138,7 @@
 }
 
 .wordish-message {
-	margin-top: 1rem;
+	margin-top: 0.75rem;
 	min-height: 1.5em;
 }
 
