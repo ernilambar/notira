@@ -37,7 +37,9 @@ function copyTextFallback( text ) {
 function copyToClipboard( { text, html } ) {
 	text = text || '';
 	if ( ! text.trim() ) {
-		return Promise.reject( new Error( 'Nothing to copy.' ) );
+		const err = new Error();
+		err.code = 'NOTHING_TO_COPY';
+		return Promise.reject( err );
 	}
 
 	if ( navigator.clipboard?.write && html != null && html !== '' ) {

@@ -185,13 +185,21 @@ class Bootstrap {
 			'minLength' => REST_API::INPUT_MIN_LENGTH,
 			'maxLength' => REST_API::INPUT_MAX_LENGTH,
 			'i18n'      => [
-				'copyLabel'     => __( 'Copy', 'wordish' ),
-				'copiedLabel'   => __( 'Copied', 'wordish' ),
-				'inputTooShort' => sprintf(
+				'copyLabel'          => __( 'Copy', 'wordish' ),
+				'copiedLabel'        => __( 'Copied', 'wordish' ),
+				'inputTooShort'      => sprintf(
 					/* translators: %d: min character count */
 					__( 'Input is too short. Please enter at least %d characters.', 'wordish' ),
 					REST_API::INPUT_MIN_LENGTH
 				),
+				'textTooLong'        => __( 'Text is too long.', 'wordish' ),
+				'pleaseEnterText'    => __( 'Please enter some text.', 'wordish' ),
+				'nothingToCopy'      => __( 'Nothing to copy.', 'wordish' ),
+				'copyFailedManual'   => __( 'Could not copy. Please select and copy manually.', 'wordish' ),
+				'generatedSuccess'   => __( 'Generated successfully.', 'wordish' ),
+				'requestFailed'      => __( 'Request failed.', 'wordish' ),
+				'somethingWentWrong' => __( 'Something went wrong.', 'wordish' ),
+				'networkError'       => __( 'Network or server error. Please try again.', 'wordish' ),
 			],
 		];
 

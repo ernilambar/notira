@@ -16,8 +16,9 @@ const generateSpinner = document.getElementById( 'wordish-generate-spinner' );
 const outputSection = document.getElementById( 'wordish-output-section' );
 const outputEl = document.getElementById( 'wordish-output' );
 const copyBtn = document.getElementById( 'wordish-copy' );
-const copyLabel = config.i18n?.copyLabel ?? 'Copy';
-const copiedLabel = config.i18n?.copiedLabel ?? 'Copied';
+const i18n = config.i18n || {};
+const copyLabel = i18n.copyLabel || '';
+const copiedLabel = i18n.copiedLabel || '';
 let copyBtnRestoreTimeout = null;
 
 function updateCount() {
@@ -65,25 +66,23 @@ function handleCopyClick() {
 		} )
 		.catch( ( err ) => {
 			const msg =
-				err?.message === 'Nothing to copy.'
-					? err.message
-					: 'Could not copy. Please select and copy manually.';
-			showToast( msg, 'error' );
+				err?.code === 'NOTHING_TO_COPY' ? i18n.nothingToCopy : i18n.copyFailedManual;
+			showToast( msg || '', 'error' );
 		} );
 }
 
 function generate() {
 	const raw = inputEl ? inputEl.value.trim() : '';
 	if ( ! raw ) {
-		showToast( 'Please enter some text.', 'error' );
+		showToast( i18n.pleaseEnterText || '', 'error' );
 		return;
 	}
 	if ( raw.length < minLength ) {
-		showToast( config.i18n?.inputTooShort ?? 'Input too short.', 'error' );
+		showToast( i18n.inputTooShort || '', 'error' );
 		return;
 	}
 	if ( raw.length > maxLength ) {
-		showToast( 'Text is too long.', 'error' );
+		showToast( i18n.textTooLong || '', 'error' );
 		return;
 	}
 	if ( generateBtn ) generateBtn.disabled = true;
@@ -111,18 +110,18 @@ function generate() {
 		.then( ( result ) => {
 			if ( result.ok && result.data?.data?.output ) {
 				setOutput( result.data.data.output );
-				showToast( config.i18n?.generatedSuccess ?? 'Generated successfully.', 'success' );
+				showToast( i18n.generatedSuccess || '', 'success' );
 			} else {
 				const msg =
 					result.data?.message ||
 					result.data?.code ||
-					'Request failed.' ||
-					'Something went wrong.';
-				showToast( msg, 'error' );
+					i18n.requestFailed ||
+					i18n.somethingWentWrong;
+				showToast( msg || '', 'error' );
 			}
 		} )
 		.catch( () => {
-			showToast( 'Network or server error. Please try again.', 'error' );
+			showToast( i18n.networkError || '', 'error' );
 		} )
 		.finally( () => {
 			if ( generateBtn ) generateBtn.disabled = false;
