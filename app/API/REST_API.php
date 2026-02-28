@@ -202,13 +202,12 @@ class REST_API {
 		$tone_label = Tone_Utils::get_tone_label( $tone );
 
 		$system = sprintf(
-			/* translators: %s: tone description */
-			__( 'You are an expert at turning draft notes into polished email body text. Output ONLY the middle part of the email as clean HTML (use <p>, <ul>, <li>, <strong>, <br> as needed). CRITICAL: Do NOT include any opening greeting (no "Dear", "Hello", "Hi", "Dear Sir/Madam", or similar) and do NOT include any closing (no "Regards", "Sincerely", "Best", or similar). The output will be wrapped with "Hi," and "Regards," separately. Start your output directly with the first paragraph of content. Tone: %s.', 'wordish' ),
+			'You are an expert at turning draft notes into polished email body text. Output ONLY the middle part of the email as clean HTML (use <p>, <ul>, <li>, <strong>, <br> as needed). CRITICAL: Do NOT include any opening greeting (no "Dear", "Hello", "Hi", "Dear Sir/Madam", or similar) and do NOT include any closing (no "Regards", "Sincerely", "Best", or similar). The output will be wrapped with "Hi," and "Regards," separately. Start your output directly with the first paragraph of content. Never add information not present in the original input. Tone: %s.',
 			$tone_label
 		);
 
 		$prompt = sprintf(
-			__( 'Convert the following draft notes into a single email body in HTML. Output ONLY the middle content. Do NOT start with any greeting (no Dear/Hello/Hi). Do NOT end with any sign-off. Start directly with the first paragraph:', 'wordish' ) . "\n\n%s",
+			'Convert the following draft notes into a single email body in HTML. Output ONLY the middle content. Do NOT start with any greeting (no Dear/Hello/Hi). Do NOT end with any sign-off. Do not add any information that is not in the draft notes. Start directly with the first paragraph:' . "\n\n%s",
 			$input
 		);
 
