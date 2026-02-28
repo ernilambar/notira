@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/ernilambar/wordish
  * Description: Improve draft notes into professional email-ready HTML using AI.
  * Version: 1.0.0
- * Requires at least: 5.9
+ * Requires at least: 7.0
  * Requires PHP: 7.4
  * Author: Nilambar
  * License: GPL v2 or later

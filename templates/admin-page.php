@@ -12,16 +12,10 @@ $has_credentials   = \Nilambar\Wordish\Utils\Credential_Utils::has_ai_credential
 $tones             = \Nilambar\Wordish\Utils\Tone_Utils::get_tone_options();
 $default_tone      = \Nilambar\Wordish\Utils\Tone_Utils::DEFAULT_TONE;
 $input_max_length  = \Nilambar\Wordish\API\REST_API::INPUT_MAX_LENGTH;
-nsdump( $has_credentials );
 ?>
+
 <div class="wrap wordish-wrap">
 	<h1><?php esc_html_e( 'Wordish', 'wordish' ); ?></h1>
-
-	<?php if ( ! $has_credentials ) : ?>
-		<div class="notice notice-warning wordish-notice-not-dismissible">
-			<p><?php esc_html_e( 'Please set your API key to use this feature.', 'wordish' ); ?></p>
-		</div>
-	<?php endif; ?>
 
 	<div class="wordish-columns">
 		<div class="wordish-column-left">

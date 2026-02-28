@@ -8,6 +8,7 @@
 namespace Nilambar\Wordish\Core;
 
 use Nilambar\Wordish\API\REST_API;
+use Nilambar\Wordish\Utils\Credential_Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,10 +33,43 @@ class Bootstrap {
 	 */
 	public static function init(): void {
 		add_action( 'admin_menu', array( __CLASS__, 'register_admin_menu' ) );
+		add_action( 'admin_notices', array( __CLASS__, 'render_credentials_notice' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ), 10, 1 );
 		add_filter( 'linkit_admin_links_status', array( __CLASS__, 'disable_linkit_on_wordish_page' ), 10, 2 );
 
 		REST_API::init();
+	}
+
+	/**
+	 * Show credentials notice when no API key is set.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function render_credentials_notice(): void {
+		$screen = get_current_screen();
+		if ( ! $screen || 'dashboard_page_' . self::ADMIN_PAGE_SLUG !== $screen->id ) {
+			return;
+		}
+
+		if ( Credential_Utils::has_ai_credentials() ) {
+			return;
+		}
+
+		$connectors_url = admin_url( 'options-general.php?page=connectors-wp-admin' );
+		$message        = sprintf(
+			/* translators: 1: opening link tag, 2: closing link tag */
+			esc_html__( 'Please set your API key in %1$sConnectors%2$s to use this feature.', 'wordish' ),
+			'<a href="' . esc_url( $connectors_url ) . '">',
+			'</a>'
+		);
+
+		wp_admin_notice(
+			$message,
+			array(
+				'type'        => 'error',
+				'dismissible' => false,
+			)
+		);
 	}
 
 	/**
