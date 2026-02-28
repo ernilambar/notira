@@ -8,7 +8,7 @@
 
 namespace Nilambar\Wordish\Rest;
 
-use Nilambar\Wordish\Core\Settings;
+use Nilambar\Wordish\Utils\Credential_Utils;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -142,7 +142,7 @@ class Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function generate( WP_REST_Request $request ) {
-		if ( ! Settings::has_ai_credentials() ) {
+		if ( ! Credential_Utils::has_ai_credentials() ) {
 			return new WP_Error(
 				'wordish_no_api_key',
 				__( 'API key is not set. Add it in Settings → AI Credentials.', 'wordish' ),
@@ -176,14 +176,8 @@ class Controller {
 		$result = self::call_ai( $input, $tone );
 
 		if ( is_wp_error( $result ) ) {
-			$code = $result->get_error_code();
-			if ( in_array( $code, array( 'wordish_ai_unauthorized', 'wordish_ai_forbidden' ), true ) ) {
-				set_transient( Settings::TRANSIENT_INVALID_KEY, 1, 300 );
-			}
 			return $result;
 		}
-
-		delete_transient( Settings::TRANSIENT_INVALID_KEY );
 		set_transient( $cache_key, $result, self::CACHE_DURATION );
 
 		return new WP_REST_Response(
