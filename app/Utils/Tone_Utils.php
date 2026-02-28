@@ -31,17 +31,17 @@ class Tone_Utils {
 	 * @return array<string, string>
 	 */
 	public static function get_tone_options(): array {
-		return array(
-			'professional'  => __( 'Professional and courteous', 'wordish' ),
-			'friendly'      => __( 'Friendly and warm', 'wordish' ),
+		return [
+			'professional'  => __( 'Professional', 'wordish' ),
+			'friendly'      => __( 'Friendly', 'wordish' ),
 			'formal'        => __( 'Formal', 'wordish' ),
-			'concise'       => __( 'Concise and direct', 'wordish' ),
-			'empathetic'    => __( 'Empathetic and supportive', 'wordish' ),
+			'concise'       => __( 'Concise', 'wordish' ),
+			'empathetic'    => __( 'Empathetic', 'wordish' ),
 			'authoritative' => __( 'Authoritative', 'wordish' ),
 			'commanding'    => __( 'Commanding', 'wordish' ),
 			'assertive'     => __( 'Assertive', 'wordish' ),
-			'neutral'       => __( 'Neutral (objective and factual)', 'wordish' ),
-		);
+			'neutral'       => __( 'Neutral', 'wordish' ),
+		];
 	}
 
 	/**

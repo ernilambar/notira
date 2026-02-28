@@ -50,7 +50,7 @@ class REST_API {
 	 * @since 1.0.0
 	 */
 	public static function init(): void {
-		add_action( 'rest_api_init', array( __CLASS__, 'register_routes' ) );
+		add_action( 'rest_api_init', [ __CLASS__, 'register_routes' ] );
 	}
 
 	/**
@@ -62,26 +62,26 @@ class REST_API {
 		register_rest_route(
 			'wordish/v1',
 			'/generate',
-			array(
+			[
 				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => array( __CLASS__, 'generate' ),
-				'permission_callback' => array( __CLASS__, 'permission_callback' ),
-				'args'                => array(
-					'input' => array(
+				'callback'            => [ __CLASS__, 'generate' ],
+				'permission_callback' => [ __CLASS__, 'permission_callback' ],
+				'args'                => [
+					'input' => [
 						'required'          => true,
-						'type'               => 'string',
-						'sanitize_callback'  => 'sanitize_textarea_field',
-						'validate_callback'  => array( __CLASS__, 'validate_input' ),
-					),
-					'tone'  => array(
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_textarea_field',
+						'validate_callback' => [ __CLASS__, 'validate_input' ],
+					],
+					'tone'  => [
 						'required'          => false,
-						'type'               => 'string',
-						'default'            => Tone_Utils::DEFAULT_TONE,
-						'enum'               => Tone_Utils::get_valid_slugs(),
-						'sanitize_callback'  => 'sanitize_key',
-					),
-				),
-			)
+						'type'              => 'string',
+						'default'           => Tone_Utils::DEFAULT_TONE,
+						'enum'              => Tone_Utils::get_valid_slugs(),
+						'sanitize_callback' => 'sanitize_key',
+					],
+				],
+			]
 		);
 	}
 
@@ -116,7 +116,7 @@ class REST_API {
 					__( 'Input must be at least %d characters.', 'wordish' ),
 					self::INPUT_MIN_LENGTH
 				),
-				array( 'status' => 400 )
+				[ 'status' => 400 ]
 			);
 		}
 		if ( $len > self::INPUT_MAX_LENGTH ) {
@@ -127,7 +127,7 @@ class REST_API {
 					__( 'Input must not exceed %d characters.', 'wordish' ),
 					self::INPUT_MAX_LENGTH
 				),
-				array( 'status' => 400 )
+				[ 'status' => 400 ]
 			);
 		}
 		return true;
@@ -146,7 +146,7 @@ class REST_API {
 			return new WP_Error(
 				'wordish_no_api_key',
 				__( 'API key is not set.', 'wordish' ),
-				array( 'status' => 503 )
+				[ 'status' => 503 ]
 			);
 		}
 
@@ -157,7 +157,7 @@ class REST_API {
 			return new WP_Error(
 				'wordish_empty_input',
 				__( 'Please enter some text to improve.', 'wordish' ),
-				array( 'status' => 400 )
+				[ 'status' => 400 ]
 			);
 		}
 
@@ -165,10 +165,10 @@ class REST_API {
 		$cached    = get_transient( $cache_key );
 		if ( false !== $cached && is_string( $cached ) ) {
 			return new WP_REST_Response(
-				array(
+				[
 					'success' => true,
-					'data'    => array( 'output' => $cached ),
-				),
+					'data'    => [ 'output' => $cached ],
+				],
 				200
 			);
 		}
@@ -181,10 +181,10 @@ class REST_API {
 		set_transient( $cache_key, $result, self::CACHE_DURATION );
 
 		return new WP_REST_Response(
-			array(
+			[
 				'success' => true,
-				'data'    => array( 'output' => $result ),
-			),
+				'data'    => [ 'output' => $result ],
+			],
 			200
 		);
 	}
@@ -230,7 +230,7 @@ class REST_API {
 			return new WP_Error(
 				'wordish_no_models',
 				__( 'No AI provider is configured.', 'wordish' ),
-				array( 'status' => 503 )
+				[ 'status' => 503 ]
 			);
 		}
 
@@ -243,19 +243,28 @@ class REST_API {
 				return new WP_Error(
 					'wordish_no_models',
 					__( 'No AI provider is configured.', 'wordish' ),
-					array( 'status' => 503 )
+					[ 'status' => 503 ]
 				);
 			}
 			if ( strpos( $msg, '401' ) !== false || strpos( $msg, 'Incorrect API key' ) !== false ) {
-				return new WP_Error( 'wordish_ai_unauthorized', __( 'Invalid API key.', 'wordish' ), array( 'status' => 503 ) );
+				return new WP_Error( 'wordish_ai_unauthorized', __( 'Invalid API key.', 'wordish' ), [ 'status' => 503 ] );
 			}
 			if ( strpos( $msg, '403' ) !== false ) {
-				return new WP_Error( 'wordish_ai_forbidden', __( 'API access denied. Check your API key and account.', 'wordish' ), array( 'status' => 503 ) );
+				return new WP_Error( 'wordish_ai_forbidden', __( 'API access denied. Check your API key and account.', 'wordish' ), [ 'status' => 503 ] );
 			}
-			return new WP_Error( 'wordish_ai_error', $msg ?: __( 'AI request failed.', 'wordish' ), array( 'status' => 502 ) );
+			return new WP_Error( 'wordish_ai_error', $msg ? $msg : __( 'AI request failed.', 'wordish' ), [ 'status' => 502 ] );
 		}
 
-		$allowed = array( 'p' => array(), 'br' => array(), 'ul' => array(), 'ol' => array(), 'li' => array(), 'strong' => array(), 'em' => array(), 'a' => array( 'href' => array() ) );
+		$allowed = [
+			'p'      => [],
+			'br'     => [],
+			'ul'     => [],
+			'ol'     => [],
+			'li'     => [],
+			'strong' => [],
+			'em'     => [],
+			'a'      => [ 'href' => [] ],
+		];
 		$body    = is_string( $response ) ? trim( $response ) : '';
 		$body    = wp_kses( $body, $allowed );
 		$body    = self::strip_leading_greeting( $body );
@@ -277,5 +286,4 @@ class REST_API {
 		$pattern = '/^\s*<p>\s*(Dear\s+(?:Sir\/Madam|[^<]+),\s*|Hello,?\s*|Hi,?\s*)\s*<\/p>\s*/iu';
 		return preg_replace( $pattern, '', $html );
 	}
-
 }

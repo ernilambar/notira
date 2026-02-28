@@ -6,12 +6,16 @@
  * @since 1.0.0
  */
 
+use Nilambar\Wordish\API\REST_API;
+use Nilambar\Wordish\Utils\Credential_Utils;
+use Nilambar\Wordish\Utils\Tone_Utils;
+
 defined( 'ABSPATH' ) || exit;
 
-$has_credentials   = \Nilambar\Wordish\Utils\Credential_Utils::has_ai_credentials();
-$tones             = \Nilambar\Wordish\Utils\Tone_Utils::get_tone_options();
-$default_tone      = \Nilambar\Wordish\Utils\Tone_Utils::DEFAULT_TONE;
-$input_max_length  = \Nilambar\Wordish\API\REST_API::INPUT_MAX_LENGTH;
+$has_credentials  = Credential_Utils::has_ai_credentials();
+$tones            = Tone_Utils::get_tone_options();
+$default_tone     = Tone_Utils::DEFAULT_TONE;
+$input_max_length = REST_API::INPUT_MAX_LENGTH;
 ?>
 
 <div class="wrap wordish-wrap">
@@ -38,20 +42,17 @@ $input_max_length  = \Nilambar\Wordish\API\REST_API::INPUT_MAX_LENGTH;
 				</div>
 
 				<div class="wordish-tone-section">
-					<fieldset>
-						<legend><?php esc_html_e( 'Tone', 'wordish' ); ?></legend>
+					<label for="wordish-tone"><?php esc_html_e( 'Tone', 'wordish' ); ?></label>
+					<select id="wordish-tone"
+						name="wordish_tone"
+						<?php echo $has_credentials ? '' : ' disabled'; ?>
+					>
 						<?php foreach ( $tones as $value => $label ) : ?>
-							<label class="wordish-tone-option">
-								<input type="radio"
-									name="wordish_tone"
-									value="<?php echo esc_attr( $value ); ?>"
-									<?php checked( $value, $default_tone ); ?>
-									<?php echo $has_credentials ? '' : ' disabled'; ?>
-								/>
+							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $default_tone ); ?>>
 								<?php echo esc_html( $label ); ?>
-							</label>
+							</option>
 						<?php endforeach; ?>
-					</fieldset>
+					</select>
 				</div>
 
 				<div class="wordish-actions">
@@ -69,7 +70,7 @@ $input_max_length  = \Nilambar\Wordish\API\REST_API::INPUT_MAX_LENGTH;
 				<div class="wordish-output-header">
 					<label><?php esc_html_e( 'Output (HTML)', 'wordish' ); ?></label>
 					<button type="button" id="wordish-copy" class="button">
-						<?php esc_html_e( 'Copy!', 'wordish' ); ?>
+						<?php esc_html_e( 'Copy', 'wordish' ); ?>
 					</button>
 				</div>
 				<div id="wordish-output" class="wordish-output" role="region" aria-live="polite" data-empty="true">

@@ -5,7 +5,7 @@ WordPress plugin that turns draft notes or bullet points into professional, emai
 ## Requirements
 
 - PHP 7.4+
-- WordPress 6.6+
+- WordPress 7.0+
 - API key from a supported provider
 
 ## Installation
@@ -18,7 +18,7 @@ WordPress plugin that turns draft notes or bullet points into professional, emai
 
 1. Go to **Dashboard → Wordish**.
 2. Paste or type draft notes, bullets, or paragraphs in the textarea.
-3. Choose a **tone** (default: Professional and courteous).
+3. Choose a **tone** (default: Professional).
 4. Click **Generate**.
 5. Use **Copy** to paste the result.
 
