@@ -1,0 +1,24 @@
+{
+    "name": "nilambar/wordish",
+    "description": "WordPress plugin to improve rough notes into professional email-ready HTML.",
+    "type": "project",
+    "license": "GPL-2.0-or-later",
+    "require": {
+        "php": ">=7.4",
+        "wordpress/wp-ai-client": "^0.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nilambar\\Wordish\\": "app/"
+        },
+        "classmap": [
+            "app/"
+        ]
+    },
+    "config": {
+        "allow-plugins": {
+            "composer/installers": true,
+            "php-http/discovery": true
+        }
+    }
+}
