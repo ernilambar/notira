@@ -1,5 +1,5 @@
 /**
- * Generic browser utilities.
+ * Generic utilities.
  */
 
 import Toastle from 'toastle';
