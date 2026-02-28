@@ -24,11 +24,18 @@ defined( 'ABSPATH' ) || exit;
 class Controller {
 
 	/**
+	 * Minimum input length (characters).
+	 *
+	 * @since 1.0.0
+	 */
+	public const INPUT_MIN_LENGTH = 20;
+
+	/**
 	 * Maximum input length (characters) to prevent abuse.
 	 *
 	 * @since 1.0.0
 	 */
-	public const INPUT_MAX_LENGTH = 4000;
+	public const INPUT_MAX_LENGTH = 2000;
 
 	/**
 	 * Cache duration for identical requests (seconds).
@@ -100,7 +107,19 @@ class Controller {
 	 * @return true|WP_Error
 	 */
 	public static function validate_input( $value, WP_REST_Request $request, string $param ) {
-		if ( strlen( $value ) > self::INPUT_MAX_LENGTH ) {
+		$len = strlen( $value );
+		if ( $len < self::INPUT_MIN_LENGTH ) {
+			return new WP_Error(
+				'wordish_input_too_short',
+				sprintf(
+					/* translators: %d: min character count */
+					__( 'Input must be at least %d characters.', 'wordish' ),
+					self::INPUT_MIN_LENGTH
+				),
+				array( 'status' => 400 )
+			);
+		}
+		if ( $len > self::INPUT_MAX_LENGTH ) {
 			return new WP_Error(
 				'wordish_input_too_long',
 				sprintf(
@@ -200,12 +219,12 @@ class Controller {
 
 		$system = sprintf(
 			/* translators: %s: tone description */
-			__( 'You are an expert at turning rough notes into polished email body text. Output ONLY the middle part of the email as clean HTML (use <p>, <ul>, <li>, <strong>, <br> as needed). CRITICAL: Do NOT include any opening greeting (no "Dear", "Hello", "Hi", "Dear Sir/Madam", or similar) and do NOT include any closing (no "Regards", "Sincerely", "Best", or similar). The output will be wrapped with "Hi," and "Regards," separately. Start your output directly with the first paragraph of content. Tone: %s.', 'wordish' ),
+			__( 'You are an expert at turning draft notes into polished email body text. Output ONLY the middle part of the email as clean HTML (use <p>, <ul>, <li>, <strong>, <br> as needed). CRITICAL: Do NOT include any opening greeting (no "Dear", "Hello", "Hi", "Dear Sir/Madam", or similar) and do NOT include any closing (no "Regards", "Sincerely", "Best", or similar). The output will be wrapped with "Hi," and "Regards," separately. Start your output directly with the first paragraph of content. Tone: %s.', 'wordish' ),
 			$tone_label
 		);
 
 		$prompt = sprintf(
-			__( 'Convert the following rough notes into a single email body in HTML. Output ONLY the middle content. Do NOT start with any greeting (no Dear/Hello/Hi). Do NOT end with any sign-off. Start directly with the first paragraph:', 'wordish' ) . "\n\n%s",
+			__( 'Convert the following draft notes into a single email body in HTML. Output ONLY the middle content. Do NOT start with any greeting (no Dear/Hello/Hi). Do NOT end with any sign-off. Start directly with the first paragraph:', 'wordish' ) . "\n\n%s",
 			$input
 		);
 
@@ -226,7 +245,7 @@ class Controller {
 		if ( ! $builder->is_supported_for_text_generation() ) {
 			return new WP_Error(
 				'wordish_no_models',
-				__( 'No AI provider is configured for text generation. Add an API key in Settings → AI Credentials.', 'wordish' ),
+				__( 'No AI provider is configured for text generation. Add an API key in Settings → Connectors.', 'wordish' ),
 				array( 'status' => 503 )
 			);
 		}
@@ -259,7 +278,7 @@ class Controller {
 		if ( '' === $body ) {
 			$body = '<p></p>';
 		}
-		return 'Hi,<br><br>' . $body . '<br><br>Regards,';
+		return 'Hi,<br>' . $body . '<br>Regards,';
 	}
 
 	/**

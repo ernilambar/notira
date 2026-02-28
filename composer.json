@@ -1,6 +1,6 @@
 {
     "name": "nilambar/wordish",
-    "description": "WordPress plugin to improve rough notes into professional email-ready HTML.",
+    "description": "WordPress plugin to improve draft notes into professional email-ready HTML.",
     "license": "GPL-2.0-or-later",
     "type": "project",
     "require": {
