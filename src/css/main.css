@@ -1,15 +1,5 @@
-/* Wordish admin styles. */
-
 .wordish-wrap {
 	max-width: none;
-}
-
-.wordish-notice-not-dismissible {
-	position: relative;
-}
-
-.wordish-notice-not-dismissible .notice-dismiss {
-	display: none;
 }
 
 .wordish-columns {
@@ -71,14 +61,14 @@
 	align-items: center;
 	gap: 0.5rem;
 	margin: 1.25rem 0;
-}
 
-.wordish-tone-section label {
-	font-weight: 600;
-}
+	label {
+		font-weight: 600;
+	}
 
-.wordish-tone-section select {
-	min-width: 12rem;
+	select {
+		min-width: 12rem;
+	}
 }
 
 .wordish-actions {
@@ -86,15 +76,27 @@
 	align-items: center;
 	gap: 0.5rem;
 	margin-top: 1rem;
-}
 
-.wordish-actions .spinner {
-	float: none;
-	margin: 0;
+	.spinner {
+		float: none;
+		margin: 0;
+	}
 }
 
 .wordish-output-section {
 	margin: 0;
+
+	.wordish-output {
+		white-space: normal;
+	}
+
+	.wordish-output[data-empty="false"] .wordish-output-placeholder {
+		display: none;
+	}
+
+	.wordish-output[data-html="true"] {
+		white-space: normal;
+	}
 }
 
 .wordish-output-header {
@@ -104,10 +106,10 @@
 	flex-wrap: wrap;
 	gap: 0.5rem;
 	margin-bottom: 0.5rem;
-}
 
-.wordish-output-header .button {
-	margin-left: auto;
+	.button {
+		margin-left: auto;
+	}
 }
 
 .wordish-output {
@@ -119,19 +121,15 @@
 	overflow: auto;
 	white-space: pre-wrap;
 	word-wrap: break-word;
-}
 
-.wordish-output-placeholder {
-	color: #787c82;
-	font-style: italic;
+	.wordish-output-placeholder {
+		color: #787c82;
+		font-style: italic;
+	}
 }
 
 .wordish-output[data-empty="false"] .wordish-output-placeholder {
 	display: none;
-}
-
-.wordish-output-section .wordish-output {
-	white-space: normal;
 }
 
 .wordish-message {
@@ -145,8 +143,4 @@
 
 .wordish-message.success {
 	color: #00a32a;
-}
-
-.wordish-output-section .wordish-output[data-html="true"] {
-	white-space: normal;
 }

@@ -1,0 +1,23 @@
+{
+	"name": "wordish",
+	"version": "1.0.0",
+	"description": "Improve draft notes into professional email-ready HTML using AI.",
+	"author": "Nilambar Sharma",
+	"license": "GPL-2.0-or-later",
+	"type": "module",
+	"browserslist": "> 2%, last 2 versions, not dead",
+	"devDependencies": {
+		"@wordpress/prettier-config": "^4.38.0",
+		"prettier": "npm:wp-prettier@^3.0.3",
+		"vite": "^7.3.1"
+	},
+	"scripts": {
+		"start": "vite build --watch",
+		"build": "vite build",
+		"dev": "vite build --watch",
+		"format": "prettier \"**/*.{cjs,css,js,json}\" --write --log-level warn"
+	},
+	"dependencies": {
+		"toastle": "^1.0.2"
+	}
+}
