@@ -58,7 +58,7 @@ class Bootstrap {
 		load_plugin_textdomain(
 			'wordish',
 			false,
-			dirname( plugin_basename( WORDISH_PLUGIN_FILE ) ) . '/languages'
+			dirname( WORDISH_BASE_FILENAME ) . '/languages'
 		);
 	}
 
@@ -107,14 +107,14 @@ class Bootstrap {
 
 		wp_enqueue_style(
 			'wordish-admin',
-			plugins_url( 'assets/css/admin.css', WORDISH_PLUGIN_FILE ),
+			WORDISH_URL . '/assets/css/admin.css',
 			array(),
 			WORDISH_VERSION
 		);
 
 		wp_enqueue_script(
 			'wordish-admin',
-			plugins_url( 'assets/js/admin.js', WORDISH_PLUGIN_FILE ),
+			WORDISH_URL . '/assets/js/admin.js',
 			array(),
 			WORDISH_VERSION,
 			true

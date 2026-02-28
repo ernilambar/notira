@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Wordish
- * Plugin URI: https://github.com/nilambar/wordish
+ * Plugin URI: https://github.com/ernilambar/wordish
  * Description: Improve draft notes into professional email-ready HTML using AI.
  * Version: 1.0.0
  * Requires at least: 5.9
@@ -16,14 +16,18 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const WORDISH_VERSION = '1.0.0';
-const WORDISH_PLUGIN_FILE = __FILE__;
-const WORDISH_PLUGIN_DIR = __DIR__;
+// Define.
+define( 'WORDISH_VERSION', '1.0.0' );
+define( 'WORDISH_BASE_NAME', basename( __DIR__ ) );
+define( 'WORDISH_BASE_FILEPATH', __FILE__ );
+define( 'WORDISH_BASE_FILENAME', plugin_basename( __FILE__ ) );
+define( 'WORDISH_DIR', rtrim( plugin_dir_path( __FILE__ ), '/' ) );
+define( 'WORDISH_URL', rtrim( plugin_dir_url( __FILE__ ), '/' ) );
 
-if ( file_exists( WORDISH_PLUGIN_DIR . '/vendor/autoload.php' ) ) {
-	require_once WORDISH_PLUGIN_DIR . '/vendor/autoload.php';
+if ( file_exists( WORDISH_DIR . '/vendor/autoload.php' ) ) {
+	require_once WORDISH_DIR . '/vendor/autoload.php';
 }
 
-require_once WORDISH_PLUGIN_DIR . '/app/Core/Bootstrap.php';
+require_once WORDISH_DIR . '/app/Core/Bootstrap.php';
 
 Nilambar\Wordish\Core\Bootstrap::init();
