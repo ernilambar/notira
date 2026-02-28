@@ -9,6 +9,7 @@ namespace Nilambar\Wordish\Core;
 
 use Nilambar\Wordish\Rest\Controller as RestController;
 use Nilambar\Wordish\Utils\Credential_Utils;
+use Nilambar\Wordish\Utils\Tone_Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -148,17 +149,7 @@ class Bootstrap {
 	 */
 	public static function render_admin_page(): void {
 		$has_credentials = Credential_Utils::has_ai_credentials();
-
-		$tones = array(
-			'professional'  => __( 'Professional and courteous', 'wordish' ),
-			'friendly'      => __( 'Friendly and warm', 'wordish' ),
-			'formal'        => __( 'Formal', 'wordish' ),
-			'concise'       => __( 'Concise and direct', 'wordish' ),
-			'empathetic'    => __( 'Empathetic and supportive', 'wordish' ),
-			'authoritative' => __( 'Authoritative', 'wordish' ),
-			'commanding'    => __( 'Commanding', 'wordish' ),
-			'assertive'     => __( 'Assertive', 'wordish' ),
-		);
+		$tones           = Tone_Utils::get_tone_options();
 		?>
 		<div class="wrap wordish-wrap">
 			<h1><?php esc_html_e( 'Wordish', 'wordish' ); ?></h1>
@@ -197,7 +188,7 @@ class Bootstrap {
 										<input type="radio"
 											name="wordish_tone"
 											value="<?php echo esc_attr( $value ); ?>"
-											<?php checked( $value, 'professional' ); ?>
+											<?php checked( $value, Tone_Utils::DEFAULT_TONE ); ?>
 											<?php echo $has_credentials ? '' : ' disabled'; ?>
 										/>
 										<?php echo esc_html( $label ); ?>

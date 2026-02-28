@@ -9,6 +9,7 @@
 namespace Nilambar\Wordish\Rest;
 
 use Nilambar\Wordish\Utils\Credential_Utils;
+use Nilambar\Wordish\Utils\Tone_Utils;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -76,8 +77,8 @@ class Controller {
 					'tone'  => array(
 						'required'          => false,
 						'type'               => 'string',
-						'default'            => 'professional',
-						'enum'               => array( 'professional', 'friendly', 'formal', 'concise', 'empathetic', 'authoritative', 'commanding', 'assertive' ),
+						'default'            => Tone_Utils::DEFAULT_TONE,
+						'enum'               => Tone_Utils::get_valid_slugs(),
 						'sanitize_callback'  => 'sanitize_key',
 					),
 				),
@@ -199,17 +200,7 @@ class Controller {
 	 * @return string|WP_Error HTML output or error.
 	 */
 	private static function call_ai( string $input, string $tone ) {
-		$tone_descriptions = array(
-			'professional'  => __( 'professional and courteous', 'wordish' ),
-			'friendly'      => __( 'friendly and warm', 'wordish' ),
-			'formal'        => __( 'formal', 'wordish' ),
-			'concise'       => __( 'concise and direct', 'wordish' ),
-			'empathetic'    => __( 'empathetic and supportive', 'wordish' ),
-			'authoritative' => __( 'authoritative', 'wordish' ),
-			'commanding'    => __( 'commanding', 'wordish' ),
-			'assertive'     => __( 'assertive', 'wordish' ),
-		);
-		$tone_label = isset( $tone_descriptions[ $tone ] ) ? $tone_descriptions[ $tone ] : $tone_descriptions['professional'];
+		$tone_label = Tone_Utils::get_tone_label( $tone );
 
 		$system = sprintf(
 			/* translators: %s: tone description */
