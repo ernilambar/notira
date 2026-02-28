@@ -1,0 +1,108 @@
+/* Wordish admin styles. */
+
+.wordish-wrap {
+	max-width: 48rem;
+}
+
+.wordish-notice-not-dismissible {
+	position: relative;
+}
+
+.wordish-notice-not-dismissible .notice-dismiss {
+	display: none;
+}
+
+.wordish-panel {
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	padding: 1.5rem;
+	margin: 1rem 0;
+}
+
+.wordish-input-section label,
+.wordish-output-header label {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+.wordish-textarea {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.wordish-char-count {
+	margin-top: 0.25rem;
+}
+
+.wordish-tone-section {
+	margin: 1.25rem 0;
+}
+
+.wordish-tone-section legend {
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+.wordish-tone-option {
+	display: block;
+	margin-bottom: 0.35rem;
+}
+
+.wordish-tone-option input {
+	margin-right: 0.5rem;
+}
+
+.wordish-actions {
+	margin-top: 1rem;
+}
+
+.wordish-output-section {
+	margin-top: 1.5rem;
+}
+
+.wordish-output-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+.wordish-output-header .button {
+	margin-left: auto;
+}
+
+.wordish-output {
+	border: 1px solid #c3c4c7;
+	background: #f6f7f7;
+	padding: 1rem;
+	min-height: 6rem;
+	max-height: 24rem;
+	overflow: auto;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+.wordish-output-section .wordish-output {
+	white-space: normal;
+}
+
+.wordish-message {
+	margin-top: 1rem;
+	min-height: 1.5em;
+}
+
+.wordish-message.error {
+	color: #b32d2e;
+}
+
+.wordish-message.success {
+	color: #00a32a;
+}
+
+.wordish-output-section .wordish-output[data-html="true"] {
+	white-space: normal;
+}
