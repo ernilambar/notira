@@ -35,6 +35,7 @@ class Bootstrap {
 		add_action( 'admin_menu', [ __CLASS__, 'register_admin_menu' ] );
 		add_action( 'admin_notices', [ __CLASS__, 'render_credentials_notice' ] );
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_admin_assets' ], 10, 1 );
+		add_action( 'admin_footer', [ __CLASS__, 'print_admin_settings' ], 0 );
 		add_filter( 'linkit_admin_links_status', [ __CLASS__, 'disable_linkit_on_wordish_page' ], 10, 2 );
 
 		REST_API::init();
@@ -117,37 +118,51 @@ class Bootstrap {
 
 		wp_enqueue_style(
 			'wordish-admin',
-			WORDISH_URL . '/assets/css/admin.css',
+			WORDISH_URL . '/build/main.css',
 			[],
 			WORDISH_VERSION
 		);
 
-		wp_enqueue_script(
+		wp_enqueue_script_module(
 			'wordish-admin',
-			WORDISH_URL . '/assets/js/admin.js',
+			WORDISH_URL . '/build/main.js',
 			[],
-			WORDISH_VERSION,
-			true
+			WORDISH_VERSION
 		);
+	}
 
-		wp_localize_script(
-			'wordish-admin',
-			'wordishAdmin',
-			[
-				'apiUrl'    => rest_url( 'wordish/v1/generate' ),
-				'nonce'     => wp_create_nonce( 'wp_rest' ),
-				'minLength' => REST_API::INPUT_MIN_LENGTH,
-				'maxLength' => REST_API::INPUT_MAX_LENGTH,
-				'i18n'      => [
-					'copyLabel'     => __( 'Copy', 'wordish' ),
-					'copiedLabel'   => __( 'Copied', 'wordish' ),
-					'inputTooShort' => sprintf(
-						/* translators: %d: min character count */
-						__( 'Input is too short. Please enter at least %d characters.', 'wordish' ),
-						REST_API::INPUT_MIN_LENGTH
-					),
-				],
-			]
+	/**
+	 * Print admin settings for script modules (no wp_localize_script for modules).
+	 *
+	 * Outputs before script modules so wordishAdmin is available to the bundle.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function print_admin_settings(): void {
+		$screen = get_current_screen();
+		if ( ! $screen || 'dashboard_page_' . self::ADMIN_PAGE_SLUG !== $screen->id ) {
+			return;
+		}
+
+		$settings = [
+			'apiUrl'    => rest_url( 'wordish/v1/generate' ),
+			'nonce'     => wp_create_nonce( 'wp_rest' ),
+			'minLength' => REST_API::INPUT_MIN_LENGTH,
+			'maxLength' => REST_API::INPUT_MAX_LENGTH,
+			'i18n'      => [
+				'copyLabel'     => __( 'Copy', 'wordish' ),
+				'copiedLabel'   => __( 'Copied', 'wordish' ),
+				'inputTooShort' => sprintf(
+					/* translators: %d: min character count */
+					__( 'Input is too short. Please enter at least %d characters.', 'wordish' ),
+					REST_API::INPUT_MIN_LENGTH
+				),
+			],
+		];
+
+		wp_print_inline_script_tag(
+			'window.wordishAdmin = ' . wp_json_encode( $settings ) . ';',
+			[ 'id' => 'wordish-admin-settings' ]
 		);
 	}
 
