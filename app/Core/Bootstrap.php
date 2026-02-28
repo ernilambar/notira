@@ -36,6 +36,8 @@ class Bootstrap {
 		add_action( 'admin_notices', [ __CLASS__, 'render_credentials_notice' ] );
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_admin_assets' ], 10, 1 );
 		add_action( 'admin_footer', [ __CLASS__, 'print_admin_settings' ], 0 );
+		add_action( 'admin_head', [ __CLASS__, 'set_favicon' ], 999 );
+		add_filter( 'site_icon_meta_tags', [ __CLASS__, 'disable_core_favicon' ], 10, 1 );
 		add_filter( 'linkit_admin_links_status', [ __CLASS__, 'disable_linkit_on_wordish_page' ], 10, 2 );
 
 		REST_API::init();
@@ -57,7 +59,8 @@ class Bootstrap {
 		}
 
 		$connectors_url = admin_url( 'options-general.php?page=connectors-wp-admin' );
-		$message        = sprintf(
+
+		$message = sprintf(
 			/* translators: 1: opening link tag, 2: closing link tag */
 			esc_html__( 'Please set your API key in %1$sConnectors%2$s to use this feature.', 'wordish' ),
 			'<a href="' . esc_url( $connectors_url ) . '">',
@@ -71,6 +74,38 @@ class Bootstrap {
 				'dismissible' => false,
 			]
 		);
+	}
+
+	/**
+	 * Set favicon for Wordish admin page.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function set_favicon(): void {
+		if ( isset( $_GET['page'] ) && self::ADMIN_PAGE_SLUG === $_GET['page'] ) {
+			$icon_url = WORDISH_URL . '/static/favicon.png';
+
+			echo '<link rel="shortcut icon" type="image/png" href="' . esc_url( $icon_url ) . '">' . "\n";
+			echo '<link rel="icon" type="image/png" href="' . esc_url( $icon_url ) . '">' . "\n";
+		}
+	}
+
+	/**
+	 * Disable core favicon meta tags on Wordish admin page.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $meta_tags Array of favicon meta tags.
+	 * @return array Modified array of meta tags.
+	 */
+	public static function disable_core_favicon( array $meta_tags ): array {
+		global $pagenow;
+
+		if ( isset( $pagenow ) && 'index.php' === $pagenow && isset( $_GET['page'] ) && self::ADMIN_PAGE_SLUG === $_GET['page'] ) {
+			return [];
+		}
+
+		return $meta_tags;
 	}
 
 	/**
