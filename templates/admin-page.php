@@ -1,0 +1,87 @@
+<?php
+/**
+ * Admin page template.
+ *
+ * @package Nilambar\Wordish
+ * @since 1.0.0
+ */
+
+defined( 'ABSPATH' ) || exit;
+
+$has_credentials   = \Nilambar\Wordish\Utils\Credential_Utils::has_ai_credentials();
+$tones             = \Nilambar\Wordish\Utils\Tone_Utils::get_tone_options();
+$default_tone      = \Nilambar\Wordish\Utils\Tone_Utils::DEFAULT_TONE;
+$input_max_length  = \Nilambar\Wordish\API\REST_API::INPUT_MAX_LENGTH;
+nsdump( $has_credentials );
+?>
+<div class="wrap wordish-wrap">
+	<h1><?php esc_html_e( 'Wordish', 'wordish' ); ?></h1>
+
+	<?php if ( ! $has_credentials ) : ?>
+		<div class="notice notice-warning wordish-notice-not-dismissible">
+			<p><?php esc_html_e( 'Please set your API key to use this feature.', 'wordish' ); ?></p>
+		</div>
+	<?php endif; ?>
+
+	<div class="wordish-columns">
+		<div class="wordish-column-left">
+			<div class="wordish-panel">
+				<div class="wordish-input-section">
+					<label for="wordish-input">
+						<?php esc_html_e( 'Draft notes or bullet points', 'wordish' ); ?>
+					</label>
+					<textarea id="wordish-input"
+						class="wordish-textarea"
+						rows="10"
+						placeholder="<?php esc_attr_e( 'Paste or type your draft notes, bullets, or paragraphs here…', 'wordish' ); ?>"
+						maxlength="<?php echo (int) $input_max_length; ?>"
+						<?php echo $has_credentials ? '' : ' disabled'; ?>
+					></textarea>
+					<p class="description wordish-char-count">
+						<span class="wordish-char-current">0</span> / <?php echo (int) $input_max_length; ?>
+						<?php esc_html_e( 'characters', 'wordish' ); ?>
+					</p>
+				</div>
+
+				<div class="wordish-tone-section">
+					<fieldset>
+						<legend><?php esc_html_e( 'Tone', 'wordish' ); ?></legend>
+						<?php foreach ( $tones as $value => $label ) : ?>
+							<label class="wordish-tone-option">
+								<input type="radio"
+									name="wordish_tone"
+									value="<?php echo esc_attr( $value ); ?>"
+									<?php checked( $value, $default_tone ); ?>
+									<?php echo $has_credentials ? '' : ' disabled'; ?>
+								/>
+								<?php echo esc_html( $label ); ?>
+							</label>
+						<?php endforeach; ?>
+					</fieldset>
+				</div>
+
+				<div class="wordish-actions">
+					<button type="button" id="wordish-generate" class="button button-primary" <?php echo $has_credentials ? '' : ' disabled'; ?>>
+						<?php esc_html_e( 'Generate', 'wordish' ); ?>
+					</button>
+					<span class="spinner" id="wordish-generate-spinner" aria-hidden="true"></span>
+				</div>
+			</div>
+			<div id="wordish-message" class="wordish-message" role="status" aria-live="polite"></div>
+		</div>
+
+		<div class="wordish-column-right">
+			<div class="wordish-output-section" id="wordish-output-section">
+				<div class="wordish-output-header">
+					<label><?php esc_html_e( 'Output (HTML)', 'wordish' ); ?></label>
+					<button type="button" id="wordish-copy" class="button">
+						<?php esc_html_e( 'Copy!', 'wordish' ); ?>
+					</button>
+				</div>
+				<div id="wordish-output" class="wordish-output" role="region" aria-live="polite" data-empty="true">
+					<span class="wordish-output-placeholder" aria-hidden="true"><?php esc_html_e( 'Output will appear here.', 'wordish' ); ?></span>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

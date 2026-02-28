@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 class Credential_Utils {
 
 	/**
-	 * Option name for AI credentials (Settings → Connectors).
+	 * Option name for AI credentials.
 	 *
 	 * @since 1.0.0
 	 */
