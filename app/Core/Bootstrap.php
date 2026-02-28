@@ -3,12 +3,12 @@
  * Plugin bootstrap and hook registration.
  *
  * @package Nilambar\Wordish
- * @since 1.0.0
  */
 
 namespace Nilambar\Wordish\Core;
 
 use Nilambar\Wordish\Rest\Controller as RestController;
+use Nilambar\Wordish\Utils\Credential_Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -37,7 +37,6 @@ class Bootstrap {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ), 10, 1 );
 		add_filter( 'linkit_admin_links_status', array( __CLASS__, 'disable_linkit_on_wordish_page' ), 10, 2 );
 
-		Settings::init();
 		RestController::init();
 	}
 
@@ -148,9 +147,7 @@ class Bootstrap {
 	 * @since 1.0.0
 	 */
 	public static function render_admin_page(): void {
-		$has_credentials = Settings::has_ai_credentials();
-		$invalid         = (bool) get_transient( Settings::TRANSIENT_INVALID_KEY );
-		$has_key         = $has_credentials && ! $invalid;
+		$has_credentials = Credential_Utils::has_ai_credentials();
 
 		$tones = array(
 			'professional'  => __( 'Professional and courteous', 'wordish' ),
@@ -170,10 +167,6 @@ class Bootstrap {
 				<div class="notice notice-warning wordish-notice-not-dismissible">
 					<p><?php esc_html_e( 'Please set your API key in Settings → AI Credentials to use this feature.', 'wordish' ); ?></p>
 				</div>
-			<?php elseif ( $invalid ) : ?>
-				<div class="notice notice-error wordish-notice-not-dismissible">
-					<p><?php esc_html_e( 'The API key in Settings → AI Credentials appears to be invalid. Please check and update it.', 'wordish' ); ?></p>
-				</div>
 			<?php endif; ?>
 
 			<div class="wordish-columns">
@@ -188,7 +181,7 @@ class Bootstrap {
 								rows="10"
 								placeholder="<?php esc_attr_e( 'Paste or type your draft notes, bullets, or paragraphs here…', 'wordish' ); ?>"
 								maxlength="<?php echo (int) RestController::INPUT_MAX_LENGTH; ?>"
-								<?php echo $has_key ? '' : ' disabled'; ?>
+								<?php echo $has_credentials ? '' : ' disabled'; ?>
 							></textarea>
 							<p class="description wordish-char-count">
 								<span class="wordish-char-current">0</span> / <?php echo (int) RestController::INPUT_MAX_LENGTH; ?>
@@ -205,7 +198,7 @@ class Bootstrap {
 											name="wordish_tone"
 											value="<?php echo esc_attr( $value ); ?>"
 											<?php checked( $value, 'professional' ); ?>
-											<?php echo $has_key ? '' : ' disabled'; ?>
+											<?php echo $has_credentials ? '' : ' disabled'; ?>
 										/>
 										<?php echo esc_html( $label ); ?>
 									</label>
@@ -214,7 +207,7 @@ class Bootstrap {
 						</div>
 
 						<div class="wordish-actions">
-							<button type="button" id="wordish-generate" class="button button-primary" <?php echo $has_key ? '' : ' disabled'; ?>>
+							<button type="button" id="wordish-generate" class="button button-primary" <?php echo $has_credentials ? '' : ' disabled'; ?>>
 								<?php esc_html_e( 'Generate', 'wordish' ); ?>
 							</button>
 							<span class="spinner" id="wordish-generate-spinner" aria-hidden="true"></span>
