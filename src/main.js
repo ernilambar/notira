@@ -137,9 +137,9 @@ if ( inputEl ) {
 }
 
 if ( generateBtn ) {
-	generateBtn.addEventListener( 'click', debounce( generate, 400 ) );
+	generateBtn.addEventListener( 'click', debounce( generate, 300 ) );
 }
 
 if ( copyBtn ) {
-	copyBtn.addEventListener( 'click', debounce( handleCopyClick, 400 ) );
+	copyBtn.addEventListener( 'click', debounce( handleCopyClick, 300 ) );
 }
