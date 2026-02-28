@@ -38,14 +38,6 @@ class Controller {
 	private const CACHE_DURATION = 300;
 
 	/**
-	 * Preferred OpenAI model (cheapest option for development).
-	 * gpt-4o-mini is currently OpenAI's lowest-cost chat model.
-	 *
-	 * @since 1.0.0
-	 */
-	private const OPENAI_MODEL = 'gpt-4o-mini';
-
-	/**
 	 * Register REST routes.
 	 *
 	 * @since 1.0.0
@@ -217,28 +209,40 @@ class Controller {
 			$input
 		);
 
-		$response = null;
-		if ( class_exists( 'WordPress\AI_Client\AI_Client' ) ) {
-			try {
-				$builder = \WordPress\AI_Client\AI_Client::prompt_with_wp_error( $prompt )
-					->using_system_instruction( $system )
-					->using_temperature( 0.5 )
-					->using_max_tokens( 1024 )
-					->using_model_preference( array( 'openai', self::OPENAI_MODEL ) );
-				$response = $builder->generate_text();
-			} catch ( \Exception $e ) {
-				$response = new WP_Error( 'wordish_ai_error', $e->getMessage() );
-			}
+		$builder = wp_ai_client_prompt( $prompt )
+			->using_system_instruction( $system )
+			->using_temperature( 0.5 )
+			->using_max_tokens( 1024 )
+			->using_model_preference(
+				'gpt-4o-mini',
+				'gpt-4o',
+				'gpt-3.5-turbo',
+				'claude-3-5-sonnet-20241022',
+				'claude-sonnet-4-5',
+				'gemini-2.0-flash',
+				'gemini-1.5-pro'
+			);
+
+		if ( ! $builder->is_supported_for_text_generation() ) {
+			return new WP_Error(
+				'wordish_no_models',
+				__( 'No AI provider is configured for text generation. Add an API key in Settings → AI Credentials.', 'wordish' ),
+				array( 'status' => 503 )
+			);
 		}
-		if ( null === $response ) {
-			$credentials = get_option( Settings::WP_AI_CLIENT_CREDENTIALS_OPTION, array() );
-			$api_key     = is_array( $credentials ) && isset( $credentials['openai'] ) ? $credentials['openai'] : '';
-			$response    = self::request_openai_direct( $api_key, $system, $prompt );
-		}
+
+		$response = $builder->generate_text();
 
 		if ( is_wp_error( $response ) ) {
 			$msg  = $response->get_error_message();
 			$code = $response->get_error_code();
+			if ( 'wordish_no_models' === $code || strpos( $msg, 'No models found' ) !== false ) {
+				return new WP_Error(
+					'wordish_no_models',
+					__( 'No AI provider is configured for text generation. Add an API key in Settings → AI Credentials.', 'wordish' ),
+					array( 'status' => 503 )
+				);
+			}
 			if ( strpos( $msg, '401' ) !== false || strpos( $msg, 'Incorrect API key' ) !== false ) {
 				return new WP_Error( 'wordish_ai_unauthorized', __( 'Invalid API key. Please check Settings → AI Credentials.', 'wordish' ), array( 'status' => 503 ) );
 			}
@@ -271,62 +275,4 @@ class Controller {
 		return preg_replace( $pattern, '', $html );
 	}
 
-	/**
-	 * Fallback: call OpenAI API directly via HTTP when wp_ai_client_prompt is not available.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $api_key  OpenAI API key.
-	 * @param string $system   System message.
-	 * @param string $prompt   User message.
-	 * @return string|WP_Error
-	 */
-	private static function request_openai_direct( string $api_key, string $system, string $prompt ) {
-		$body = wp_json_encode(
-			array(
-				'model'    => self::OPENAI_MODEL,
-				'messages' => array(
-					array( 'role' => 'system', 'content' => $system ),
-					array( 'role' => 'user', 'content' => $prompt ),
-				),
-				'max_tokens' => 1024,
-				'temperature' => 0.5,
-			)
-		);
-
-		$response = wp_remote_post(
-			'https://api.openai.com/v1/chat/completions',
-			array(
-				'headers' => array(
-					'Content-Type'  => 'application/json',
-					'Authorization' => 'Bearer ' . $api_key,
-				),
-				'body'    => $body,
-				'timeout' => 60,
-			)
-		);
-
-		if ( is_wp_error( $response ) ) {
-			return $response;
-		}
-
-		$code = wp_remote_retrieve_response_code( $response );
-		if ( 401 === $code ) {
-			return new WP_Error( 'wordish_ai_unauthorized', __( 'Invalid API key.', 'wordish' ) );
-		}
-		if ( 403 === $code ) {
-			return new WP_Error( 'wordish_ai_forbidden', __( 'API access denied.', 'wordish' ) );
-		}
-		if ( $code < 200 || $code >= 300 ) {
-			$body_res = wp_remote_retrieve_body( $response );
-			return new WP_Error( 'wordish_ai_error', $body_res ?: 'Request failed' );
-		}
-
-		$data = json_decode( wp_remote_retrieve_body( $response ), true );
-		if ( empty( $data['choices'][0]['message']['content'] ) ) {
-			return new WP_Error( 'wordish_ai_error', __( 'Invalid response from API.', 'wordish' ) );
-		}
-
-		return trim( $data['choices'][0]['message']['content'] );
-	}
 }

@@ -20,6 +20,13 @@ defined( 'ABSPATH' ) || exit;
 class Bootstrap {
 
 	/**
+	 * Admin page menu slug.
+	 *
+	 * @since 1.0.0
+	 */
+	public const ADMIN_PAGE_SLUG = 'wordish';
+
+	/**
 	 * Initialize the plugin.
 	 *
 	 * @since 1.0.0
@@ -28,21 +35,19 @@ class Bootstrap {
 		add_action( 'init', array( __CLASS__, 'on_init' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'register_admin_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ), 10, 1 );
+		add_filter( 'linkit_admin_links_status', array( __CLASS__, 'disable_linkit_on_wordish_page' ), 10, 2 );
 
 		Settings::init();
 		RestController::init();
 	}
 
 	/**
-	 * Initialize text domain and WordPress AI Client.
+	 * Initialize text domain.
 	 *
 	 * @since 1.0.0
 	 */
 	public static function on_init(): void {
 		self::load_textdomain();
-		if ( class_exists( 'WordPress\AI_Client\AI_Client' ) ) {
-			\WordPress\AI_Client\AI_Client::init();
-		}
 	}
 
 	/**
@@ -59,6 +64,22 @@ class Bootstrap {
 	}
 
 	/**
+	 * Disable Linkit admin links (Open Links button, quick menu) on the Wordish admin page.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param bool   $show Whether to show Linkit admin UI. Passed by linkit_admin_links_status filter.
+	 * @param string $hook Current admin page hook suffix.
+	 * @return bool False on Wordish page, otherwise the original $show value.
+	 */
+	public static function disable_linkit_on_wordish_page( bool $show, string $hook ): bool {
+		if ( 'dashboard_page_' . self::ADMIN_PAGE_SLUG === $hook ) {
+			return false;
+		}
+		return $show;
+	}
+
+	/**
 	 * Register admin menu under Dashboard.
 	 *
 	 * @since 1.0.0
@@ -68,7 +89,7 @@ class Bootstrap {
 			__( 'Wordish', 'wordish' ),
 			__( 'Wordish', 'wordish' ),
 			'manage_options',
-			'wordish',
+			self::ADMIN_PAGE_SLUG,
 			array( __CLASS__, 'render_admin_page' )
 		);
 	}
@@ -81,7 +102,7 @@ class Bootstrap {
 	 * @param string $hook_suffix Current admin page hook.
 	 */
 	public static function enqueue_admin_assets( $hook_suffix ): void {
-		if ( 'dashboard_page_wordish' !== $hook_suffix ) {
+		if ( 'dashboard_page_' . self::ADMIN_PAGE_SLUG !== $hook_suffix ) {
 			return;
 		}
 
