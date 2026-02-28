@@ -1,12 +1,11 @@
 <?php
 /**
- * REST API controller for Wordish generate endpoint.
+ * REST API for Wordish generate endpoint.
  *
  * @package Nilambar\Wordish
- * @since 1.0.0
  */
 
-namespace Nilambar\Wordish\Rest;
+namespace Nilambar\Wordish\API;
 
 use Nilambar\Wordish\Utils\Credential_Utils;
 use Nilambar\Wordish\Utils\Tone_Utils;
@@ -18,11 +17,11 @@ use WP_REST_Server;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class Controller.
+ * Class REST_API.
  *
  * @since 1.0.0
  */
-class Controller {
+class REST_API {
 
 	/**
 	 * Minimum input length (characters).
@@ -146,7 +145,7 @@ class Controller {
 		if ( ! Credential_Utils::has_ai_credentials() ) {
 			return new WP_Error(
 				'wordish_no_api_key',
-				__( 'API key is not set. Add it in Settings → AI Credentials.', 'wordish' ),
+				__( 'API key is not set.', 'wordish' ),
 				array( 'status' => 503 )
 			);
 		}
@@ -191,7 +190,7 @@ class Controller {
 	}
 
 	/**
-	 * Call AI to generate improved HTML content (uses credentials from Settings → AI Credentials).
+	 * Call AI to generate improved HTML content (uses credentials from Connectors).
 	 *
 	 * @since 1.0.0
 	 *
@@ -230,7 +229,7 @@ class Controller {
 		if ( ! $builder->is_supported_for_text_generation() ) {
 			return new WP_Error(
 				'wordish_no_models',
-				__( 'No AI provider is configured for text generation. Add an API key in Settings → Connectors.', 'wordish' ),
+				__( 'No AI provider is configured.', 'wordish' ),
 				array( 'status' => 503 )
 			);
 		}
@@ -243,12 +242,12 @@ class Controller {
 			if ( 'wordish_no_models' === $code || strpos( $msg, 'No models found' ) !== false ) {
 				return new WP_Error(
 					'wordish_no_models',
-					__( 'No AI provider is configured for text generation. Add an API key in Settings → AI Credentials.', 'wordish' ),
+					__( 'No AI provider is configured.', 'wordish' ),
 					array( 'status' => 503 )
 				);
 			}
 			if ( strpos( $msg, '401' ) !== false || strpos( $msg, 'Incorrect API key' ) !== false ) {
-				return new WP_Error( 'wordish_ai_unauthorized', __( 'Invalid API key. Please check Settings → AI Credentials.', 'wordish' ), array( 'status' => 503 ) );
+				return new WP_Error( 'wordish_ai_unauthorized', __( 'Invalid API key.', 'wordish' ), array( 'status' => 503 ) );
 			}
 			if ( strpos( $msg, '403' ) !== false ) {
 				return new WP_Error( 'wordish_ai_forbidden', __( 'API access denied. Check your API key and account.', 'wordish' ), array( 'status' => 503 ) );
