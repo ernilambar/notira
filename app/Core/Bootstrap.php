@@ -27,10 +27,7 @@ class Bootstrap {
 	public static function init(): void {
 		add_action( 'init', array( __CLASS__, 'on_init' ) );
 		add_action( 'admin_menu', array( __CLASS__, 'register_admin_menu' ) );
-		add_action( 'admin_menu', array( __CLASS__, 'remove_ai_credentials_menu' ), 99 );
-		add_action( 'admin_init', array( __CLASS__, 'register_settings' ) );
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'enqueue_admin_assets' ), 10, 1 );
-		add_filter( 'option_wp_ai_client_provider_credentials', array( __CLASS__, 'inject_wordish_api_key' ), 10, 1 );
 
 		Settings::init();
 		RestController::init();
@@ -49,25 +46,6 @@ class Bootstrap {
 	}
 
 	/**
-	 * Inject Wordish OpenAI API key into wp-ai-client credentials when set.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array<string, string> $credentials Provider credentials.
-	 * @return array<string, string>
-	 */
-	public static function inject_wordish_api_key( $credentials ): array {
-		if ( ! is_array( $credentials ) ) {
-			$credentials = array();
-		}
-		$key = get_option( Settings::OPTION_API_KEY, '' );
-		if ( '' !== $key ) {
-			$credentials['openai'] = $key;
-		}
-		return $credentials;
-	}
-
-	/**
 	 * Load plugin text domain.
 	 *
 	 * @since 1.0.0
@@ -78,15 +56,6 @@ class Bootstrap {
 			false,
 			dirname( plugin_basename( WORDISH_PLUGIN_FILE ) ) . '/languages'
 		);
-	}
-
-	/**
-	 * Remove wp-ai-client's "AI Credentials" submenu; Wordish uses Settings → General → Wordish.
-	 *
-	 * @since 1.0.0
-	 */
-	public static function remove_ai_credentials_menu(): void {
-		remove_submenu_page( 'options-general.php', 'wp-ai-client' );
 	}
 
 	/**
@@ -102,67 +71,6 @@ class Bootstrap {
 			'wordish',
 			array( __CLASS__, 'render_admin_page' )
 		);
-	}
-
-	/**
-	 * Register plugin settings (API key on Settings > General).
-	 *
-	 * @since 1.0.0
-	 */
-	public static function register_settings(): void {
-		register_setting(
-			'general',
-			Settings::OPTION_API_KEY,
-			array(
-				'type'              => 'string',
-				'sanitize_callback' => 'sanitize_text_field',
-			)
-		);
-
-		add_settings_section(
-			'wordish_section',
-			__( 'Wordish', 'wordish' ),
-			array( __CLASS__, 'render_settings_section' ),
-			'general'
-		);
-
-		add_settings_field(
-			Settings::OPTION_API_KEY,
-			__( 'OpenAI API Key', 'wordish' ),
-			array( __CLASS__, 'render_api_key_field' ),
-			'general',
-			'wordish_section',
-			array(
-				'label_for' => 'wordish_openai_api_key',
-			)
-		);
-	}
-
-	/**
-	 * Render settings section description.
-	 *
-	 * @since 1.0.0
-	 */
-	public static function render_settings_section(): void {
-		echo '<p class="description">' . esc_html__( 'API key for AI-powered email drafting. Used to improve rough notes into professional HTML.', 'wordish' ) . '</p>';
-	}
-
-	/**
-	 * Render API key input field.
-	 *
-	 * @since 1.0.0
-	 */
-	public static function render_api_key_field(): void {
-		$value = get_option( Settings::OPTION_API_KEY, '' );
-		?>
-		<input type="password"
-			id="wordish_openai_api_key"
-			name="wordish_openai_api_key"
-			value="<?php echo esc_attr( $value ); ?>"
-			class="regular-text"
-			autocomplete="off"
-		/>
-		<?php
 	}
 
 	/**
@@ -209,28 +117,31 @@ class Bootstrap {
 	 * @since 1.0.0
 	 */
 	public static function render_admin_page(): void {
-		$api_key   = get_option( Settings::OPTION_API_KEY, '' );
-		$invalid   = (bool) get_transient( Settings::TRANSIENT_INVALID_KEY );
-		$has_key   = '' !== $api_key && ! $invalid;
+		$has_credentials = Settings::has_ai_credentials();
+		$invalid         = (bool) get_transient( Settings::TRANSIENT_INVALID_KEY );
+		$has_key         = $has_credentials && ! $invalid;
 
 		$tones = array(
-			'professional' => __( 'Professional and courteous', 'wordish' ),
-			'friendly'     => __( 'Friendly and warm', 'wordish' ),
-			'formal'       => __( 'Formal', 'wordish' ),
-			'concise'      => __( 'Concise and direct', 'wordish' ),
-			'empathetic'   => __( 'Empathetic and supportive', 'wordish' ),
+			'professional'  => __( 'Professional and courteous', 'wordish' ),
+			'friendly'      => __( 'Friendly and warm', 'wordish' ),
+			'formal'        => __( 'Formal', 'wordish' ),
+			'concise'       => __( 'Concise and direct', 'wordish' ),
+			'empathetic'    => __( 'Empathetic and supportive', 'wordish' ),
+			'authoritative' => __( 'Authoritative', 'wordish' ),
+			'commanding'    => __( 'Commanding', 'wordish' ),
+			'assertive'     => __( 'Assertive', 'wordish' ),
 		);
 		?>
 		<div class="wrap wordish-wrap">
 			<h1><?php esc_html_e( 'Wordish', 'wordish' ); ?></h1>
 
-			<?php if ( '' === $api_key ) : ?>
+			<?php if ( ! $has_credentials ) : ?>
 				<div class="notice notice-warning wordish-notice-not-dismissible">
-					<p><?php esc_html_e( 'Please set your OpenAI API key in Settings → General → Wordish to use this feature.', 'wordish' ); ?></p>
+					<p><?php esc_html_e( 'Please set your API key in Settings → AI Credentials to use this feature.', 'wordish' ); ?></p>
 				</div>
 			<?php elseif ( $invalid ) : ?>
 				<div class="notice notice-error wordish-notice-not-dismissible">
-					<p><?php esc_html_e( 'The OpenAI API key in Settings → General → Wordish appears to be invalid. Please check and update it.', 'wordish' ); ?></p>
+					<p><?php esc_html_e( 'The API key in Settings → AI Credentials appears to be invalid. Please check and update it.', 'wordish' ); ?></p>
 				</div>
 			<?php endif; ?>
 

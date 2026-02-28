@@ -38,6 +38,14 @@ class Controller {
 	private const CACHE_DURATION = 300;
 
 	/**
+	 * Preferred OpenAI model (cheapest option for development).
+	 * gpt-4o-mini is currently OpenAI's lowest-cost chat model.
+	 *
+	 * @since 1.0.0
+	 */
+	private const OPENAI_MODEL = 'gpt-4o-mini';
+
+	/**
 	 * Register REST routes.
 	 *
 	 * @since 1.0.0
@@ -70,7 +78,7 @@ class Controller {
 						'required'          => false,
 						'type'               => 'string',
 						'default'            => 'professional',
-						'enum'               => array( 'professional', 'friendly', 'formal', 'concise', 'empathetic' ),
+						'enum'               => array( 'professional', 'friendly', 'formal', 'concise', 'empathetic', 'authoritative', 'commanding', 'assertive' ),
 						'sanitize_callback'  => 'sanitize_key',
 					),
 				),
@@ -115,22 +123,6 @@ class Controller {
 	}
 
 	/**
-	 * Check if API key is set and optionally valid (format only).
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $api_key API key value.
-	 * @return bool
-	 */
-	public static function validate_api_key( string $api_key ): bool {
-		if ( '' === $api_key ) {
-			return false;
-		}
-		// Basic format: OpenAI keys start with sk- and are long.
-		return strlen( $api_key ) >= 20 && ( strpos( $api_key, 'sk-' ) === 0 || preg_match( '/^[a-zA-Z0-9_-]+$/', $api_key ) );
-	}
-
-	/**
 	 * Handle generate request.
 	 *
 	 * @since 1.0.0
@@ -139,11 +131,10 @@ class Controller {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function generate( WP_REST_Request $request ) {
-		$api_key = get_option( Settings::OPTION_API_KEY, '' );
-		if ( '' === $api_key ) {
+		if ( ! Settings::has_ai_credentials() ) {
 			return new WP_Error(
 				'wordish_no_api_key',
-				__( 'OpenAI API key is not set. Add it in Settings → General → Wordish.', 'wordish' ),
+				__( 'API key is not set. Add it in Settings → AI Credentials.', 'wordish' ),
 				array( 'status' => 503 )
 			);
 		}
@@ -171,7 +162,7 @@ class Controller {
 			);
 		}
 
-		$result = self::call_ai( $input, $tone, $api_key );
+		$result = self::call_ai( $input, $tone );
 
 		if ( is_wp_error( $result ) ) {
 			$code = $result->get_error_code();
@@ -194,33 +185,35 @@ class Controller {
 	}
 
 	/**
-	 * Call AI to generate improved HTML content.
+	 * Call AI to generate improved HTML content (uses credentials from Settings → AI Credentials).
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param string $input Raw user input.
 	 * @param string $tone  Tone slug.
-	 * @param string $api_key API key.
 	 * @return string|WP_Error HTML output or error.
 	 */
-	private static function call_ai( string $input, string $tone, string $api_key ) {
+	private static function call_ai( string $input, string $tone ) {
 		$tone_descriptions = array(
-			'professional' => __( 'professional and courteous', 'wordish' ),
-			'friendly'     => __( 'friendly and warm', 'wordish' ),
-			'formal'       => __( 'formal', 'wordish' ),
-			'concise'      => __( 'concise and direct', 'wordish' ),
-			'empathetic'   => __( 'empathetic and supportive', 'wordish' ),
+			'professional'  => __( 'professional and courteous', 'wordish' ),
+			'friendly'      => __( 'friendly and warm', 'wordish' ),
+			'formal'        => __( 'formal', 'wordish' ),
+			'concise'       => __( 'concise and direct', 'wordish' ),
+			'empathetic'    => __( 'empathetic and supportive', 'wordish' ),
+			'authoritative' => __( 'authoritative', 'wordish' ),
+			'commanding'    => __( 'commanding', 'wordish' ),
+			'assertive'     => __( 'assertive', 'wordish' ),
 		);
 		$tone_label = isset( $tone_descriptions[ $tone ] ) ? $tone_descriptions[ $tone ] : $tone_descriptions['professional'];
 
 		$system = sprintf(
 			/* translators: %s: tone description */
-			__( 'You are an expert at turning rough notes into polished, professional email body text. Output only the email body as clean HTML (use <p>, <ul>, <li>, <strong>, <br> as needed). Do not include subject, greeting, or sign-off. Tone: %s.', 'wordish' ),
+			__( 'You are an expert at turning rough notes into polished email body text. Output ONLY the middle part of the email as clean HTML (use <p>, <ul>, <li>, <strong>, <br> as needed). CRITICAL: Do NOT include any opening greeting (no "Dear", "Hello", "Hi", "Dear Sir/Madam", or similar) and do NOT include any closing (no "Regards", "Sincerely", "Best", or similar). The output will be wrapped with "Hi," and "Regards," separately. Start your output directly with the first paragraph of content. Tone: %s.', 'wordish' ),
 			$tone_label
 		);
 
 		$prompt = sprintf(
-			__( 'Convert the following rough notes into a single professional email body in HTML. Output only the HTML body (no greeting or sign-off):', 'wordish' ) . "\n\n%s",
+			__( 'Convert the following rough notes into a single email body in HTML. Output ONLY the middle content. Do NOT start with any greeting (no Dear/Hello/Hi). Do NOT end with any sign-off. Start directly with the first paragraph:', 'wordish' ) . "\n\n%s",
 			$input
 		);
 
@@ -230,21 +223,24 @@ class Controller {
 				$builder = \WordPress\AI_Client\AI_Client::prompt_with_wp_error( $prompt )
 					->using_system_instruction( $system )
 					->using_temperature( 0.5 )
-					->using_max_tokens( 1024 );
+					->using_max_tokens( 1024 )
+					->using_model_preference( array( 'openai', self::OPENAI_MODEL ) );
 				$response = $builder->generate_text();
 			} catch ( \Exception $e ) {
 				$response = new WP_Error( 'wordish_ai_error', $e->getMessage() );
 			}
 		}
 		if ( null === $response ) {
-			$response = self::request_openai_direct( $api_key, $system, $prompt );
+			$credentials = get_option( Settings::WP_AI_CLIENT_CREDENTIALS_OPTION, array() );
+			$api_key     = is_array( $credentials ) && isset( $credentials['openai'] ) ? $credentials['openai'] : '';
+			$response    = self::request_openai_direct( $api_key, $system, $prompt );
 		}
 
 		if ( is_wp_error( $response ) ) {
-			$msg = $response->get_error_message();
+			$msg  = $response->get_error_message();
 			$code = $response->get_error_code();
 			if ( strpos( $msg, '401' ) !== false || strpos( $msg, 'Incorrect API key' ) !== false ) {
-				return new WP_Error( 'wordish_ai_unauthorized', __( 'Invalid API key. Please check Settings → General → Wordish.', 'wordish' ), array( 'status' => 503 ) );
+				return new WP_Error( 'wordish_ai_unauthorized', __( 'Invalid API key. Please check Settings → AI Credentials.', 'wordish' ), array( 'status' => 503 ) );
 			}
 			if ( strpos( $msg, '403' ) !== false ) {
 				return new WP_Error( 'wordish_ai_forbidden', __( 'API access denied. Check your API key and account.', 'wordish' ), array( 'status' => 503 ) );
@@ -255,10 +251,24 @@ class Controller {
 		$allowed = array( 'p' => array(), 'br' => array(), 'ul' => array(), 'ol' => array(), 'li' => array(), 'strong' => array(), 'em' => array(), 'a' => array( 'href' => array() ) );
 		$body    = is_string( $response ) ? trim( $response ) : '';
 		$body    = wp_kses( $body, $allowed );
+		$body    = self::strip_leading_greeting( $body );
 		if ( '' === $body ) {
 			$body = '<p></p>';
 		}
 		return 'Hi,<br><br>' . $body . '<br><br>Regards,';
+	}
+
+	/**
+	 * Remove leading greeting paragraph (e.g. "Dear Sir/Madam,") that the model may still output.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $html Body HTML.
+	 * @return string
+	 */
+	private static function strip_leading_greeting( string $html ): string {
+		$pattern = '/^\s*<p>\s*(Dear\s+(?:Sir\/Madam|[^<]+),\s*|Hello,?\s*|Hi,?\s*)\s*<\/p>\s*/iu';
+		return preg_replace( $pattern, '', $html );
 	}
 
 	/**
@@ -274,7 +284,7 @@ class Controller {
 	private static function request_openai_direct( string $api_key, string $system, string $prompt ) {
 		$body = wp_json_encode(
 			array(
-				'model'    => 'gpt-4o-mini',
+				'model'    => self::OPENAI_MODEL,
 				'messages' => array(
 					array( 'role' => 'system', 'content' => $system ),
 					array( 'role' => 'user', 'content' => $prompt ),

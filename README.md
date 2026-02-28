@@ -1,18 +1,18 @@
 # Wordish
 
-WordPress plugin that turns rough notes or bullet points into professional, email-ready HTML using AI (OpenAI). Output can be copied and pasted into HelpScout or similar tools.
+WordPress plugin that turns rough notes or bullet points into professional, email-ready HTML using AI. Output can be copied and pasted into HelpScout or similar tools. Uses the [WordPress AI Client](https://github.com/WordPress/wp-ai-client); configure API keys in **Settings → AI Credentials**.
 
 ## Requirements
 
 - PHP 7.4+
 - WordPress 5.9+
-- OpenAI API key
+- API key from a supported provider (e.g. OpenAI), set in **Settings → AI Credentials**
 
 ## Installation
 
 1. Install dependencies: `composer install`
 2. Activate the plugin in **Plugins**.
-3. Set your **OpenAI API key** in **Settings → General → Wordish**.
+3. Set your API key in **Settings → AI Credentials** (e.g. OpenAI or another supported provider).
 
 ## Usage
 
