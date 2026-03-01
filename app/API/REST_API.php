@@ -161,8 +161,10 @@ class REST_API {
 			);
 		}
 
-		$cache_key = 'wordish_' . md5( $input . '|' . $tone );
-		$cached    = get_transient( $cache_key );
+		$valid_slugs = Tone_Utils::get_valid_slugs();
+		$tone        = ( is_string( $tone ) && in_array( $tone, $valid_slugs, true ) ) ? $tone : Tone_Utils::DEFAULT_TONE;
+		$cache_key   = 'wordish_' . $tone . '_' . md5( $input );
+		$cached      = get_transient( $cache_key );
 		if ( false !== $cached && is_string( $cached ) ) {
 			return new WP_REST_Response(
 				[
