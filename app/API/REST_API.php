@@ -1,6 +1,6 @@
 <?php
 /**
- * REST API for Wordish generate endpoint.
+ * REST API for text generation
  *
  * @package Nilambar\Wordish
  */
@@ -8,6 +8,7 @@
 namespace Nilambar\Wordish\API;
 
 use Nilambar\Wordish\Utils\Credential_Utils;
+use Nilambar\Wordish\Utils\Prompt_Utils;
 use Nilambar\Wordish\Utils\Tone_Utils;
 use WP_Error;
 use WP_REST_Request;
@@ -202,16 +203,15 @@ class REST_API {
 	 */
 	private static function call_ai( string $input, string $tone ) {
 		$tone_label = Tone_Utils::get_tone_label( $tone );
-
-		$system = sprintf(
-			'You are an expert at turning draft notes into polished email body text. Your tasks: (1) Check and fix all grammar, spelling, punctuation, and sentence structure in the draft. (2) Write as a direct email from sender to recipient: use first person for the sender ("I", "we", "my", "our") and second person for the recipient ("you", "your")—never use third person ("they", "their", "them") for either party. (3) Output ONLY the middle part of the email as clean HTML (use <p>, <ul>, <li>, <strong>, <br> as needed). CRITICAL: Do NOT include any opening greeting (no "Dear", "Hello", "Hi", "Dear Sir/Madam", or similar) and do NOT include any closing (no "Regards", "Sincerely", "Best", or similar). The output will be wrapped with "Hi," and "Regards," separately. Start your output directly with the first paragraph of content. Never add information not present in the original input. Tone: %s.',
-			$tone_label
-		);
-
-		$prompt = sprintf(
-			'Convert the following draft notes into a single email body in HTML. Write as sender to recipient: use "I"/"we"/"my"/"our" for the sender and "you"/"your" for the recipient; do not use "they"/"their"/"them" for either. First check and fix any grammar, spelling, punctuation, or sentence-structure errors in the draft. Output ONLY the middle content (corrected and polished). Do NOT start with any greeting (no Dear/Hello/Hi). Do NOT end with any sign-off. Do not add any information that is not in the draft notes. Start directly with the first paragraph:' . "\n\n%s",
-			$input
-		);
+		$system     = Prompt_Utils::get_email_system_prompt( $tone_label );
+		$prompt     = Prompt_Utils::get_email_user_prompt( $input );
+		if ( '' === $system || '' === $prompt ) {
+			return new WP_Error(
+				'wordish_missing_prompts',
+				__( 'Prompt templates are missing.', 'wordish' ),
+				[ 'status' => 503 ]
+			);
+		}
 
 		$builder = wp_ai_client_prompt( $prompt )
 			->using_system_instruction( $system )
