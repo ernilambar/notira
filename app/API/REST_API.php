@@ -268,23 +268,9 @@ class REST_API {
 		];
 		$body    = is_string( $response ) ? trim( $response ) : '';
 		$body    = wp_kses( $body, $allowed );
-		$body    = self::strip_leading_greeting( $body );
 		if ( '' === $body ) {
 			$body = '<p></p>';
 		}
 		return 'Hi,<br>' . $body . '<br>Regards,';
-	}
-
-	/**
-	 * Remove leading greeting paragraph (e.g. "Dear Sir/Madam,") that the model may still output.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $html Body HTML.
-	 * @return string
-	 */
-	private static function strip_leading_greeting( string $html ): string {
-		$pattern = '/^\s*<p>\s*(Dear\s+(?:Sir\/Madam|[^<]+),\s*|Hello,?\s*|Hi,?\s*)\s*<\/p>\s*/iu';
-		return preg_replace( $pattern, '', $html );
 	}
 }
