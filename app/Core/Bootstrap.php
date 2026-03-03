@@ -83,7 +83,7 @@ class Bootstrap {
 	 */
 	public static function set_favicon(): void {
 		if ( isset( $_GET['page'] ) && self::ADMIN_PAGE_SLUG === $_GET['page'] ) {
-			$icon_url = WORDISH_URL . '/static/favicon.png';
+			$icon_url = WORDISH_URL . '/build/favicon.png';
 
 			echo '<link rel="shortcut icon" type="image/png" href="' . esc_url( $icon_url ) . '">' . "\n";
 			echo '<link rel="icon" type="image/png" href="' . esc_url( $icon_url ) . '">' . "\n";
