@@ -6,13 +6,6 @@
 	"license": "GPL-2.0-or-later",
 	"type": "module",
 	"browserslist": "> 2%, last 2 versions, not dead",
-	"build": {
-		"entries": [
-			"main"
-		],
-		"srcDir": "src",
-		"outDir": "build"
-	},
 	"devDependencies": {
 		"@wordpress/prettier-config": "^4.38.0",
 		"postcss-nested": "^7.0.2",
@@ -21,8 +14,8 @@
 		"vite": "^7.3.1"
 	},
 	"scripts": {
-		"dev": "node scripts/build.mjs --watch",
-		"build": "node scripts/build.mjs",
+		"dev": "vite build --watch",
+		"build": "vite build",
 		"format": "prettier \"**/*.{cjs,css,js,json,mjs}\" --write --log-level warn"
 	},
 	"dependencies": {
