@@ -30,6 +30,13 @@ function updateCount() {
 	} else {
 		countEl.parentNode.classList.remove( 'wordish-at-limit' );
 	}
+	updateGenerateButtonState();
+}
+
+function updateGenerateButtonState() {
+	if ( ! generateBtn ) return;
+	const len = inputEl ? inputEl.value.trim().length : 0;
+	generateBtn.disabled = len < minLength;
 }
 
 function getTone() {
@@ -42,6 +49,12 @@ function setOutput( html ) {
 	outputEl.innerHTML = html || '';
 	outputEl.setAttribute( 'data-html', html ? 'true' : 'false' );
 	outputEl.setAttribute( 'data-empty', html ? 'false' : 'true' );
+	updateCopyButtonState();
+}
+
+function updateCopyButtonState() {
+	if ( ! copyBtn || ! outputEl ) return;
+	copyBtn.disabled = outputEl.getAttribute( 'data-empty' ) === 'true';
 }
 
 function setCopyButtonCopied() {
@@ -56,6 +69,10 @@ function setCopyButtonCopied() {
 
 function handleCopyClick() {
 	if ( ! outputEl ) return;
+	if ( outputEl.getAttribute( 'data-empty' ) === 'true' ) {
+		showToast( i18n.nothingToCopy || '', 'error' );
+		return;
+	}
 	const html = outputEl.innerHTML || '';
 	const text = outputEl.innerText || outputEl.textContent || '';
 
@@ -124,7 +141,7 @@ function generate() {
 			showToast( i18n.networkError || '', 'error' );
 		} )
 		.finally( () => {
-			if ( generateBtn ) generateBtn.disabled = false;
+			updateGenerateButtonState();
 			if ( generateSpinner ) generateSpinner.classList.remove( 'is-active' );
 		} );
 }
@@ -136,9 +153,11 @@ if ( inputEl ) {
 }
 
 if ( generateBtn ) {
+	updateGenerateButtonState();
 	generateBtn.addEventListener( 'click', debounce( generate, 300 ) );
 }
 
 if ( copyBtn ) {
+	updateCopyButtonState();
 	copyBtn.addEventListener( 'click', debounce( handleCopyClick, 300 ) );
 }

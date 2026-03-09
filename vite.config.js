@@ -1,5 +1,6 @@
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
+import browserslistToEsbuild from 'browserslist-to-esbuild';
 
 const __dirname = fileURLToPath( new URL( '.', import.meta.url ) );
 const root = resolve( __dirname, '.' );
@@ -11,6 +12,8 @@ export default {
 	build: {
 		outDir: 'build',
 		emptyOutDir: true,
+		sourcemap: false,
+		target: browserslistToEsbuild(),
 		rollupOptions: {
 			input: {
 				main: 'src/main.js',
@@ -21,7 +24,6 @@ export default {
 				assetFileNames: '[name][extname]',
 			},
 		},
-		sourcemap: false,
 	},
 	resolve: {
 		alias: {

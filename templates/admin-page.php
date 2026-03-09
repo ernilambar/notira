@@ -15,6 +15,7 @@ defined( 'ABSPATH' ) || exit;
 $has_credentials  = Credential_Utils::has_ai_credentials();
 $tones            = Tone_Utils::get_tone_options();
 $default_tone     = Tone_Utils::DEFAULT_TONE;
+$input_min_length = REST_API::INPUT_MIN_LENGTH;
 $input_max_length = REST_API::INPUT_MAX_LENGTH;
 ?>
 
@@ -26,7 +27,7 @@ $input_max_length = REST_API::INPUT_MAX_LENGTH;
 			<div class="wordish-panel">
 				<div class="wordish-input-section">
 					<label for="wordish-input">
-						<?php esc_html_e( 'Draft notes or bullet points', 'wordish' ); ?>
+						<?php esc_html_e( 'Enter draft notes or bullet points', 'wordish' ); ?>
 					</label>
 					<textarea id="wordish-input"
 						class="wordish-textarea"
@@ -38,6 +39,12 @@ $input_max_length = REST_API::INPUT_MAX_LENGTH;
 					<p class="description wordish-char-count">
 						<span class="wordish-char-current">0</span> / <?php echo (int) $input_max_length; ?>
 						<?php esc_html_e( 'characters', 'wordish' ); ?>
+						<span class="wordish-char-limits">(
+						<?php
+							/* translators: %d: minimum character count */
+							printf( esc_html__( 'Min: %d chars', 'wordish' ), (int) $input_min_length );
+						?>
+						)</span>
 					</p>
 				</div>
 
