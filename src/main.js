@@ -30,13 +30,6 @@ function updateCount() {
 	} else {
 		countEl.parentNode.classList.remove( 'wordish-at-limit' );
 	}
-	updateGenerateButtonState();
-}
-
-function updateGenerateButtonState() {
-	if ( ! generateBtn ) return;
-	const len = inputEl ? inputEl.value.trim().length : 0;
-	generateBtn.disabled = len < minLength;
 }
 
 function getTone() {
@@ -49,12 +42,6 @@ function setOutput( html ) {
 	outputEl.innerHTML = html || '';
 	outputEl.setAttribute( 'data-html', html ? 'true' : 'false' );
 	outputEl.setAttribute( 'data-empty', html ? 'false' : 'true' );
-	updateCopyButtonState();
-}
-
-function updateCopyButtonState() {
-	if ( ! copyBtn || ! outputEl ) return;
-	copyBtn.disabled = outputEl.getAttribute( 'data-empty' ) === 'true';
 }
 
 function setCopyButtonCopied() {
@@ -102,7 +89,6 @@ function generate() {
 		showToast( i18n.textTooLong || '', 'error' );
 		return;
 	}
-	if ( generateBtn ) generateBtn.disabled = true;
 	if ( generateSpinner ) generateSpinner.classList.add( 'is-active' );
 
 	const body = JSON.stringify( { input: raw, tone: getTone() } );
@@ -141,7 +127,6 @@ function generate() {
 			showToast( i18n.networkError || '', 'error' );
 		} )
 		.finally( () => {
-			updateGenerateButtonState();
 			if ( generateSpinner ) generateSpinner.classList.remove( 'is-active' );
 		} );
 }
@@ -153,11 +138,9 @@ if ( inputEl ) {
 }
 
 if ( generateBtn ) {
-	updateGenerateButtonState();
 	generateBtn.addEventListener( 'click', debounce( generate, 300 ) );
 }
 
 if ( copyBtn ) {
-	updateCopyButtonState();
 	copyBtn.addEventListener( 'click', debounce( handleCopyClick, 300 ) );
 }
