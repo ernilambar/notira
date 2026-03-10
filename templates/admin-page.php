@@ -22,6 +22,7 @@ $input_max_length = REST_API::INPUT_MAX_LENGTH;
 <div class="wrap wordish-wrap">
 	<h1><?php esc_html_e( 'Wordish', 'wordish' ); ?></h1>
 
+	<div class="wordish-content">
 	<div class="wordish-columns">
 		<div class="wordish-column-left">
 			<div class="wordish-panel">
@@ -75,7 +76,7 @@ $input_max_length = REST_API::INPUT_MAX_LENGTH;
 		<div class="wordish-column-right">
 			<div class="wordish-output-section" id="wordish-output-section">
 				<div class="wordish-output-header">
-					<label><?php esc_html_e( 'Output (HTML)', 'wordish' ); ?></label>
+					<label><?php esc_html_e( 'Output', 'wordish' ); ?></label>
 					<button type="button" id="wordish-copy" class="button">
 						<?php esc_html_e( 'Copy', 'wordish' ); ?>
 					</button>
@@ -85,5 +86,6 @@ $input_max_length = REST_API::INPUT_MAX_LENGTH;
 				</div>
 			</div>
 		</div>
+	</div>
 	</div>
 </div>

@@ -3,6 +3,10 @@
 	min-height: 60vh;
 }
 
+.wordish-content {
+	background: #fff;
+}
+
 .wordish-columns {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -25,6 +29,7 @@
 	min-width: 0;
 	position: sticky;
 	top: 32px;
+	padding: 1.5rem;
 }
 
 @media screen and (max-width: 782px) {
@@ -34,9 +39,6 @@
 }
 
 .wordish-panel {
-	background: #fff;
-	border: 1px solid #c3c4c7;
-	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 	padding: 1.5rem;
 	margin: 0;
 }
