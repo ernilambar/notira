@@ -20,6 +20,7 @@ const i18n = config.i18n || {};
 const copyLabel = i18n.copyLabel || '';
 const copiedLabel = i18n.copiedLabel || '';
 let copyBtnRestoreTimeout = null;
+let inputErrorTimeout = null;
 
 function updateCount() {
 	if ( ! inputEl || ! countEl ) return;
@@ -78,7 +79,18 @@ function handleCopyClick() {
 function generate() {
 	const raw = inputEl ? inputEl.value.trim() : '';
 	if ( ! raw ) {
-		showToast( i18n.pleaseEnterText || '', 'error' );
+		if ( inputErrorTimeout ) clearTimeout( inputErrorTimeout );
+		if ( inputEl ) inputEl.focus();
+		if ( countEl ) {
+			const charCountEl = countEl.parentNode;
+			if ( charCountEl ) {
+				charCountEl.classList.add( 'wordish-char-count-error' );
+				inputErrorTimeout = setTimeout( () => {
+					charCountEl.classList.remove( 'wordish-char-count-error' );
+					inputErrorTimeout = null;
+				}, 3000 );
+			}
+		}
 		return;
 	}
 	if ( raw.length < minLength ) {

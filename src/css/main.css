@@ -55,8 +55,18 @@
 	box-sizing: border-box;
 }
 
+.wordish-textarea:focus {
+	border-color: #a0a5aa;
+	box-shadow: 0 0 0 1px #a0a5aa;
+	outline: 1px solid #a0a5aa;
+}
+
 .wordish-char-count {
 	margin-top: 0.25rem;
+}
+
+.wordish-char-count.wordish-char-count-error {
+	color: #b32d2e;
 }
 
 .wordish-tone-section {
