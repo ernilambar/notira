@@ -69,6 +69,7 @@ $input_max_length = REST_API::INPUT_MAX_LENGTH;
 					</button>
 					<span class="spinner" id="wordish-generate-spinner" aria-hidden="true"></span>
 				</div>
+				<div id="wordish-generation-meta" class="wordish-generation-meta is-empty" role="status" aria-live="polite"></div>
 			</div>
 			<div id="wordish-message" class="wordish-message" role="status" aria-live="polite"></div>
 		</div>

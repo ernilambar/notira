@@ -96,6 +96,22 @@
 	}
 }
 
+.wordish-generation-meta {
+	margin-top: 0.75rem;
+	font-size: 12px;
+	line-height: 1.5;
+	color: #646970;
+	max-width: 36rem;
+}
+
+.wordish-generation-meta.is-empty {
+	display: none;
+}
+
+.wordish-generation-meta-line + .wordish-generation-meta-line {
+	margin-top: 0.35rem;
+}
+
 .wordish-output-section {
 	margin: 0;
 
