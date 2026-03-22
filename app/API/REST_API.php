@@ -7,9 +7,11 @@
 
 namespace Nilambar\Wordish\API;
 
+use Nilambar\Wordish\Utils\AI_Model_Pricing;
 use Nilambar\Wordish\Utils\Credential_Utils;
 use Nilambar\Wordish\Utils\Prompt_Utils;
 use Nilambar\Wordish\Utils\Tone_Utils;
+use Throwable;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -166,14 +168,31 @@ class REST_API {
 		$tone        = ( is_string( $tone ) && in_array( $tone, $valid_slugs, true ) ) ? $tone : Tone_Utils::DEFAULT_TONE;
 		$cache_key   = 'wordish_' . $tone . '_' . md5( $input );
 		$cached      = get_transient( $cache_key );
-		if ( false !== $cached && is_string( $cached ) ) {
-			return new WP_REST_Response(
-				[
-					'success' => true,
-					'data'    => [ 'output' => $cached ],
-				],
-				200
-			);
+		if ( false !== $cached ) {
+			$cached_output = '';
+			$cached_meta   = null;
+			if ( is_array( $cached ) && isset( $cached['output'] ) && is_string( $cached['output'] ) ) {
+				$cached_output = $cached['output'];
+				$cached_meta   = isset( $cached['meta'] ) && is_array( $cached['meta'] ) ? $cached['meta'] : null;
+			} elseif ( is_string( $cached ) ) {
+				$cached_output = $cached;
+			}
+			if ( '' !== $cached_output ) {
+				$meta = is_array( $cached_meta )
+					? array_merge( $cached_meta, [ 'from_cache' => true ] )
+					: [ 'from_cache' => true ];
+				$meta = self::enrich_generation_meta( $meta );
+				return new WP_REST_Response(
+					[
+						'success' => true,
+						'data'    => [
+							'output' => $cached_output,
+							'meta'   => $meta,
+						],
+					],
+					200
+				);
+			}
 		}
 
 		$result = self::call_ai( $input, $tone );
@@ -181,15 +200,52 @@ class REST_API {
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
-		set_transient( $cache_key, $result, self::CACHE_DURATION );
+		set_transient(
+			$cache_key,
+			[
+				'output' => $result['output'],
+				'meta'   => $result['meta'],
+			],
+			self::CACHE_DURATION
+		);
+
+		$response_meta = self::enrich_generation_meta( $result['meta'] );
 
 		return new WP_REST_Response(
 			[
 				'success' => true,
-				'data'    => [ 'output' => $result ],
+				'data'    => [
+					'output' => $result['output'],
+					'meta'   => $response_meta,
+				],
 			],
 			200
 		);
+	}
+
+	/**
+	 * Final pass on generation meta before the REST response (currency equivalents, etc.).
+	 *
+	 * NPR uses WORDISH_NPR_RATE from the main plugin file; a rate of 0 skips the NPR field.
+	 * Values are not stored in transients so the rate can change without stale NPR.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array<string, mixed> $meta Response meta.
+	 * @return array<string, mixed>
+	 */
+	private static function enrich_generation_meta( array $meta ): array {
+		unset( $meta['estimated_cost_npr'] );
+		if ( ! isset( $meta['estimated_cost_usd'] ) || ! is_numeric( $meta['estimated_cost_usd'] ) ) {
+			return $meta;
+		}
+		$rate = (float) WORDISH_NPR_RATE;
+		if ( $rate <= 0 ) {
+			return $meta;
+		}
+		$usd                        = (float) $meta['estimated_cost_usd'];
+		$meta['estimated_cost_npr'] = round( $usd * $rate, 6 );
+		return $meta;
 	}
 
 	/**
@@ -199,7 +255,7 @@ class REST_API {
 	 *
 	 * @param string $input Raw user input.
 	 * @param string $tone  Tone slug.
-	 * @return string|WP_Error HTML output or error.
+	 * @return array{output: string, meta: array<string, mixed>}|WP_Error HTML output and metadata, or error.
 	 */
 	private static function call_ai( string $input, string $tone ) {
 		$tone_label = Tone_Utils::get_tone_label( $tone );
@@ -235,11 +291,11 @@ class REST_API {
 			);
 		}
 
-		$response = $builder->generate_text();
+		$result_obj = $builder->generate_text_result();
 
-		if ( is_wp_error( $response ) ) {
-			$msg  = $response->get_error_message();
-			$code = $response->get_error_code();
+		if ( is_wp_error( $result_obj ) ) {
+			$msg  = $result_obj->get_error_message();
+			$code = $result_obj->get_error_code();
 			if ( 'wordish_no_models' === $code || strpos( $msg, 'No models found' ) !== false ) {
 				return new WP_Error(
 					'wordish_no_models',
@@ -256,6 +312,24 @@ class REST_API {
 			return new WP_Error( 'wordish_ai_error', $msg ? $msg : __( 'AI request failed.', 'wordish' ), [ 'status' => 502 ] );
 		}
 
+		if ( ! is_object( $result_obj ) || ! method_exists( $result_obj, 'toText' ) ) {
+			return new WP_Error(
+				'wordish_ai_error',
+				__( 'AI request failed.', 'wordish' ),
+				[ 'status' => 502 ]
+			);
+		}
+
+		try {
+			$raw_text = trim( $result_obj->toText() );
+		} catch ( Throwable $e ) {
+			return new WP_Error(
+				'wordish_ai_error',
+				$e->getMessage() ? $e->getMessage() : __( 'AI request failed.', 'wordish' ),
+				[ 'status' => 502 ]
+			);
+		}
+
 		$allowed = [
 			'p'      => [],
 			'br'     => [],
@@ -266,11 +340,71 @@ class REST_API {
 			'em'     => [],
 			'a'      => [ 'href' => [] ],
 		];
-		$body    = is_string( $response ) ? trim( $response ) : '';
-		$body    = wp_kses( $body, $allowed );
+		$body    = wp_kses( $raw_text, $allowed );
 		if ( '' === $body ) {
 			$body = '<p></p>';
 		}
-		return 'Hi,<br>' . $body . '<br>Regards,';
+		$output = 'Hi,<br>' . $body . '<br>Regards,';
+
+		$meta = self::extract_generation_meta_from_result( $result_obj );
+		$cost = AI_Model_Pricing::estimate_from_meta( $meta );
+		if ( null !== $cost ) {
+			$meta['estimated_cost_usd'] = $cost;
+		}
+
+		return [
+			'output' => $output,
+			'meta'   => $meta,
+		];
+	}
+
+	/**
+	 * Build a small metadata array for the REST response from a generative AI result object.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param object $result Result object from the AI client (e.g. GenerativeAiResult).
+	 * @return array<string, mixed>
+	 */
+	private static function extract_generation_meta_from_result( object $result ): array {
+		$meta = [];
+
+		if ( method_exists( $result, 'getId' ) ) {
+			$meta['response_id'] = $result->getId();
+		}
+
+		if ( method_exists( $result, 'getTokenUsage' ) ) {
+			$usage = $result->getTokenUsage();
+			if ( is_object( $usage ) && method_exists( $usage, 'toArray' ) ) {
+				$meta['token_usage'] = $usage->toArray();
+			}
+		}
+
+		if ( method_exists( $result, 'getModelMetadata' ) ) {
+			$model = $result->getModelMetadata();
+			if ( is_object( $model ) && method_exists( $model, 'toArray' ) ) {
+				$arr           = $model->toArray();
+				$meta['model'] = [
+					'id'   => isset( $arr['id'] ) && is_string( $arr['id'] ) ? $arr['id'] : '',
+					'name' => isset( $arr['name'] ) && is_string( $arr['name'] ) ? $arr['name'] : '',
+				];
+				$meta['model'] = array_filter( $meta['model'] );
+			}
+		}
+
+		if ( method_exists( $result, 'getProviderMetadata' ) ) {
+			$provider = $result->getProviderMetadata();
+			if ( is_object( $provider ) && method_exists( $provider, 'toArray' ) ) {
+				$arr              = $provider->toArray();
+				$meta['provider'] = [
+					'id'   => isset( $arr['id'] ) && is_string( $arr['id'] ) ? $arr['id'] : '',
+					'name' => isset( $arr['name'] ) && is_string( $arr['name'] ) ? $arr['name'] : '',
+					'type' => isset( $arr['type'] ) && is_string( $arr['type'] ) ? $arr['type'] : '',
+				];
+				$meta['provider'] = array_filter( $meta['provider'] );
+			}
+		}
+
+		return $meta;
 	}
 }

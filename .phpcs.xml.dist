@@ -33,6 +33,9 @@
 	<!-- PHP version check. -->
 	<config name="testVersion" value="7.4-"/>
 
+	<!-- Loads the PHP Compatibility ruleset. -->
+	<rule ref="PHPCompatibility" />
+
 	<rule ref="NilambarCodingStandard" />
 
 	<!-- Don't worry about files that don't contain any code -->

@@ -13,6 +13,7 @@ const inputEl = document.getElementById( 'wordish-input' );
 const countEl = inputEl ? inputEl.parentNode.querySelector( '.wordish-char-current' ) : null;
 const generateBtn = document.getElementById( 'wordish-generate' );
 const generateSpinner = document.getElementById( 'wordish-generate-spinner' );
+const generationMetaEl = document.getElementById( 'wordish-generation-meta' );
 const outputSection = document.getElementById( 'wordish-output-section' );
 const outputEl = document.getElementById( 'wordish-output' );
 const copyBtn = document.getElementById( 'wordish-copy' );
@@ -43,6 +44,149 @@ function setOutput( html ) {
 	outputEl.innerHTML = html || '';
 	outputEl.setAttribute( 'data-html', html ? 'true' : 'false' );
 	outputEl.setAttribute( 'data-empty', html ? 'false' : 'true' );
+}
+
+function setGenerationMeta( meta ) {
+	if ( ! generationMetaEl ) return;
+	generationMetaEl.textContent = '';
+	generationMetaEl.classList.add( 'is-empty' );
+
+	if ( ! meta || typeof meta !== 'object' ) {
+		return;
+	}
+
+	const rows = [];
+	const provider = meta.provider;
+	const model = meta.model;
+	const tu = meta.token_usage;
+	const fromCache = Boolean( meta.from_cache );
+
+	if ( provider && typeof provider === 'object' ) {
+		const name = typeof provider.name === 'string' ? provider.name : '';
+		const id = typeof provider.id === 'string' ? provider.id : '';
+		const type = typeof provider.type === 'string' ? provider.type : '';
+		const parts = [];
+		if ( name ) {
+			parts.push( name );
+		} else if ( id ) {
+			parts.push( id );
+		}
+		if ( type && type !== id ) {
+			parts.push( type );
+		}
+		if ( parts.length ) {
+			rows.push( {
+				type: 'plain',
+				text: `${ i18n.metaProvider || 'Provider' }: ${ parts.join( ' · ' ) }`,
+			} );
+		}
+	}
+
+	if ( model && typeof model === 'object' ) {
+		const name = typeof model.name === 'string' ? model.name : '';
+		const id = typeof model.id === 'string' ? model.id : '';
+		let modelLine = '';
+		if ( name && id && name !== id ) {
+			modelLine = `${ name } (${ id })`;
+		} else if ( name || id ) {
+			modelLine = name || id;
+		}
+		if ( modelLine ) {
+			rows.push( {
+				type: 'plain',
+				text: `${ i18n.metaModel || 'Model' }: ${ modelLine }`,
+			} );
+		}
+	}
+
+	if ( tu && typeof tu === 'object' ) {
+		const parts = [];
+		if ( typeof tu.promptTokens === 'number' ) {
+			parts.push( `${ i18n.metaPrompt || 'Prompt' }: ${ tu.promptTokens }` );
+		}
+		if ( typeof tu.completionTokens === 'number' ) {
+			parts.push( `${ i18n.metaCompletion || 'Completion' }: ${ tu.completionTokens }` );
+		}
+		if ( typeof tu.totalTokens === 'number' ) {
+			parts.push( `${ i18n.metaTotal || 'Total' }: ${ tu.totalTokens }` );
+		}
+		if ( typeof tu.thoughtTokens === 'number' ) {
+			parts.push( `${ i18n.metaThought || 'Thought' }: ${ tu.thoughtTokens }` );
+		}
+		if ( parts.length ) {
+			rows.push( {
+				type: 'plain',
+				text: `${ i18n.metaTokens || 'Tokens' }: ${ parts.join( ' · ' ) }`,
+			} );
+		}
+	}
+
+	const costRaw = meta.estimated_cost_usd;
+	const costNum =
+		typeof costRaw === 'number'
+			? costRaw
+			: typeof costRaw === 'string' && costRaw !== ''
+			? Number( costRaw )
+			: NaN;
+	if ( Number.isFinite( costNum ) && costNum >= 0 ) {
+		const formatted = new Intl.NumberFormat( undefined, {
+			style: 'currency',
+			currency: 'USD',
+			minimumFractionDigits: 0,
+			maximumFractionDigits: 6,
+		} ).format( costNum );
+		const tpl = i18n.metaEstimatedCostTpl || 'Est. Cost: ≈ %s';
+		const usdLine = tpl.replace( '%s', formatted );
+		const nprRaw = meta.estimated_cost_npr;
+		const nprNum =
+			typeof nprRaw === 'number'
+				? nprRaw
+				: typeof nprRaw === 'string' && nprRaw !== ''
+				? Number( nprRaw )
+				: NaN;
+		let nprFormatted = '';
+		if ( Number.isFinite( nprNum ) && nprNum >= 0 ) {
+			const nprAmount = new Intl.NumberFormat( undefined, {
+				minimumFractionDigits: 0,
+				maximumFractionDigits: 4,
+			} ).format( nprNum );
+			const nprPrefix = ( i18n.metaNprPrefix || 'Rs.' ).trim();
+			nprFormatted = nprPrefix ? `${ nprPrefix } ${ nprAmount }` : nprAmount;
+		}
+		rows.push( { type: 'cost', usdLine, nprFormatted } );
+	}
+
+	if ( fromCache && rows.length === 0 ) {
+		rows.push( { type: 'plain', text: i18n.metaFromCache || '' } );
+	} else if ( fromCache && rows.length > 0 ) {
+		rows.push( { type: 'plain', text: i18n.metaFromCache || '' } );
+	}
+
+	const filtered = rows.filter( ( r ) => r.type === 'cost' || ( r.type === 'plain' && r.text ) );
+	if ( ! filtered.length ) {
+		return;
+	}
+
+	generationMetaEl.classList.remove( 'is-empty' );
+	const frag = document.createDocumentFragment();
+	filtered.forEach( ( row ) => {
+		const lineEl = document.createElement( 'div' );
+		lineEl.className = 'wordish-generation-meta-line';
+		if ( row.type === 'cost' ) {
+			lineEl.classList.add( 'wordish-generation-meta-line--cost' );
+			lineEl.appendChild( document.createTextNode( row.usdLine ) );
+			if ( row.nprFormatted ) {
+				const nprEl = document.createElement( 'span' );
+				nprEl.className = 'wordish-meta-cost-npr';
+				nprEl.textContent = ` (${ row.nprFormatted })`;
+				lineEl.appendChild( nprEl );
+			}
+		} else {
+			lineEl.textContent = row.text;
+		}
+		frag.appendChild( lineEl );
+	} );
+	generationMetaEl.appendChild( frag );
 }
 
 function setCopyButtonCopied() {
@@ -102,6 +246,7 @@ function generate() {
 		return;
 	}
 	if ( generateSpinner ) generateSpinner.classList.add( 'is-active' );
+	setGenerationMeta( null );
 
 	const body = JSON.stringify( { input: raw, tone: getTone() } );
 	const headers = {
@@ -125,8 +270,10 @@ function generate() {
 		.then( ( result ) => {
 			if ( result.ok && result.data?.data?.output ) {
 				setOutput( result.data.data.output );
+				setGenerationMeta( result.data.data.meta );
 				showToast( i18n.generatedSuccess || '', 'success' );
 			} else {
+				setGenerationMeta( null );
 				const msg =
 					result.data?.message ||
 					result.data?.code ||
@@ -136,6 +283,7 @@ function generate() {
 			}
 		} )
 		.catch( () => {
+			setGenerationMeta( null );
 			showToast( i18n.networkError || '', 'error' );
 		} )
 		.finally( () => {
