@@ -112,6 +112,11 @@
 	margin-top: 0.35rem;
 }
 
+.wordish-meta-cost-npr {
+	font-size: 0.85em;
+	opacity: 0.92;
+}
+
 .wordish-output-section {
 	margin: 0;
 

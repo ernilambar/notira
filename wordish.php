@@ -25,6 +25,7 @@ define( 'WORDISH_BASE_FILEPATH', __FILE__ );
 define( 'WORDISH_BASE_FILENAME', plugin_basename( __FILE__ ) );
 define( 'WORDISH_DIR', rtrim( plugin_dir_path( __FILE__ ), '/' ) );
 define( 'WORDISH_URL', rtrim( plugin_dir_url( __FILE__ ), '/' ) );
+define( 'WORDISH_NPR_RATE', 145 );
 
 if ( file_exists( WORDISH_DIR . '/vendor/autoload.php' ) ) {
 	require_once WORDISH_DIR . '/vendor/autoload.php';

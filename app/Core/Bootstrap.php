@@ -209,6 +209,7 @@ class Bootstrap {
 				'metaThought'          => __( 'Thought', 'wordish' ),
 				'metaFromCache'        => __( 'Served from cache.', 'wordish' ),
 				'metaEstimatedCostTpl' => __( 'Est. Cost: ≈ %s', 'wordish' ),
+				'metaNprPrefix'        => __( 'Rs.', 'wordish' ),
 			],
 		];
 

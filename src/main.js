@@ -55,7 +55,7 @@ function setGenerationMeta( meta ) {
 		return;
 	}
 
-	const lines = [];
+	const rows = [];
 	const provider = meta.provider;
 	const model = meta.model;
 	const tu = meta.token_usage;
@@ -75,7 +75,10 @@ function setGenerationMeta( meta ) {
 			parts.push( type );
 		}
 		if ( parts.length ) {
-			lines.push( `${ i18n.metaProvider || 'Provider' }: ${ parts.join( ' · ' ) }` );
+			rows.push( {
+				type: 'plain',
+				text: `${ i18n.metaProvider || 'Provider' }: ${ parts.join( ' · ' ) }`,
+			} );
 		}
 	}
 
@@ -89,7 +92,10 @@ function setGenerationMeta( meta ) {
 			modelLine = name || id;
 		}
 		if ( modelLine ) {
-			lines.push( `${ i18n.metaModel || 'Model' }: ${ modelLine }` );
+			rows.push( {
+				type: 'plain',
+				text: `${ i18n.metaModel || 'Model' }: ${ modelLine }`,
+			} );
 		}
 	}
 
@@ -108,7 +114,10 @@ function setGenerationMeta( meta ) {
 			parts.push( `${ i18n.metaThought || 'Thought' }: ${ tu.thoughtTokens }` );
 		}
 		if ( parts.length ) {
-			lines.push( `${ i18n.metaTokens || 'Tokens' }: ${ parts.join( ' · ' ) }` );
+			rows.push( {
+				type: 'plain',
+				text: `${ i18n.metaTokens || 'Tokens' }: ${ parts.join( ' · ' ) }`,
+			} );
 		}
 	}
 
@@ -127,27 +136,55 @@ function setGenerationMeta( meta ) {
 			maximumFractionDigits: 6,
 		} ).format( costNum );
 		const tpl = i18n.metaEstimatedCostTpl || 'Est. Cost: ≈ %s';
-		lines.push( tpl.replace( '%s', formatted ) );
+		const usdLine = tpl.replace( '%s', formatted );
+		const nprRaw = meta.estimated_cost_npr;
+		const nprNum =
+			typeof nprRaw === 'number'
+				? nprRaw
+				: typeof nprRaw === 'string' && nprRaw !== ''
+				? Number( nprRaw )
+				: NaN;
+		let nprFormatted = '';
+		if ( Number.isFinite( nprNum ) && nprNum >= 0 ) {
+			const nprAmount = new Intl.NumberFormat( undefined, {
+				minimumFractionDigits: 0,
+				maximumFractionDigits: 4,
+			} ).format( nprNum );
+			const nprPrefix = ( i18n.metaNprPrefix || 'Rs.' ).trim();
+			nprFormatted = nprPrefix ? `${ nprPrefix } ${ nprAmount }` : nprAmount;
+		}
+		rows.push( { type: 'cost', usdLine, nprFormatted } );
 	}
 
-	if ( fromCache && lines.length === 0 ) {
-		lines.push( i18n.metaFromCache || '' );
-	} else if ( fromCache && lines.length > 0 ) {
-		lines.push( i18n.metaFromCache || '' );
+	if ( fromCache && rows.length === 0 ) {
+		rows.push( { type: 'plain', text: i18n.metaFromCache || '' } );
+	} else if ( fromCache && rows.length > 0 ) {
+		rows.push( { type: 'plain', text: i18n.metaFromCache || '' } );
 	}
 
-	const filtered = lines.filter( Boolean );
+	const filtered = rows.filter( ( r ) => r.type === 'cost' || ( r.type === 'plain' && r.text ) );
 	if ( ! filtered.length ) {
 		return;
 	}
 
 	generationMetaEl.classList.remove( 'is-empty' );
 	const frag = document.createDocumentFragment();
-	filtered.forEach( ( text ) => {
-		const row = document.createElement( 'div' );
-		row.className = 'wordish-generation-meta-line';
-		row.textContent = text;
-		frag.appendChild( row );
+	filtered.forEach( ( row ) => {
+		const lineEl = document.createElement( 'div' );
+		lineEl.className = 'wordish-generation-meta-line';
+		if ( row.type === 'cost' ) {
+			lineEl.classList.add( 'wordish-generation-meta-line--cost' );
+			lineEl.appendChild( document.createTextNode( row.usdLine ) );
+			if ( row.nprFormatted ) {
+				const nprEl = document.createElement( 'span' );
+				nprEl.className = 'wordish-meta-cost-npr';
+				nprEl.textContent = ` (${ row.nprFormatted })`;
+				lineEl.appendChild( nprEl );
+			}
+		} else {
+			lineEl.textContent = row.text;
+		}
+		frag.appendChild( lineEl );
 	} );
 	generationMetaEl.appendChild( frag );
 }

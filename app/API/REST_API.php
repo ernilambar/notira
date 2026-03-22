@@ -181,6 +181,7 @@ class REST_API {
 				$meta = is_array( $cached_meta )
 					? array_merge( $cached_meta, [ 'from_cache' => true ] )
 					: [ 'from_cache' => true ];
+				$meta = self::enrich_generation_meta( $meta );
 				return new WP_REST_Response(
 					[
 						'success' => true,
@@ -208,16 +209,43 @@ class REST_API {
 			self::CACHE_DURATION
 		);
 
+		$response_meta = self::enrich_generation_meta( $result['meta'] );
+
 		return new WP_REST_Response(
 			[
 				'success' => true,
 				'data'    => [
 					'output' => $result['output'],
-					'meta'   => $result['meta'],
+					'meta'   => $response_meta,
 				],
 			],
 			200
 		);
+	}
+
+	/**
+	 * Final pass on generation meta before the REST response (currency equivalents, etc.).
+	 *
+	 * NPR uses WORDISH_NPR_RATE from the main plugin file; a rate of 0 skips the NPR field.
+	 * Values are not stored in transients so the rate can change without stale NPR.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array<string, mixed> $meta Response meta.
+	 * @return array<string, mixed>
+	 */
+	private static function enrich_generation_meta( array $meta ): array {
+		unset( $meta['estimated_cost_npr'] );
+		if ( ! isset( $meta['estimated_cost_usd'] ) || ! is_numeric( $meta['estimated_cost_usd'] ) ) {
+			return $meta;
+		}
+		$rate = (float) WORDISH_NPR_RATE;
+		if ( $rate <= 0 ) {
+			return $meta;
+		}
+		$usd                        = (float) $meta['estimated_cost_usd'];
+		$meta['estimated_cost_npr'] = round( $usd * $rate, 6 );
+		return $meta;
 	}
 
 	/**
