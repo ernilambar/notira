@@ -54,11 +54,29 @@ class Bootstrap {
 			return;
 		}
 
-		if ( Credential_Utils::has_ai_credentials() ) {
+		if ( Credential_Utils::supports_ai() && Credential_Utils::has_ai_credentials() ) {
 			return;
 		}
 
-		$connectors_url = admin_url( 'options-general.php?page=connectors-wp-admin' );
+		if ( ! Credential_Utils::supports_ai() ) {
+			if ( ! function_exists( 'wp_supports_ai' ) ) {
+				$message = esc_html__( 'Wordish requires WordPress AI support (WordPress 7.0+). AI features are unavailable in this installation.', 'wordish' );
+			} else {
+				$message = esc_html__( 'WordPress AI is disabled on this site (for example via the WP_AI_SUPPORT constant or a filter). Wordish cannot generate text until AI support is enabled.', 'wordish' );
+			}
+
+			wp_admin_notice(
+				$message,
+				[
+					'type'        => 'warning',
+					'dismissible' => false,
+				]
+			);
+
+			return;
+		}
+
+		$connectors_url = admin_url( 'options-connectors.php' );
 
 		$message = sprintf(
 			/* translators: 1: opening link tag, 2: closing link tag */

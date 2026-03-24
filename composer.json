@@ -1,8 +1,8 @@
 {
-	"name": "nilambar/wordish",
+	"name": "ernilambar/wordish",
 	"description": "WordPress plugin to improve draft notes into professional email-ready HTML.",
 	"license": "GPL-2.0-or-later",
-	"type": "project",
+	"type": "wordpress-plugin",
 	"require": {
 		"php": ">=7.4"
 	},
@@ -10,7 +10,7 @@
 		"dealerdirect/phpcodesniffer-composer-installer": "^1",
 		"ernilambar/coding-standard": "^1",
 		"php-parallel-lint/php-parallel-lint": "^1.4",
-		"phpcompatibility/php-compatibility": "^10.0@alpha",
+		"phpcompatibility/php-compatibility": "^10",
 		"slevomat/coding-standard": "^8",
 		"wp-coding-standards/wpcs": "^3"
 	},
