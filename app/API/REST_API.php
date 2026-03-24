@@ -145,6 +145,14 @@ class REST_API {
 	 * @return WP_REST_Response|WP_Error
 	 */
 	public static function generate( WP_REST_Request $request ) {
+		if ( ! Credential_Utils::supports_ai() ) {
+			return new WP_Error(
+				'wordish_ai_unsupported',
+				__( 'WordPress AI is not available or is disabled on this site.', 'wordish' ),
+				[ 'status' => 503 ]
+			);
+		}
+
 		if ( ! Credential_Utils::has_ai_credentials() ) {
 			return new WP_Error(
 				'wordish_no_api_key',
