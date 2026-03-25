@@ -71,7 +71,13 @@ $input_max_length = REST_API::INPUT_MAX_LENGTH;
 				</div>
 				<div id="wordish-generation-meta" class="wordish-generation-meta is-empty" role="status" aria-live="polite"></div>
 			</div>
-			<div id="wordish-message" class="wordish-message" role="status" aria-live="polite"></div>
+			<div
+				id="wordish-notice"
+				class="wordish-notice wordish-notice--hidden"
+				role="status"
+				aria-live="polite"
+				aria-hidden="true"
+			></div>
 		</div>
 
 		<div class="wordish-column-right">

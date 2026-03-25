@@ -14,13 +14,12 @@ const countEl = inputEl ? inputEl.parentNode.querySelector( '.wordish-char-curre
 const generateBtn = document.getElementById( 'wordish-generate' );
 const generateSpinner = document.getElementById( 'wordish-generate-spinner' );
 const generationMetaEl = document.getElementById( 'wordish-generation-meta' );
+const noticeEl = document.getElementById( 'wordish-notice' );
 const outputSection = document.getElementById( 'wordish-output-section' );
 const outputEl = document.getElementById( 'wordish-output' );
 const copyBtn = document.getElementById( 'wordish-copy' );
 const i18n = config.i18n || {};
-const copyLabel = i18n.copyLabel || '';
 const copiedLabel = i18n.copiedLabel || '';
-let copyBtnRestoreTimeout = null;
 let inputErrorTimeout = null;
 
 function updateCount() {
@@ -44,6 +43,24 @@ function setOutput( html ) {
 	outputEl.innerHTML = html || '';
 	outputEl.setAttribute( 'data-html', html ? 'true' : 'false' );
 	outputEl.setAttribute( 'data-empty', html ? 'false' : 'true' );
+}
+
+function setNotice( message, type ) {
+	if ( ! noticeEl ) {
+		return;
+	}
+	if ( ! message ) {
+		noticeEl.textContent = '';
+		noticeEl.className = 'wordish-notice wordish-notice--hidden';
+		noticeEl.setAttribute( 'aria-hidden', 'true' );
+		noticeEl.setAttribute( 'role', 'status' );
+		return;
+	}
+	noticeEl.textContent = message;
+	const kind = type === 'error' ? 'error' : 'success';
+	noticeEl.className = `wordish-notice wordish-notice--${ kind }`;
+	noticeEl.setAttribute( 'aria-hidden', 'false' );
+	noticeEl.setAttribute( 'role', type === 'error' ? 'alert' : 'status' );
 }
 
 function setGenerationMeta( meta ) {
@@ -189,16 +206,6 @@ function setGenerationMeta( meta ) {
 	generationMetaEl.appendChild( frag );
 }
 
-function setCopyButtonCopied() {
-	if ( ! copyBtn ) return;
-	if ( copyBtnRestoreTimeout ) clearTimeout( copyBtnRestoreTimeout );
-	copyBtn.textContent = copiedLabel;
-	copyBtnRestoreTimeout = setTimeout( () => {
-		copyBtn.textContent = copyLabel;
-		copyBtnRestoreTimeout = null;
-	}, 3000 );
-}
-
 function handleCopyClick() {
 	if ( ! outputEl ) return;
 	if ( outputEl.getAttribute( 'data-empty' ) === 'true' ) {
@@ -210,7 +217,6 @@ function handleCopyClick() {
 
 	copyToClipboard( { text, html } )
 		.then( () => {
-			setCopyButtonCopied();
 			showToast( copiedLabel, 'success' );
 		} )
 		.catch( ( err ) => {
@@ -238,13 +244,14 @@ function generate() {
 		return;
 	}
 	if ( raw.length < minLength ) {
-		showToast( i18n.inputTooShort || '', 'error' );
+		setNotice( i18n.inputTooShort || '', 'error' );
 		return;
 	}
 	if ( raw.length > maxLength ) {
-		showToast( i18n.textTooLong || '', 'error' );
+		setNotice( i18n.textTooLong || '', 'error' );
 		return;
 	}
+	setNotice();
 	if ( generateSpinner ) generateSpinner.classList.add( 'is-active' );
 	setGenerationMeta( null );
 
@@ -271,7 +278,7 @@ function generate() {
 			if ( result.ok && result.data?.data?.output ) {
 				setOutput( result.data.data.output );
 				setGenerationMeta( result.data.data.meta );
-				showToast( i18n.generatedSuccess || '', 'success' );
+				setNotice( i18n.generatedSuccess || '', 'success' );
 			} else {
 				setGenerationMeta( null );
 				const msg =
@@ -279,12 +286,12 @@ function generate() {
 					result.data?.code ||
 					i18n.requestFailed ||
 					i18n.somethingWentWrong;
-				showToast( msg || '', 'error' );
+				setNotice( msg || '', 'error' );
 			}
 		} )
 		.catch( () => {
 			setGenerationMeta( null );
-			showToast( i18n.networkError || '', 'error' );
+			setNotice( i18n.networkError || '', 'error' );
 		} )
 		.finally( () => {
 			if ( generateSpinner ) generateSpinner.classList.remove( 'is-active' );
