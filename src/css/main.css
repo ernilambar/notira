@@ -166,15 +166,30 @@
 	display: none;
 }
 
-.wordish-message {
-	margin-top: 0.75rem;
-	min-height: 1.5em;
+.wordish-notice {
+	padding: 0.75rem 1rem;
+	border-radius: 2px;
+	border: 1px solid transparent;
+	font-size: 13px;
+	line-height: 1.5;
+	margin-left: 1.5rem;
+	margin-bottom: 1.5rem;
 }
 
-.wordish-message.error {
-	color: #b32d2e;
+.wordish-notice--hidden {
+	display: none;
 }
 
-.wordish-message.success {
-	color: #00a32a;
+.wordish-notice--success {
+	background: #edfaef;
+	border-color: #68de7c;
+	color: #1e4620;
+	box-shadow: inset 4px 0 0 0 #00a32a;
+}
+
+.wordish-notice--error {
+	background: #fcf0f1;
+	border-color: #f0b0b5;
+	color: #2c3338;
+	box-shadow: inset 4px 0 0 0 #d63638;
 }

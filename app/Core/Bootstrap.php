@@ -203,7 +203,6 @@ class Bootstrap {
 			'minLength' => REST_API::INPUT_MIN_LENGTH,
 			'maxLength' => REST_API::INPUT_MAX_LENGTH,
 			'i18n'      => [
-				'copyLabel'            => __( 'Copy', 'wordish' ),
 				'copiedLabel'          => __( 'Copied', 'wordish' ),
 				'inputTooShort'        => sprintf(
 					/* translators: %d: min character count */
