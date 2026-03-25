@@ -7,7 +7,7 @@
 	"type": "module",
 	"browserslist": "> 2%, last 2 versions, not dead",
 	"dependencies": {
-		"toastle": "^2.0.0"
+		"toastle": "^2.1.0"
 	},
 	"devDependencies": {
 		"@wordpress/prettier-config": "^4.42.0",
@@ -16,7 +16,7 @@
 		"postcss": "^8.5.8",
 		"postcss-nested": "^7.0.2",
 		"prettier": "npm:wp-prettier@^3.0.3",
-		"vite": "^8.0.1"
+		"vite": "^8.0.2"
 	},
 	"scripts": {
 		"dev": "vite build --watch",
