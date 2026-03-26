@@ -230,10 +230,3 @@
 	vertical-align: middle;
 	white-space: nowrap;
 }
-
-#notira-root .notira-inline-validation {
-	margin: 0.35rem 0 0;
-	color: #b32d2e;
-	font-size: 13px;
-	line-height: 1.5;
-}

@@ -268,9 +268,12 @@
 					placeholder={i18n.inputPlaceholder}
 					disabled={! aiUiEnabled}
 					aria-invalid={inputHasValidationError || exceedsMax}
-					aria-describedby={validationMessage ? 'notira-input-validation' : undefined}
+					aria-describedby={validationMessage
+						? 'notira-char-count-line notira-input-validation'
+						: 'notira-char-count-line'}
 				></textarea>
 				<p
+					id="notira-char-count-line"
 					class="description notira-char-count"
 					class:notira-char-count-error={charCountError ||
 						validationIssue === 'empty' ||
@@ -284,17 +287,12 @@
 					{maxLength}
 					{i18n.charactersWord}
 					<span class="notira-char-limits">({i18n.minCharsHint})</span>
+					{#if validationMessage}
+						<span id="notira-input-validation" class="screen-reader-text" role="alert"
+							>{validationMessage}</span
+						>
+					{/if}
 				</p>
-				{#if validationMessage}
-					<p
-						id="notira-input-validation"
-						class="notira-inline-validation"
-						role="alert"
-						transition:fade={{ duration: 160 }}
-					>
-						{validationMessage}
-					</p>
-				{/if}
 			</div>
 
 			<div class="notira-tone-section">
