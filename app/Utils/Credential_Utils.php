@@ -2,10 +2,10 @@
 /**
  * AI credential helpers.
  *
- * @package Nilambar\Wordish
+ * @package Nilambar\Notira
  */
 
-namespace Nilambar\Wordish\Utils;
+namespace Nilambar\Notira\Utils;
 
 defined( 'ABSPATH' ) || exit;
 

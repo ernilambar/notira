@@ -1,4 +1,4 @@
-# Wordish
+# Notira
 
 WordPress plugin that turns draft notes or bullet points into professional, email-ready HTML using AI.
 
@@ -16,9 +16,8 @@ WordPress plugin that turns draft notes or bullet points into professional, emai
 
 ## Usage
 
-1. Go to **Dashboard → Wordish**.
+1. Go to **Dashboard → Notira**.
 2. Paste or type draft notes, bullets, or paragraphs in the textarea.
 3. Choose a **tone** (default: Professional).
 4. Click **Generate**.
 5. Use **Copy** to copy the result.
-

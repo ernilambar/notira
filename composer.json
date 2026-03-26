@@ -1,5 +1,5 @@
 {
-	"name": "ernilambar/wordish",
+	"name": "ernilambar/notira",
 	"description": "WordPress plugin to improve draft notes into professional email-ready HTML.",
 	"license": "GPL-2.0-or-later",
 	"type": "wordpress-plugin",
@@ -18,7 +18,7 @@
 	"prefer-stable": true,
 	"autoload": {
 		"psr-4": {
-			"Nilambar\\Wordish\\": "app/"
+			"Nilambar\\Notira\\": "app/"
 		}
 	},
 	"config": {

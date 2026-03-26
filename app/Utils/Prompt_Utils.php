@@ -2,10 +2,10 @@
 /**
  * Prompt template helpers.
  *
- * @package Nilambar\Wordish
+ * @package Nilambar\Notira
  */
 
-namespace Nilambar\Wordish\Utils;
+namespace Nilambar\Notira\Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -29,7 +29,7 @@ class Prompt_Utils {
 	 * @return string Template content with placeholders replaced, or empty string if file unreadable.
 	 */
 	public static function get_template( string $filename, array $replacements = [] ): string {
-		$path = WORDISH_DIR . '/prompts/' . $filename;
+		$path = NOTIRA_DIR . '/prompts/' . $filename;
 
 		if ( ! is_readable( $path ) ) {
 			return '';

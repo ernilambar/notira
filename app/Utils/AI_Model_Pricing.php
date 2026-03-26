@@ -7,11 +7,11 @@
  * batch, caching, and flex discounts are not applied. Update this file when
  * providers change list prices.
  *
- * @package Nilambar\Wordish
+ * @package Nilambar\Notira
  * @since 1.0.0
  */
 
-namespace Nilambar\Wordish\Utils;
+namespace Nilambar\Notira\Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -101,7 +101,7 @@ class AI_Model_Pricing {
 			'input'  => 0.1,
 			'output' => 0.4,
 		],
-		// Legacy model id still in Wordish preferences; rate aligned to current Gemini 2.5 Pro ≤200k text tier.
+		// Legacy model id still in Notira preferences; rate aligned to current Gemini 2.5 Pro ≤200k text tier.
 		'gemini-1.5-pro'   => [
 			'input'  => 1.25,
 			'output' => 10.0,
