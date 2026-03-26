@@ -1,7 +1,10 @@
-/*
- * UI for the Svelte app. Imported from main.js because <style src> in .svelte
- * is not emitted into the Vite bundle. Scoped to #notira-root from the template.
- */
+.wrap.notira-wrap {
+	max-width: none;
+}
+
+.wrap.notira-wrap .notira-content {
+	background: #fff;
+}
 
 #notira-root .notira-columns {
 	display: grid;
