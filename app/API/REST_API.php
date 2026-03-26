@@ -7,7 +7,6 @@
 
 namespace Nilambar\Notira\API;
 
-use Nilambar\Notira\Utils\AI_Model_Pricing;
 use Nilambar\Notira\Utils\Credential_Utils;
 use Nilambar\Notira\Utils\Prompt_Utils;
 use Nilambar\Notira\Utils\Tone_Utils;
@@ -189,7 +188,6 @@ class REST_API {
 				$meta = is_array( $cached_meta )
 					? array_merge( $cached_meta, [ 'from_cache' => true ] )
 					: [ 'from_cache' => true ];
-				$meta = self::enrich_generation_meta( $meta );
 				return new WP_REST_Response(
 					[
 						'success' => true,
@@ -217,43 +215,16 @@ class REST_API {
 			self::CACHE_DURATION
 		);
 
-		$response_meta = self::enrich_generation_meta( $result['meta'] );
-
 		return new WP_REST_Response(
 			[
 				'success' => true,
 				'data'    => [
 					'output' => $result['output'],
-					'meta'   => $response_meta,
+					'meta'   => $result['meta'],
 				],
 			],
 			200
 		);
-	}
-
-	/**
-	 * Final pass on generation meta before the REST response (currency equivalents, etc.).
-	 *
-	 * NPR uses NOTIRA_NPR_RATE from the main plugin file; a rate of 0 skips the NPR field.
-	 * Values are not stored in transients so the rate can change without stale NPR.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array<string, mixed> $meta Response meta.
-	 * @return array<string, mixed>
-	 */
-	private static function enrich_generation_meta( array $meta ): array {
-		unset( $meta['estimated_cost_npr'] );
-		if ( ! isset( $meta['estimated_cost_usd'] ) || ! is_numeric( $meta['estimated_cost_usd'] ) ) {
-			return $meta;
-		}
-		$rate = (float) NOTIRA_NPR_RATE;
-		if ( $rate <= 0 ) {
-			return $meta;
-		}
-		$usd                        = (float) $meta['estimated_cost_usd'];
-		$meta['estimated_cost_npr'] = round( $usd * $rate, 6 );
-		return $meta;
 	}
 
 	/**
@@ -355,10 +326,6 @@ class REST_API {
 		$output = 'Hi,<br>' . $body . '<br>Regards,';
 
 		$meta = self::extract_generation_meta_from_result( $result_obj );
-		$cost = AI_Model_Pricing::estimate_from_meta( $meta );
-		if ( null !== $cost ) {
-			$meta['estimated_cost_usd'] = $cost;
-		}
 
 		return [
 			'output' => $output,

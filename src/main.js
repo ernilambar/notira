@@ -138,48 +138,13 @@ function setGenerationMeta( meta ) {
 		}
 	}
 
-	const costRaw = meta.estimated_cost_usd;
-	const costNum =
-		typeof costRaw === 'number'
-			? costRaw
-			: typeof costRaw === 'string' && costRaw !== ''
-			? Number( costRaw )
-			: NaN;
-	if ( Number.isFinite( costNum ) && costNum >= 0 ) {
-		const formatted = new Intl.NumberFormat( undefined, {
-			style: 'currency',
-			currency: 'USD',
-			minimumFractionDigits: 0,
-			maximumFractionDigits: 6,
-		} ).format( costNum );
-		const tpl = i18n.metaEstimatedCostTpl || 'Est. Cost: ≈ %s';
-		const usdLine = tpl.replace( '%s', formatted );
-		const nprRaw = meta.estimated_cost_npr;
-		const nprNum =
-			typeof nprRaw === 'number'
-				? nprRaw
-				: typeof nprRaw === 'string' && nprRaw !== ''
-				? Number( nprRaw )
-				: NaN;
-		let nprFormatted = '';
-		if ( Number.isFinite( nprNum ) && nprNum >= 0 ) {
-			const nprAmount = new Intl.NumberFormat( undefined, {
-				minimumFractionDigits: 0,
-				maximumFractionDigits: 4,
-			} ).format( nprNum );
-			const nprPrefix = ( i18n.metaNprPrefix || 'Rs.' ).trim();
-			nprFormatted = nprPrefix ? `${ nprPrefix } ${ nprAmount }` : nprAmount;
-		}
-		rows.push( { type: 'cost', usdLine, nprFormatted } );
-	}
-
 	if ( fromCache && rows.length === 0 ) {
 		rows.push( { type: 'plain', text: i18n.metaFromCache || '' } );
 	} else if ( fromCache && rows.length > 0 ) {
 		rows.push( { type: 'plain', text: i18n.metaFromCache || '' } );
 	}
 
-	const filtered = rows.filter( ( r ) => r.type === 'cost' || ( r.type === 'plain' && r.text ) );
+	const filtered = rows.filter( ( r ) => r.type === 'plain' && r.text );
 	if ( ! filtered.length ) {
 		return;
 	}
@@ -189,18 +154,7 @@ function setGenerationMeta( meta ) {
 	filtered.forEach( ( row ) => {
 		const lineEl = document.createElement( 'div' );
 		lineEl.className = 'notira-generation-meta-line';
-		if ( row.type === 'cost' ) {
-			lineEl.classList.add( 'notira-generation-meta-line--cost' );
-			lineEl.appendChild( document.createTextNode( row.usdLine ) );
-			if ( row.nprFormatted ) {
-				const nprEl = document.createElement( 'span' );
-				nprEl.className = 'notira-meta-cost-npr';
-				nprEl.textContent = ` (${ row.nprFormatted })`;
-				lineEl.appendChild( nprEl );
-			}
-		} else {
-			lineEl.textContent = row.text;
-		}
+		lineEl.textContent = row.text;
 		frag.appendChild( lineEl );
 	} );
 	generationMetaEl.appendChild( frag );
