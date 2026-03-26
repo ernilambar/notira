@@ -2,13 +2,13 @@
 /**
  * Admin page template.
  *
- * @package Nilambar\Wordish
+ * @package Nilambar\Notira
  * @since 1.0.0
  */
 
-use Nilambar\Wordish\API\REST_API;
-use Nilambar\Wordish\Utils\Credential_Utils;
-use Nilambar\Wordish\Utils\Tone_Utils;
+use Nilambar\Notira\API\REST_API;
+use Nilambar\Notira\Utils\Credential_Utils;
+use Nilambar\Notira\Utils\Tone_Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -19,40 +19,40 @@ $input_min_length = REST_API::INPUT_MIN_LENGTH;
 $input_max_length = REST_API::INPUT_MAX_LENGTH;
 ?>
 
-<div class="wrap wordish-wrap">
-	<h1><?php esc_html_e( 'Wordish', 'wordish' ); ?></h1>
+<div class="wrap notira-wrap">
+	<h1><?php esc_html_e( 'Notira', 'notira' ); ?></h1>
 
-	<div class="wordish-content">
-	<div class="wordish-columns">
-		<div class="wordish-column-left">
-			<div class="wordish-panel">
-				<div class="wordish-input-section">
-					<label for="wordish-input">
-						<?php esc_html_e( 'Enter draft notes or bullet points', 'wordish' ); ?>
+	<div class="notira-content">
+	<div class="notira-columns">
+		<div class="notira-column-left">
+			<div class="notira-panel">
+				<div class="notira-input-section">
+					<label for="notira-input">
+						<?php esc_html_e( 'Enter draft notes or bullet points', 'notira' ); ?>
 					</label>
-					<textarea id="wordish-input"
-						class="wordish-textarea"
+					<textarea id="notira-input"
+						class="notira-textarea"
 						rows="10"
-						placeholder="<?php esc_attr_e( 'Paste or type your draft notes, bullets, or paragraphs here…', 'wordish' ); ?>"
+						placeholder="<?php esc_attr_e( 'Paste or type your draft notes, bullets, or paragraphs here…', 'notira' ); ?>"
 						maxlength="<?php echo (int) $input_max_length; ?>"
 						<?php echo $ai_ui_enabled ? '' : ' disabled'; ?>
 					></textarea>
-					<p class="description wordish-char-count">
-						<span class="wordish-char-current">0</span> / <?php echo (int) $input_max_length; ?>
-						<?php esc_html_e( 'characters', 'wordish' ); ?>
-						<span class="wordish-char-limits">(
+					<p class="description notira-char-count">
+						<span class="notira-char-current">0</span> / <?php echo (int) $input_max_length; ?>
+						<?php esc_html_e( 'characters', 'notira' ); ?>
+						<span class="notira-char-limits">(
 						<?php
 							/* translators: %d: minimum character count */
-							printf( esc_html__( 'Min: %d chars', 'wordish' ), (int) $input_min_length );
+							printf( esc_html__( 'Min: %d chars', 'notira' ), (int) $input_min_length );
 						?>
 						)</span>
 					</p>
 				</div>
 
-				<div class="wordish-tone-section">
-					<label for="wordish-tone"><?php esc_html_e( 'Tone', 'wordish' ); ?></label>
-					<select id="wordish-tone"
-						name="wordish_tone"
+				<div class="notira-tone-section">
+					<label for="notira-tone"><?php esc_html_e( 'Tone', 'notira' ); ?></label>
+					<select id="notira-tone"
+						name="notira_tone"
 						<?php echo $ai_ui_enabled ? '' : ' disabled'; ?>
 					>
 						<?php foreach ( $tones as $value => $label ) : ?>
@@ -63,33 +63,33 @@ $input_max_length = REST_API::INPUT_MAX_LENGTH;
 					</select>
 				</div>
 
-				<div class="wordish-actions">
-					<button type="button" id="wordish-generate" class="button button-primary" <?php echo $ai_ui_enabled ? '' : ' disabled'; ?>>
-						<?php esc_html_e( 'Generate', 'wordish' ); ?>
+				<div class="notira-actions">
+					<button type="button" id="notira-generate" class="button button-primary" <?php echo $ai_ui_enabled ? '' : ' disabled'; ?>>
+						<?php esc_html_e( 'Generate', 'notira' ); ?>
 					</button>
-					<span class="spinner" id="wordish-generate-spinner" aria-hidden="true"></span>
+					<span class="spinner" id="notira-generate-spinner" aria-hidden="true"></span>
 				</div>
-				<div id="wordish-generation-meta" class="wordish-generation-meta is-empty" role="status" aria-live="polite"></div>
+				<div id="notira-generation-meta" class="notira-generation-meta is-empty" role="status" aria-live="polite"></div>
 			</div>
 			<div
-				id="wordish-notice"
-				class="wordish-notice wordish-notice--hidden"
+				id="notira-notice"
+				class="notira-notice notira-notice--hidden"
 				role="status"
 				aria-live="polite"
 				aria-hidden="true"
 			></div>
 		</div>
 
-		<div class="wordish-column-right">
-			<div class="wordish-output-section" id="wordish-output-section">
-				<div class="wordish-output-header">
-					<label><?php esc_html_e( 'Output', 'wordish' ); ?></label>
-					<button type="button" id="wordish-copy" class="button">
-						<?php esc_html_e( 'Copy', 'wordish' ); ?>
+		<div class="notira-column-right">
+			<div class="notira-output-section" id="notira-output-section">
+				<div class="notira-output-header">
+					<label><?php esc_html_e( 'Output', 'notira' ); ?></label>
+					<button type="button" id="notira-copy" class="button">
+						<?php esc_html_e( 'Copy', 'notira' ); ?>
 					</button>
 				</div>
-				<div id="wordish-output" class="wordish-output" role="region" aria-live="polite" data-empty="true">
-					<span class="wordish-output-placeholder" aria-hidden="true"><?php esc_html_e( 'Output will appear here.', 'wordish' ); ?></span>
+				<div id="notira-output" class="notira-output" role="region" aria-live="polite" data-empty="true">
+					<span class="notira-output-placeholder" aria-hidden="true"><?php esc_html_e( 'Output will appear here.', 'notira' ); ?></span>
 				</div>
 			</div>
 		</div>

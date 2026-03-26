@@ -2,15 +2,15 @@
 /**
  * REST API for text generation
  *
- * @package Nilambar\Wordish
+ * @package Nilambar\Notira
  */
 
-namespace Nilambar\Wordish\API;
+namespace Nilambar\Notira\API;
 
-use Nilambar\Wordish\Utils\AI_Model_Pricing;
-use Nilambar\Wordish\Utils\Credential_Utils;
-use Nilambar\Wordish\Utils\Prompt_Utils;
-use Nilambar\Wordish\Utils\Tone_Utils;
+use Nilambar\Notira\Utils\AI_Model_Pricing;
+use Nilambar\Notira\Utils\Credential_Utils;
+use Nilambar\Notira\Utils\Prompt_Utils;
+use Nilambar\Notira\Utils\Tone_Utils;
 use Throwable;
 use WP_Error;
 use WP_REST_Request;
@@ -63,7 +63,7 @@ class REST_API {
 	 */
 	public static function register_routes(): void {
 		register_rest_route(
-			'wordish/v1',
+			'notira/v1',
 			'/generate',
 			[
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -113,10 +113,10 @@ class REST_API {
 		$len = strlen( $value );
 		if ( $len < self::INPUT_MIN_LENGTH ) {
 			return new WP_Error(
-				'wordish_input_too_short',
+				'notira_input_too_short',
 				sprintf(
 					/* translators: %d: min character count */
-					__( 'Input must be at least %d characters.', 'wordish' ),
+					__( 'Input must be at least %d characters.', 'notira' ),
 					self::INPUT_MIN_LENGTH
 				),
 				[ 'status' => 400 ]
@@ -124,10 +124,10 @@ class REST_API {
 		}
 		if ( $len > self::INPUT_MAX_LENGTH ) {
 			return new WP_Error(
-				'wordish_input_too_long',
+				'notira_input_too_long',
 				sprintf(
 					/* translators: %d: max character count */
-					__( 'Input must not exceed %d characters.', 'wordish' ),
+					__( 'Input must not exceed %d characters.', 'notira' ),
 					self::INPUT_MAX_LENGTH
 				),
 				[ 'status' => 400 ]
@@ -147,16 +147,16 @@ class REST_API {
 	public static function generate( WP_REST_Request $request ) {
 		if ( ! Credential_Utils::supports_ai() ) {
 			return new WP_Error(
-				'wordish_ai_unsupported',
-				__( 'WordPress AI is not available or is disabled on this site.', 'wordish' ),
+				'notira_ai_unsupported',
+				__( 'WordPress AI is not available or is disabled on this site.', 'notira' ),
 				[ 'status' => 503 ]
 			);
 		}
 
 		if ( ! Credential_Utils::has_ai_credentials() ) {
 			return new WP_Error(
-				'wordish_no_api_key',
-				__( 'API key is not set.', 'wordish' ),
+				'notira_no_api_key',
+				__( 'API key is not set.', 'notira' ),
 				[ 'status' => 503 ]
 			);
 		}
@@ -166,15 +166,15 @@ class REST_API {
 		$input = is_string( $input ) ? trim( $input ) : '';
 		if ( '' === $input ) {
 			return new WP_Error(
-				'wordish_empty_input',
-				__( 'Please enter some text to improve.', 'wordish' ),
+				'notira_empty_input',
+				__( 'Please enter some text to improve.', 'notira' ),
 				[ 'status' => 400 ]
 			);
 		}
 
 		$valid_slugs = Tone_Utils::get_valid_slugs();
 		$tone        = ( is_string( $tone ) && in_array( $tone, $valid_slugs, true ) ) ? $tone : Tone_Utils::DEFAULT_TONE;
-		$cache_key   = 'wordish_' . $tone . '_' . md5( $input );
+		$cache_key   = 'notira_' . $tone . '_' . md5( $input );
 		$cached      = get_transient( $cache_key );
 		if ( false !== $cached ) {
 			$cached_output = '';
@@ -234,7 +234,7 @@ class REST_API {
 	/**
 	 * Final pass on generation meta before the REST response (currency equivalents, etc.).
 	 *
-	 * NPR uses WORDISH_NPR_RATE from the main plugin file; a rate of 0 skips the NPR field.
+	 * NPR uses NOTIRA_NPR_RATE from the main plugin file; a rate of 0 skips the NPR field.
 	 * Values are not stored in transients so the rate can change without stale NPR.
 	 *
 	 * @since 1.0.0
@@ -247,7 +247,7 @@ class REST_API {
 		if ( ! isset( $meta['estimated_cost_usd'] ) || ! is_numeric( $meta['estimated_cost_usd'] ) ) {
 			return $meta;
 		}
-		$rate = (float) WORDISH_NPR_RATE;
+		$rate = (float) NOTIRA_NPR_RATE;
 		if ( $rate <= 0 ) {
 			return $meta;
 		}
@@ -271,8 +271,8 @@ class REST_API {
 		$prompt     = Prompt_Utils::get_email_user_prompt( $input );
 		if ( '' === $system || '' === $prompt ) {
 			return new WP_Error(
-				'wordish_missing_prompts',
-				__( 'Prompt templates are missing.', 'wordish' ),
+				'notira_missing_prompts',
+				__( 'Prompt templates are missing.', 'notira' ),
 				[ 'status' => 503 ]
 			);
 		}
@@ -293,8 +293,8 @@ class REST_API {
 
 		if ( ! $builder->is_supported_for_text_generation() ) {
 			return new WP_Error(
-				'wordish_no_models',
-				__( 'No AI provider is configured.', 'wordish' ),
+				'notira_no_models',
+				__( 'No AI provider is configured.', 'notira' ),
 				[ 'status' => 503 ]
 			);
 		}
@@ -304,26 +304,26 @@ class REST_API {
 		if ( is_wp_error( $result_obj ) ) {
 			$msg  = $result_obj->get_error_message();
 			$code = $result_obj->get_error_code();
-			if ( 'wordish_no_models' === $code || strpos( $msg, 'No models found' ) !== false ) {
+			if ( 'notira_no_models' === $code || strpos( $msg, 'No models found' ) !== false ) {
 				return new WP_Error(
-					'wordish_no_models',
-					__( 'No AI provider is configured.', 'wordish' ),
+					'notira_no_models',
+					__( 'No AI provider is configured.', 'notira' ),
 					[ 'status' => 503 ]
 				);
 			}
 			if ( strpos( $msg, '401' ) !== false || strpos( $msg, 'Incorrect API key' ) !== false ) {
-				return new WP_Error( 'wordish_ai_unauthorized', __( 'Invalid API key.', 'wordish' ), [ 'status' => 503 ] );
+				return new WP_Error( 'notira_ai_unauthorized', __( 'Invalid API key.', 'notira' ), [ 'status' => 503 ] );
 			}
 			if ( strpos( $msg, '403' ) !== false ) {
-				return new WP_Error( 'wordish_ai_forbidden', __( 'API access denied. Check your API key and account.', 'wordish' ), [ 'status' => 503 ] );
+				return new WP_Error( 'notira_ai_forbidden', __( 'API access denied. Check your API key and account.', 'notira' ), [ 'status' => 503 ] );
 			}
-			return new WP_Error( 'wordish_ai_error', $msg ? $msg : __( 'AI request failed.', 'wordish' ), [ 'status' => 502 ] );
+			return new WP_Error( 'notira_ai_error', $msg ? $msg : __( 'AI request failed.', 'notira' ), [ 'status' => 502 ] );
 		}
 
 		if ( ! is_object( $result_obj ) || ! method_exists( $result_obj, 'toText' ) ) {
 			return new WP_Error(
-				'wordish_ai_error',
-				__( 'AI request failed.', 'wordish' ),
+				'notira_ai_error',
+				__( 'AI request failed.', 'notira' ),
 				[ 'status' => 502 ]
 			);
 		}
@@ -332,8 +332,8 @@ class REST_API {
 			$raw_text = trim( $result_obj->toText() );
 		} catch ( Throwable $e ) {
 			return new WP_Error(
-				'wordish_ai_error',
-				$e->getMessage() ? $e->getMessage() : __( 'AI request failed.', 'wordish' ),
+				'notira_ai_error',
+				$e->getMessage() ? $e->getMessage() : __( 'AI request failed.', 'notira' ),
 				[ 'status' => 502 ]
 			);
 		}

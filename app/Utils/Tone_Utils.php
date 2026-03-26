@@ -2,10 +2,10 @@
 /**
  * Tone helpers.
  *
- * @package Nilambar\Wordish
+ * @package Nilambar\Notira
  */
 
-namespace Nilambar\Wordish\Utils;
+namespace Nilambar\Notira\Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -32,15 +32,15 @@ class Tone_Utils {
 	 */
 	public static function get_tone_options(): array {
 		return [
-			'professional'  => __( 'Professional', 'wordish' ),
-			'friendly'      => __( 'Friendly', 'wordish' ),
-			'formal'        => __( 'Formal', 'wordish' ),
-			'concise'       => __( 'Concise', 'wordish' ),
-			'empathetic'    => __( 'Empathetic', 'wordish' ),
-			'authoritative' => __( 'Authoritative', 'wordish' ),
-			'commanding'    => __( 'Commanding', 'wordish' ),
-			'assertive'     => __( 'Assertive', 'wordish' ),
-			'neutral'       => __( 'Neutral', 'wordish' ),
+			'professional'  => __( 'Professional', 'notira' ),
+			'friendly'      => __( 'Friendly', 'notira' ),
+			'formal'        => __( 'Formal', 'notira' ),
+			'concise'       => __( 'Concise', 'notira' ),
+			'empathetic'    => __( 'Empathetic', 'notira' ),
+			'authoritative' => __( 'Authoritative', 'notira' ),
+			'commanding'    => __( 'Commanding', 'notira' ),
+			'assertive'     => __( 'Assertive', 'notira' ),
+			'neutral'       => __( 'Neutral', 'notira' ),
 		];
 	}
 

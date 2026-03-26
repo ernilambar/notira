@@ -64,7 +64,7 @@
 	<rule ref="WordPress.WP.I18n">
 		<properties>
 			<property name="text_domain" type="array">
-				<element value="wordish" />
+				<element value="notira" />
 			</property>
 		</properties>
 	</rule>
@@ -74,7 +74,7 @@
 			<property name="old_text_domain" type="array">
 				<element value="" />
 			</property>
-			<property name="new_text_domain" value="wordish" />
+			<property name="new_text_domain" value="notira" />
 		</properties>
 	</rule>
 

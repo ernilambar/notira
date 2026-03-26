@@ -3,21 +3,21 @@ import './css/main.css';
 
 import { copyToClipboard, debounce, showToast } from './js/utils.js';
 
-const config = window.wordishAdmin || {};
+const config = window.notiraAdmin || {};
 const minLength = config.minLength ?? 0;
 const maxLength = config.maxLength ?? 0;
 const apiUrl = config.apiUrl ?? '';
 const nonce = config.nonce ?? '';
 
-const inputEl = document.getElementById( 'wordish-input' );
-const countEl = inputEl ? inputEl.parentNode.querySelector( '.wordish-char-current' ) : null;
-const generateBtn = document.getElementById( 'wordish-generate' );
-const generateSpinner = document.getElementById( 'wordish-generate-spinner' );
-const generationMetaEl = document.getElementById( 'wordish-generation-meta' );
-const noticeEl = document.getElementById( 'wordish-notice' );
-const outputSection = document.getElementById( 'wordish-output-section' );
-const outputEl = document.getElementById( 'wordish-output' );
-const copyBtn = document.getElementById( 'wordish-copy' );
+const inputEl = document.getElementById( 'notira-input' );
+const countEl = inputEl ? inputEl.parentNode.querySelector( '.notira-char-current' ) : null;
+const generateBtn = document.getElementById( 'notira-generate' );
+const generateSpinner = document.getElementById( 'notira-generate-spinner' );
+const generationMetaEl = document.getElementById( 'notira-generation-meta' );
+const noticeEl = document.getElementById( 'notira-notice' );
+const outputSection = document.getElementById( 'notira-output-section' );
+const outputEl = document.getElementById( 'notira-output' );
+const copyBtn = document.getElementById( 'notira-copy' );
 const i18n = config.i18n || {};
 const copiedLabel = i18n.copiedLabel || '';
 let inputErrorTimeout = null;
@@ -27,14 +27,14 @@ function updateCount() {
 	const len = inputEl.value.length;
 	countEl.textContent = len;
 	if ( len >= maxLength ) {
-		countEl.parentNode.classList.add( 'wordish-at-limit' );
+		countEl.parentNode.classList.add( 'notira-at-limit' );
 	} else {
-		countEl.parentNode.classList.remove( 'wordish-at-limit' );
+		countEl.parentNode.classList.remove( 'notira-at-limit' );
 	}
 }
 
 function getTone() {
-	const select = document.querySelector( 'select[name="wordish_tone"]' );
+	const select = document.querySelector( 'select[name="notira_tone"]' );
 	return select ? select.value : 'professional';
 }
 
@@ -51,14 +51,14 @@ function setNotice( message, type ) {
 	}
 	if ( ! message ) {
 		noticeEl.textContent = '';
-		noticeEl.className = 'wordish-notice wordish-notice--hidden';
+		noticeEl.className = 'notira-notice notira-notice--hidden';
 		noticeEl.setAttribute( 'aria-hidden', 'true' );
 		noticeEl.setAttribute( 'role', 'status' );
 		return;
 	}
 	noticeEl.textContent = message;
 	const kind = type === 'error' ? 'error' : 'success';
-	noticeEl.className = `wordish-notice wordish-notice--${ kind }`;
+	noticeEl.className = `notira-notice notira-notice--${ kind }`;
 	noticeEl.setAttribute( 'aria-hidden', 'false' );
 	noticeEl.setAttribute( 'role', type === 'error' ? 'alert' : 'status' );
 }
@@ -188,13 +188,13 @@ function setGenerationMeta( meta ) {
 	const frag = document.createDocumentFragment();
 	filtered.forEach( ( row ) => {
 		const lineEl = document.createElement( 'div' );
-		lineEl.className = 'wordish-generation-meta-line';
+		lineEl.className = 'notira-generation-meta-line';
 		if ( row.type === 'cost' ) {
-			lineEl.classList.add( 'wordish-generation-meta-line--cost' );
+			lineEl.classList.add( 'notira-generation-meta-line--cost' );
 			lineEl.appendChild( document.createTextNode( row.usdLine ) );
 			if ( row.nprFormatted ) {
 				const nprEl = document.createElement( 'span' );
-				nprEl.className = 'wordish-meta-cost-npr';
+				nprEl.className = 'notira-meta-cost-npr';
 				nprEl.textContent = ` (${ row.nprFormatted })`;
 				lineEl.appendChild( nprEl );
 			}
@@ -234,9 +234,9 @@ function generate() {
 		if ( countEl ) {
 			const charCountEl = countEl.parentNode;
 			if ( charCountEl ) {
-				charCountEl.classList.add( 'wordish-char-count-error' );
+				charCountEl.classList.add( 'notira-char-count-error' );
 				inputErrorTimeout = setTimeout( () => {
-					charCountEl.classList.remove( 'wordish-char-count-error' );
+					charCountEl.classList.remove( 'notira-char-count-error' );
 					inputErrorTimeout = null;
 				}, 3000 );
 			}
