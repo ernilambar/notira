@@ -1,3 +1,4 @@
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
 import browserslistToEsbuild from 'browserslist-to-esbuild';
@@ -8,6 +9,7 @@ const root = resolve( __dirname, '.' );
 /** @type {import('vite').UserConfig} */
 export default {
 	root,
+	plugins: [ svelte() ],
 	publicDir: resolve( root, 'public' ),
 	build: {
 		outDir: 'build',

@@ -9,6 +9,7 @@ namespace Nilambar\Notira\Core;
 
 use Nilambar\Notira\API\REST_API;
 use Nilambar\Notira\Utils\Credential_Utils;
+use Nilambar\Notira\Utils\Tone_Utils;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -197,13 +198,40 @@ class Bootstrap {
 			return;
 		}
 
+		$ai_ui_enabled = Credential_Utils::supports_ai() && Credential_Utils::has_ai_credentials();
+		$tones_options = Tone_Utils::get_tone_options();
+		$tones_list    = [];
+		foreach ( $tones_options as $value => $label ) {
+			$tones_list[] = [
+				'value' => (string) $value,
+				'label' => $label,
+			];
+		}
+
 		$settings = [
-			'apiUrl'    => rest_url( 'notira/v1/generate' ),
-			'nonce'     => wp_create_nonce( 'wp_rest' ),
-			'minLength' => REST_API::INPUT_MIN_LENGTH,
-			'maxLength' => REST_API::INPUT_MAX_LENGTH,
-			'i18n'      => [
+			'apiUrl'        => rest_url( 'notira/v1/generate' ),
+			'nonce'         => wp_create_nonce( 'wp_rest' ),
+			'aiUiEnabled'   => $ai_ui_enabled,
+			'defaultTone'   => Tone_Utils::DEFAULT_TONE,
+			'tones'         => $tones_list,
+			'i18n'          => [
+				'inputLabel'         => __( 'Enter draft notes or bullet points', 'notira' ),
+				'inputPlaceholder'   => __( 'Paste or type your draft notes, bullets, or paragraphs here…', 'notira' ),
+				'toneLabel'          => __( 'Tone', 'notira' ),
+				'generateLabel'      => __( 'Generate', 'notira' ),
+				'copyLabel'          => __( 'Copy', 'notira' ),
 				'copiedLabel'        => __( 'Copied', 'notira' ),
+				'outputLabel'        => __( 'Output', 'notira' ),
+				'outputPlaceholder'  => __( 'Output will appear here.', 'notira' ),
+				'charactersWord'     => __( 'characters', 'notira' ),
+				/* translators: Separator between current length and max length in the character counter, e.g. "12 / 500". Include spaces if your language needs them. */
+				'charCountMiddle'    => __( ' / ', 'notira' ),
+				'minCharsHint'       => sprintf(
+					/* translators: %d: minimum character count */
+					__( 'Min: %d chars', 'notira' ),
+					REST_API::INPUT_MIN_LENGTH
+				),
+				'generatingLabel'    => __( 'Generating…', 'notira' ),
 				'inputTooShort'      => sprintf(
 					/* translators: %d: min character count */
 					__( 'Input is too short. Please enter at least %d characters.', 'notira' ),

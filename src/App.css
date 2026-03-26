@@ -1,0 +1,232 @@
+/*
+ * UI for the Svelte app. Imported from main.js because <style src> in .svelte
+ * is not emitted into the Vite bundle. Scoped to #notira-root from the template.
+ */
+
+#notira-root .notira-columns {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1.5rem;
+	align-items: start;
+	margin-top: 1rem;
+}
+
+@media screen and (max-width: 1024px) {
+	#notira-root .notira-columns {
+		grid-template-columns: 1fr;
+	}
+}
+
+#notira-root .notira-column-left {
+	min-width: 0;
+}
+
+#notira-root .notira-column-right {
+	min-width: 0;
+	position: sticky;
+	top: 32px;
+	padding: 1.5rem;
+}
+
+@media screen and (max-width: 782px) {
+	#notira-root .notira-column-right {
+		position: static;
+	}
+}
+
+#notira-root .notira-panel {
+	padding: 1.5rem;
+	margin: 0;
+}
+
+#notira-root .notira-input-section label,
+#notira-root .notira-output-header .notira-output-title {
+	display: block;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+#notira-root .notira-textarea {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+#notira-root .notira-textarea:focus {
+	border-color: #a0a5aa;
+	box-shadow: 0 0 0 1px #a0a5aa;
+	outline: 1px solid #a0a5aa;
+}
+
+#notira-root .notira-textarea--error {
+	border-color: #d63638;
+	box-shadow: 0 0 0 1px #d63638;
+}
+
+#notira-root .notira-char-count {
+	margin-top: 0.25rem;
+}
+
+#notira-root .notira-char-count.notira-char-count-error {
+	color: #b32d2e;
+}
+
+#notira-root .notira-tone-section {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 1.25rem 0;
+}
+
+#notira-root .notira-tone-section label {
+	font-weight: 600;
+}
+
+#notira-root .notira-tone-section select {
+	min-width: 12rem;
+}
+
+#notira-root .notira-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin-top: 1rem;
+}
+
+#notira-root .notira-spinner-host {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	opacity: 0;
+	transform: scale(0.92);
+	transition:
+		opacity 0.2s ease,
+		transform 0.2s ease;
+	pointer-events: none;
+	color: #50575e;
+}
+
+#notira-root .notira-spinner-host.is-active {
+	opacity: 1;
+	transform: scale(1);
+}
+
+#notira-root .notira-spinner-track {
+	opacity: 0.2;
+}
+
+#notira-root .notira-spinner-host.is-active .notira-spinner-svg {
+	animation: notira-spin 0.75s linear infinite;
+}
+
+@keyframes notira-spin {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+#notira-root .notira-generation-meta {
+	margin-top: 0.75rem;
+	font-size: 12px;
+	line-height: 1.5;
+	color: #646970;
+	max-width: 36rem;
+}
+
+#notira-root .notira-generation-meta.is-empty {
+	display: none;
+}
+
+#notira-root .notira-generation-meta-line + .notira-generation-meta-line {
+	margin-top: 0.35rem;
+}
+
+#notira-root .notira-notice-host {
+	margin-left: 1.5rem;
+	margin-bottom: 1.5rem;
+}
+
+#notira-root .notira-notice {
+	padding: 0.75rem 1rem;
+	border-radius: 2px;
+	border: 1px solid transparent;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+#notira-root .notira-notice--success {
+	background: #edfaef;
+	border-color: #68de7c;
+	color: #1e4620;
+	box-shadow: inset 4px 0 0 0 #00a32a;
+}
+
+#notira-root .notira-notice--error {
+	background: #fcf0f1;
+	border-color: #f0b0b5;
+	color: #2c3338;
+	box-shadow: inset 4px 0 0 0 #d63638;
+}
+
+#notira-root .notira-output-section {
+	margin: 0;
+}
+
+#notira-root .notira-output-section .notira-output {
+	white-space: normal;
+}
+
+#notira-root .notira-output-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-bottom: 0.5rem;
+}
+
+#notira-root .notira-output-header .button {
+	margin-left: auto;
+}
+
+#notira-root .notira-output {
+	border: 1px solid #c3c4c7;
+	background: #f6f7f7;
+	padding: 1rem;
+	min-height: 6rem;
+	max-height: 40vh;
+	overflow: auto;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+#notira-root .notira-output .notira-output-placeholder {
+	color: #787c82;
+	font-style: italic;
+}
+
+#notira-root .notira-output-html {
+	white-space: normal;
+}
+
+#notira-root .notira-output--filled {
+	white-space: normal;
+}
+
+#notira-root .notira-copy-btn {
+	min-width: 6.5rem;
+}
+
+#notira-root .notira-copy-label-wrap {
+	display: inline-block;
+	min-height: 1.2em;
+	vertical-align: top;
+}
+
+#notira-root .notira-inline-validation {
+	margin: 0.35rem 0 0;
+	color: #b32d2e;
+	font-size: 13px;
+	line-height: 1.5;
+}
