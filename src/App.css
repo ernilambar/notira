@@ -215,13 +215,20 @@
 }
 
 #notira-root .notira-copy-btn {
-	min-width: 6.5rem;
+	box-sizing: border-box;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }
 
 #notira-root .notira-copy-label-wrap {
+	box-sizing: border-box;
 	display: inline-block;
+	min-width: 14ch;
 	min-height: 1.2em;
-	vertical-align: top;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;
 }
 
 #notira-root .notira-inline-validation {

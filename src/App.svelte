@@ -237,7 +237,6 @@
 	}
 
 	const debouncedGenerate = debounce( generate, 300 );
-	const debouncedCopy = debounce( handleCopy, 300 );
 
 	onMount( () => {
 		const { minCap, maxCap } = readLimitAttributes();
@@ -390,18 +389,12 @@
 					type="button"
 					class="button notira-copy-btn"
 					disabled={! aiUiEnabled}
-					onclick={debouncedCopy}
+					onclick={handleCopy}
 				>
 					<span class="notira-copy-label-wrap">
-						{#if copyShowingCopied}
-							<span class="notira-copy-label" transition:fade={{ duration: 160 }}
-								>{i18n.copiedLabel}</span
-							>
-						{:else}
-							<span class="notira-copy-label" transition:fade={{ duration: 160 }}
-								>{i18n.copyLabel}</span
-							>
-						{/if}
+						<span class="notira-copy-label"
+							>{copyShowingCopied ? i18n.copiedLabel : i18n.copyLabel}</span
+						>
 					</span>
 				</button>
 			</div>
