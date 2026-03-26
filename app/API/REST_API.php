@@ -171,6 +171,30 @@ class REST_API {
 			);
 		}
 
+		$len = strlen( $input );
+		if ( $len < self::INPUT_MIN_LENGTH ) {
+			return new WP_Error(
+				'notira_input_too_short',
+				sprintf(
+					/* translators: %d: min character count */
+					__( 'Input must be at least %d characters.', 'notira' ),
+					self::INPUT_MIN_LENGTH
+				),
+				[ 'status' => 400 ]
+			);
+		}
+		if ( $len > self::INPUT_MAX_LENGTH ) {
+			return new WP_Error(
+				'notira_input_too_long',
+				sprintf(
+					/* translators: %d: max character count */
+					__( 'Input must not exceed %d characters.', 'notira' ),
+					self::INPUT_MAX_LENGTH
+				),
+				[ 'status' => 400 ]
+			);
+		}
+
 		$valid_slugs = Tone_Utils::get_valid_slugs();
 		$tone        = ( is_string( $tone ) && in_array( $tone, $valid_slugs, true ) ) ? $tone : Tone_Utils::DEFAULT_TONE;
 		$cache_key   = 'notira_' . $tone . '_' . md5( $input );
