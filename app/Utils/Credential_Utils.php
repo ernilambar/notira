@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Nilambar\Notira\Utils;
 
+use Throwable;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -36,8 +38,7 @@ class Credential_Utils {
 	/**
 	 * Check if at least one Connectors AI provider has configured credentials.
 	 *
-	 * Uses `wp_get_connectors()` and per-provider options (e.g. `connectors_ai_openai_api_key`),
-	 * environment variables, or PHP constants (same rules as core Connectors).
+	 * Uses `wp_get_connectors()` and per-provider options (e.g. `connectors_ai_openai_api_key`).
 	 *
 	 * @since 1.0.0
 	 *
@@ -56,40 +57,38 @@ class Credential_Utils {
 	}
 
 	/**
-	 * Resolves API key source for a connector (env, constant, database, none).
+	 * Whether stored credentials appear usable for text generation.
 	 *
-	 * Mirrors WordPress core _wp_connectors_get_api_key_source() behavior.
+	 * Performs a lightweight client check after {@see Credential_Utils::has_ai_credentials()}.
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param string $provider_id  Connector or provider ID.
-	 * @param string $setting_name Settings option name (e.g. connectors_ai_openai_api_key).
-	 * @return string One of env, constant, database, none.
+	 * @return bool
 	 */
-	private static function get_api_key_source( string $provider_id, string $setting_name ): string {
-		$constant_case_id = strtoupper(
-			preg_replace( '/([a-z])([A-Z])/', '$1_$2', str_replace( '-', '_', $provider_id ) )
-		);
-		$env_var_name     = $constant_case_id . '_API_KEY';
-
-		$env_value = getenv( $env_var_name );
-		if ( false !== $env_value && '' !== $env_value ) {
-			return 'env';
+	public static function has_valid_ai_credentials(): bool {
+		if ( ! self::has_ai_credentials() ) {
+			return false;
 		}
 
-		if ( defined( $env_var_name ) ) {
-			$const_value = constant( $env_var_name );
-			if ( is_string( $const_value ) && '' !== $const_value ) {
-				return 'constant';
-			}
+		if ( ! function_exists( 'wp_ai_client_prompt' ) ) {
+			return false;
 		}
 
-		$db_value = get_option( $setting_name, '' );
-		if ( '' !== $db_value && is_string( $db_value ) ) {
-			return 'database';
+		try {
+			$builder = wp_ai_client_prompt( 'Test' );
+		} catch ( Throwable $e ) {
+			return false;
 		}
 
-		return 'none';
+		if ( ! is_object( $builder ) || ! method_exists( $builder, 'is_supported_for_text_generation' ) ) {
+			return false;
+		}
+
+		try {
+			return (bool) $builder->is_supported_for_text_generation();
+		} catch ( Throwable $e ) {
+			return false;
+		}
 	}
 
 	/**
@@ -105,7 +104,7 @@ class Credential_Utils {
 			return false;
 		}
 
-		foreach ( $connectors as $connector_id => $connector_data ) {
+		foreach ( $connectors as $connector_data ) {
 			if ( ! is_array( $connector_data ) ) {
 				continue;
 			}
@@ -128,8 +127,8 @@ class Credential_Utils {
 				continue;
 			}
 
-			$source = self::get_api_key_source( (string) $connector_id, $setting_name );
-			if ( 'none' !== $source ) {
+			$value = get_option( $setting_name, '' );
+			if ( is_string( $value ) && '' !== trim( $value ) ) {
 				return true;
 			}
 		}
