@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4722f1f03db1760501de8e803c7cb28e",
+    "content-hash": "046b7a4090ecb9567bcf94de8126af3c",
     "packages": [
         {
             "name": "ernilambar/optioner",
