@@ -5,9 +5,12 @@
  * @package Nilambar\Notira
  */
 
+declare(strict_types=1);
+
 namespace Nilambar\Notira\Core;
 
 use Nilambar\Notira\API\REST_API;
+use Nilambar\Notira\Options\Options;
 use Nilambar\Notira\Utils\Credential_Utils;
 use Nilambar\Notira\Utils\Tone_Utils;
 
@@ -21,11 +24,18 @@ defined( 'ABSPATH' ) || exit;
 class Bootstrap {
 
 	/**
-	 * Admin page menu slug.
+	 * Admin page menu slug (generator).
 	 *
 	 * @since 1.0.0
 	 */
 	public const ADMIN_PAGE_SLUG = 'notira';
+
+	/**
+	 * Settings submenu slug (Optioner).
+	 *
+	 * @since 1.0.0
+	 */
+	public const SETTINGS_PAGE_SLUG = 'notira-settings';
 
 	/**
 	 * Initialize the plugin.
@@ -33,6 +43,8 @@ class Bootstrap {
 	 * @since 1.0.0
 	 */
 	public static function init(): void {
+		( new Options() )->register();
+
 		add_action( 'admin_menu', [ __CLASS__, 'register_admin_menu' ] );
 		add_action( 'admin_notices', [ __CLASS__, 'render_credentials_notice' ] );
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_admin_assets' ], 10, 1 );
@@ -51,7 +63,16 @@ class Bootstrap {
 	 */
 	public static function render_credentials_notice(): void {
 		$screen = get_current_screen();
-		if ( ! $screen || 'dashboard_page_' . self::ADMIN_PAGE_SLUG !== $screen->id ) {
+		if ( ! $screen ) {
+			return;
+		}
+
+		$notira_screens = [
+			'toplevel_page_' . self::ADMIN_PAGE_SLUG,
+			self::ADMIN_PAGE_SLUG . '_page_' . self::SETTINGS_PAGE_SLUG,
+		];
+
+		if ( ! in_array( $screen->id, $notira_screens, true ) ) {
 			return;
 		}
 
@@ -101,7 +122,9 @@ class Bootstrap {
 	 * @since 1.0.0
 	 */
 	public static function set_favicon(): void {
-		if ( isset( $_GET['page'] ) && self::ADMIN_PAGE_SLUG === $_GET['page'] ) {
+		$current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+
+		if ( self::ADMIN_PAGE_SLUG === $current_page || self::SETTINGS_PAGE_SLUG === $current_page ) {
 			$icon_url = NOTIRA_URL . '/build/favicon.png';
 
 			echo '<link rel="shortcut icon" type="image/png" href="' . esc_url( $icon_url ) . '">' . "\n";
@@ -120,7 +143,13 @@ class Bootstrap {
 	public static function disable_core_favicon( array $meta_tags ): array {
 		global $pagenow;
 
-		if ( isset( $pagenow ) && 'index.php' === $pagenow && isset( $_GET['page'] ) && self::ADMIN_PAGE_SLUG === $_GET['page'] ) {
+		if ( ! isset( $pagenow ) || 'admin.php' !== $pagenow || ! isset( $_GET['page'] ) ) {
+			return $meta_tags;
+		}
+
+		$current_page = sanitize_key( wp_unslash( $_GET['page'] ) );
+
+		if ( self::ADMIN_PAGE_SLUG === $current_page || self::SETTINGS_PAGE_SLUG === $current_page ) {
 			return [];
 		}
 
@@ -137,9 +166,15 @@ class Bootstrap {
 	 * @return bool False on Notira page, otherwise the original $show value.
 	 */
 	public static function disable_linkit_on_notira_page( bool $show, string $hook ): bool {
-		if ( 'dashboard_page_' . self::ADMIN_PAGE_SLUG === $hook ) {
+		$notira_hooks = [
+			'toplevel_page_' . self::ADMIN_PAGE_SLUG,
+			self::ADMIN_PAGE_SLUG . '_page_' . self::SETTINGS_PAGE_SLUG,
+		];
+
+		if ( in_array( $hook, $notira_hooks, true ) ) {
 			return false;
 		}
+
 		return $show;
 	}
 
@@ -149,12 +184,14 @@ class Bootstrap {
 	 * @since 1.0.0
 	 */
 	public static function register_admin_menu(): void {
-		add_dashboard_page(
+		add_menu_page(
 			__( 'Notira', 'notira' ),
 			__( 'Notira', 'notira' ),
 			'manage_options',
 			self::ADMIN_PAGE_SLUG,
-			[ __CLASS__, 'render_admin_page' ]
+			[ __CLASS__, 'render_admin_page' ],
+			'dashicons-email-alt',
+			58
 		);
 	}
 
@@ -166,7 +203,7 @@ class Bootstrap {
 	 * @param string $hook_suffix Current admin page hook.
 	 */
 	public static function enqueue_admin_assets( $hook_suffix ): void {
-		if ( 'dashboard_page_' . self::ADMIN_PAGE_SLUG !== $hook_suffix ) {
+		if ( 'toplevel_page_' . self::ADMIN_PAGE_SLUG !== $hook_suffix ) {
 			return;
 		}
 
@@ -194,7 +231,7 @@ class Bootstrap {
 	 */
 	public static function print_admin_settings(): void {
 		$screen = get_current_screen();
-		if ( ! $screen || 'dashboard_page_' . self::ADMIN_PAGE_SLUG !== $screen->id ) {
+		if ( ! $screen || 'toplevel_page_' . self::ADMIN_PAGE_SLUG !== $screen->id ) {
 			return;
 		}
 
@@ -209,12 +246,12 @@ class Bootstrap {
 		}
 
 		$settings = [
-			'apiUrl'        => rest_url( 'notira/v1/generate' ),
-			'nonce'         => wp_create_nonce( 'wp_rest' ),
-			'aiUiEnabled'   => $ai_ui_enabled,
-			'defaultTone'   => Tone_Utils::DEFAULT_TONE,
-			'tones'         => $tones_list,
-			'i18n'          => [
+			'apiUrl'      => rest_url( 'notira/v1/generate' ),
+			'nonce'       => wp_create_nonce( 'wp_rest' ),
+			'aiUiEnabled' => $ai_ui_enabled,
+			'defaultTone' => Tone_Utils::DEFAULT_TONE,
+			'tones'       => $tones_list,
+			'i18n'        => [
 				'inputLabel'         => __( 'Enter draft notes or bullet points', 'notira' ),
 				'inputPlaceholder'   => __( 'Paste or type your draft notes, bullets, or paragraphs here…', 'notira' ),
 				'toneLabel'          => __( 'Tone', 'notira' ),

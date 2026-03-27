@@ -4,8 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ae1b6905ba8b7098394b8d3a1a6eb132",
-    "packages": [],
+    "content-hash": "4722f1f03db1760501de8e803c7cb28e",
+    "packages": [
+        {
+            "name": "ernilambar/optioner",
+            "version": "3.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ernilambar/optioner.git",
+                "reference": "145bd9778a030878d62f1cacfd1bcd97693bbeff"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ernilambar/optioner/zipball/145bd9778a030878d62f1cacfd1bcd97693bbeff",
+                "reference": "145bd9778a030878d62f1cacfd1bcd97693bbeff",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.24"
+            },
+            "require-dev": {
+                "dealerdirect/phpcodesniffer-composer-installer": "^1",
+                "php-parallel-lint/php-parallel-lint": "^1.4",
+                "phpcompatibility/php-compatibility": "^10.0@alpha",
+                "squizlabs/php_codesniffer": "^3.13",
+                "wp-coding-standards/wpcs": "^3.3"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nilambar Sharma",
+                    "email": "nilambar@outlook.com",
+                    "homepage": "https://www.nilambar.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Minimal option framework for WordPress.",
+            "homepage": "https://github.com/ernilambar/optioner",
+            "keywords": [
+                "option",
+                "wordpress"
+            ],
+            "support": {
+                "issues": "https://github.com/ernilambar/optioner/issues",
+                "source": "https://github.com/ernilambar/optioner/tree/3.1.1"
+            },
+            "time": "2026-03-09T12:07:00+00:00"
+        }
+    ],
     "packages-dev": [
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",

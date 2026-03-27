@@ -5,6 +5,8 @@
  * @package Nilambar\Notira
  */
 
+declare(strict_types=1);
+
 namespace Nilambar\Notira\Utils;
 
 defined( 'ABSPATH' ) || exit;
