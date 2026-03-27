@@ -5,8 +5,11 @@
  * @package Nilambar\Notira
  */
 
+declare(strict_types=1);
+
 namespace Nilambar\Notira\API;
 
+use Nilambar\Notira\Core\Option;
 use Nilambar\Notira\Utils\Credential_Utils;
 use Nilambar\Notira\Utils\Prompt_Utils;
 use Nilambar\Notira\Utils\Tone_Utils;
@@ -252,15 +255,45 @@ class REST_API {
 	}
 
 	/**
+	 * Return sanitized opening and closing lines from settings.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @return array{greeting: string, signoff: string}
+	 */
+	private static function get_email_wrapper_lines(): array {
+		$greeting = Option::get( 'email_greeting' );
+		$signoff  = Option::get( 'email_signoff' );
+
+		if ( ! is_string( $greeting ) || '' === trim( $greeting ) ) {
+			$greeting = (string) Option::defaults( 'email_greeting' );
+		} else {
+			$greeting = sanitize_text_field( $greeting );
+		}
+
+		if ( ! is_string( $signoff ) || '' === trim( $signoff ) ) {
+			$signoff = (string) Option::defaults( 'email_signoff' );
+		} else {
+			$signoff = sanitize_text_field( $signoff );
+		}
+
+		return [
+			'greeting' => $greeting,
+			'signoff'  => $signoff,
+		];
+	}
+
+	/**
 	 * Call AI to generate improved HTML content (uses credentials from Connectors).
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param string $input Raw user input.
 	 * @param string $tone  Tone slug.
-	 * @return array{output: string, meta: array<string, mixed>}|WP_Error HTML output and metadata, or error.
+	 * @return array|WP_Error HTML output and metadata, or error.
 	 */
 	private static function call_ai( string $input, string $tone ) {
+		$wrappers   = self::get_email_wrapper_lines();
 		$tone_label = Tone_Utils::get_tone_label( $tone );
 		$system     = Prompt_Utils::get_email_system_prompt( $tone_label );
 		$prompt     = Prompt_Utils::get_email_user_prompt( $input );
@@ -347,7 +380,7 @@ class REST_API {
 		if ( '' === $body ) {
 			$body = '<p></p>';
 		}
-		$output = 'Hi,<br>' . $body . '<br>Regards,';
+		$output = esc_html( $wrappers['greeting'] ) . '<br>' . $body . '<br>' . esc_html( $wrappers['signoff'] );
 
 		$meta = self::extract_generation_meta_from_result( $result_obj );
 
