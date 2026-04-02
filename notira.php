@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Notira
  * Plugin URI: https://github.com/ernilambar/notira
- * Description: Improve draft notes into professional email-ready HTML using AI.
- * Version: 1.0.0
+ * Description: Improve draft text into email-ready or proofread HTML using AI.
+ * Version: 1.1.0
  * Requires at least: 7.0
  * Requires PHP: 7.4
  * Author: Nilambar
@@ -22,7 +22,7 @@ use Nilambar\Notira\Core\Bootstrap;
 defined( 'ABSPATH' ) || exit;
 
 // Define.
-define( 'NOTIRA_VERSION', '1.0.0' );
+define( 'NOTIRA_VERSION', '1.1.0' );
 define( 'NOTIRA_BASE_NAME', basename( __DIR__ ) );
 define( 'NOTIRA_BASE_FILEPATH', __FILE__ );
 define( 'NOTIRA_BASE_FILENAME', plugin_basename( __FILE__ ) );

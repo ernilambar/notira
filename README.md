@@ -1,23 +1,9 @@
 # Notira
 
-WordPress plugin that turns draft notes or bullet points into professional, email-ready HTML using AI.
+WordPress plugin that turns draft text into clean HTML with AI. **Email** mode polishes an email body and wraps it with your opening/closing lines from **Notira → Settings → Output**. **Proofread** mode corrects grammar, spelling, and clarity with minimal rewriting.
 
-## Requirements
+**Requirements:** PHP 7.4+, WordPress 7.0+, API key in **Settings → Connectors**.
 
-- PHP 7.4+
-- WordPress 7.0+
-- API key from a supported provider
+**Install:** `composer install`, activate the plugin, set your API key.
 
-## Installation
-
-1. Install dependencies: `composer install`
-2. Activate the plugin in **Plugins**.
-3. Set your API key in **Settings → Connectors** (e.g. OpenAI or another supported provider).
-
-## Usage
-
-1. Go to **Dashboard → Notira**.
-2. Paste or type draft notes, bullets, or paragraphs in the textarea.
-3. Choose a **tone** (default: Professional).
-4. Click **Generate**.
-5. Use **Copy** to copy the result.
+**Usage:** **Dashboard → Notira** → pick mode and tone (default **Professional**; **Match original** follows the source register) → **Generate** → **Copy**.

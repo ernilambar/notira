@@ -52,7 +52,7 @@ class Options {
 		$obj->add_tab(
 			[
 				'id'    => 'notira_settings',
-				'title' => esc_html__( 'Email output', 'notira' ),
+				'title' => esc_html__( 'Output', 'notira' ),
 			]
 		);
 
@@ -62,7 +62,7 @@ class Options {
 				'id'          => 'email_greeting',
 				'type'        => 'text',
 				'title'       => esc_html__( 'Opening line', 'notira' ),
-				'description' => esc_html__( 'Shown before the generated body (for example: Hi,).', 'notira' ),
+				'description' => esc_html__( 'Used only in Email mode: shown before the generated body (for example: Hi,).', 'notira' ),
 				'placeholder' => (string) Option::defaults( 'email_greeting' ),
 				'default'     => (string) Option::defaults( 'email_greeting' ),
 			]
@@ -74,7 +74,7 @@ class Options {
 				'id'          => 'email_signoff',
 				'type'        => 'text',
 				'title'       => esc_html__( 'Closing line', 'notira' ),
-				'description' => esc_html__( 'Shown after the generated body (for example: Regards,).', 'notira' ),
+				'description' => esc_html__( 'Used only in Email mode: shown after the generated body (for example: Regards,).', 'notira' ),
 				'placeholder' => (string) Option::defaults( 'email_signoff' ),
 				'default'     => (string) Option::defaults( 'email_signoff' ),
 			]

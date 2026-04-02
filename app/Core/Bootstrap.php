@@ -12,6 +12,7 @@ namespace Nilambar\Notira\Core;
 use Nilambar\Notira\API\REST_API;
 use Nilambar\Notira\Options\Options;
 use Nilambar\Notira\Utils\Credential_Utils;
+use Nilambar\Notira\Utils\Mode_Utils;
 use Nilambar\Notira\Utils\Tone_Utils;
 
 defined( 'ABSPATH' ) || exit;
@@ -245,15 +246,31 @@ class Bootstrap {
 			];
 		}
 
+		$modes_list = [
+			[
+				'value' => Mode_Utils::MODE_EMAIL,
+				'label' => __( 'Email', 'notira' ),
+				'help'  => __( 'Polish your notes into a clear email body. Opening and closing lines from settings are added around the result.', 'notira' ),
+			],
+			[
+				'value' => Mode_Utils::MODE_PROOFREAD,
+				'label' => __( 'Proofread', 'notira' ),
+				'help'  => __( 'Grammar, spelling, and punctuation corrections, with clarity improvements only where needed; preserves structure and meaning.', 'notira' ),
+			],
+		];
+
 		$settings = [
 			'apiUrl'      => rest_url( 'notira/v1/generate' ),
 			'nonce'       => wp_create_nonce( 'wp_rest' ),
 			'aiUiEnabled' => $ai_ui_enabled,
+			'defaultMode' => Mode_Utils::DEFAULT_MODE,
+			'modes'       => $modes_list,
 			'defaultTone' => Tone_Utils::DEFAULT_TONE,
 			'tones'       => $tones_list,
 			'i18n'        => [
 				'inputLabel'         => __( 'Enter draft notes or bullet points', 'notira' ),
-				'inputPlaceholder'   => __( 'Paste or type your draft notes, bullets, or paragraphs here…', 'notira' ),
+				'inputPlaceholder'   => __( 'Paste or type your text here…', 'notira' ),
+				'modeLabel'          => __( 'Mode', 'notira' ),
 				'toneLabel'          => __( 'Tone', 'notira' ),
 				'generateLabel'      => __( 'Generate', 'notira' ),
 				'copyLabel'          => __( 'Copy', 'notira' ),
