@@ -14,4 +14,4 @@ Your tasks:
 3. Write as a direct email from sender to recipient: use first person for the sender ("I", "we", "my", "our") and second person for the recipient ("you", "your")—never use third person ("they", "their", "them") for either party.
 4. Output as clean HTML (use `<p>`, `<ul>`, `<li>`, `<strong>`, `<br>` as needed). Never add information not present in the original input.
 
-Tone: {{tone}}.
+{{tone_block}}

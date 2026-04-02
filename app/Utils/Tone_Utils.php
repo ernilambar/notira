@@ -34,15 +34,16 @@ class Tone_Utils {
 	 */
 	public static function get_tone_options(): array {
 		return [
-			'professional'  => __( 'Professional', 'notira' ),
-			'friendly'      => __( 'Friendly', 'notira' ),
-			'formal'        => __( 'Formal', 'notira' ),
-			'concise'       => __( 'Concise', 'notira' ),
-			'empathetic'    => __( 'Empathetic', 'notira' ),
-			'authoritative' => __( 'Authoritative', 'notira' ),
-			'commanding'    => __( 'Commanding', 'notira' ),
-			'assertive'     => __( 'Assertive', 'notira' ),
-			'neutral'       => __( 'Neutral', 'notira' ),
+			'professional'   => __( 'Professional', 'notira' ),
+			'match_original' => __( 'Match original', 'notira' ),
+			'friendly'       => __( 'Friendly', 'notira' ),
+			'formal'         => __( 'Formal', 'notira' ),
+			'concise'        => __( 'Concise', 'notira' ),
+			'empathetic'     => __( 'Empathetic', 'notira' ),
+			'authoritative'  => __( 'Authoritative', 'notira' ),
+			'commanding'     => __( 'Commanding', 'notira' ),
+			'assertive'      => __( 'Assertive', 'notira' ),
+			'neutral'        => __( 'Neutral', 'notira' ),
 		];
 	}
 

@@ -11,6 +11,7 @@ namespace Nilambar\Notira\API;
 
 use Nilambar\Notira\Core\Option;
 use Nilambar\Notira\Utils\Credential_Utils;
+use Nilambar\Notira\Utils\Mode_Utils;
 use Nilambar\Notira\Utils\Prompt_Utils;
 use Nilambar\Notira\Utils\Tone_Utils;
 use Throwable;
@@ -78,6 +79,12 @@ class REST_API {
 						'sanitize_callback' => 'sanitize_textarea_field',
 						'validate_callback' => [ __CLASS__, 'validate_input' ],
 					],
+					'mode'  => [
+						'required'          => true,
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_key',
+						'validate_callback' => [ __CLASS__, 'validate_mode' ],
+					],
 					'tone'  => [
 						'required'          => false,
 						'type'              => 'string',
@@ -139,6 +146,34 @@ class REST_API {
 	}
 
 	/**
+	 * Validate generation mode slug.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param mixed           $value   Parameter value.
+	 * @param WP_REST_Request $request Request object.
+	 * @return true|WP_Error
+	 */
+	public static function validate_mode( $value, WP_REST_Request $request ) {
+		if ( ! is_string( $value ) || '' === $value ) {
+			return new WP_Error(
+				'notira_invalid_mode',
+				__( 'A valid mode is required. Use email or proofread.', 'notira' ),
+				[ 'status' => 400 ]
+			);
+		}
+		$slug = sanitize_key( $value );
+		if ( ! in_array( $slug, Mode_Utils::get_valid_slugs(), true ) ) {
+			return new WP_Error(
+				'notira_invalid_mode',
+				__( 'A valid mode is required. Use email or proofread.', 'notira' ),
+				[ 'status' => 400 ]
+			);
+		}
+		return true;
+	}
+
+	/**
 	 * Handle generate request.
 	 *
 	 * @since 1.0.0
@@ -164,12 +199,22 @@ class REST_API {
 		}
 
 		$input = $request->get_param( 'input' );
+		$mode  = $request->get_param( 'mode' );
 		$tone  = $request->get_param( 'tone' );
+		$mode  = is_string( $mode ) ? sanitize_key( $mode ) : '';
 		$input = is_string( $input ) ? trim( $input ) : '';
 		if ( '' === $input ) {
 			return new WP_Error(
 				'notira_empty_input',
 				__( 'Please enter some text to improve.', 'notira' ),
+				[ 'status' => 400 ]
+			);
+		}
+
+		if ( ! in_array( $mode, Mode_Utils::get_valid_slugs(), true ) ) {
+			return new WP_Error(
+				'notira_invalid_mode',
+				__( 'A valid mode is required. Use email or proofread.', 'notira' ),
 				[ 'status' => 400 ]
 			);
 		}
@@ -200,7 +245,7 @@ class REST_API {
 
 		$valid_slugs = Tone_Utils::get_valid_slugs();
 		$tone        = ( is_string( $tone ) && in_array( $tone, $valid_slugs, true ) ) ? $tone : Tone_Utils::DEFAULT_TONE;
-		$cache_key   = 'notira_' . $tone . '_' . md5( $input );
+		$cache_key   = 'notira_' . $mode . '_' . $tone . '_' . md5( $input );
 		$cached      = get_transient( $cache_key );
 		if ( false !== $cached ) {
 			$cached_output = '';
@@ -228,7 +273,7 @@ class REST_API {
 			}
 		}
 
-		$result = self::call_ai( $input, $tone );
+		$result = self::call_ai( $input, $tone, $mode );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -290,13 +335,13 @@ class REST_API {
 	 *
 	 * @param string $input Raw user input.
 	 * @param string $tone  Tone slug.
+	 * @param string $mode  Mode slug (email or proofread).
 	 * @return array|WP_Error HTML output and metadata, or error.
 	 */
-	private static function call_ai( string $input, string $tone ) {
-		$wrappers   = self::get_email_wrapper_lines();
-		$tone_label = Tone_Utils::get_tone_label( $tone );
-		$system     = Prompt_Utils::get_email_system_prompt( $tone_label );
-		$prompt     = Prompt_Utils::get_email_user_prompt( $input );
+	private static function call_ai( string $input, string $tone, string $mode ) {
+		$wrappers = self::get_email_wrapper_lines();
+		$system   = Prompt_Utils::get_assembled_system_prompt( $mode, $tone );
+		$prompt   = Prompt_Utils::get_mode_user_prompt( $mode, $input );
 		if ( '' === $system || '' === $prompt ) {
 			return new WP_Error(
 				'notira_missing_prompts',
@@ -380,7 +425,11 @@ class REST_API {
 		if ( '' === $body ) {
 			$body = '<p></p>';
 		}
-		$output = esc_html( $wrappers['greeting'] ) . '<br>' . $body . '<br>' . esc_html( $wrappers['signoff'] );
+		if ( Mode_Utils::MODE_PROOFREAD === $mode ) {
+			$output = $body;
+		} else {
+			$output = esc_html( $wrappers['greeting'] ) . '<br>' . $body . '<br>' . esc_html( $wrappers['signoff'] );
+		}
 
 		$meta = self::extract_generation_meta_from_result( $result_obj );
 

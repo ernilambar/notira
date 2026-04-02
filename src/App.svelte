@@ -6,7 +6,15 @@
 	const admin = typeof window !== 'undefined' ? window.notiraAdmin : null;
 	const cfg = admin && typeof admin === 'object' ? admin : {};
 
-	const { apiUrl = '', nonce = '', aiUiEnabled = false, defaultTone = '', tones = [] } = cfg;
+	const {
+		apiUrl = '',
+		nonce = '',
+		aiUiEnabled = false,
+		defaultMode = 'email',
+		modes = [],
+		defaultTone = '',
+		tones = [],
+	} = cfg;
 
 	/**
 	 * Input length limits come only from #notira-root data-* (templates/admin-page.php), not
@@ -18,6 +26,17 @@
 	/** @type {Record<string, string>} */
 	const i18n = cfg.i18n && typeof cfg.i18n === 'object' ? cfg.i18n : {};
 
+	const modeList = Array.isArray( modes ) ? modes : [];
+	const modeValues = modeList.map( ( m ) => m?.value ).filter( Boolean );
+	let initialMode = defaultMode;
+	if ( initialMode && ! modeValues.includes( initialMode ) ) {
+		initialMode = modeList[ 0 ]?.value ?? 'email';
+	} else if ( ! initialMode && modeList.length ) {
+		initialMode = modeList[ 0 ].value;
+	} else if ( ! initialMode ) {
+		initialMode = 'email';
+	}
+
 	const toneList = Array.isArray( tones ) ? tones : [];
 	const toneValues = toneList.map( ( t ) => t?.value ).filter( Boolean );
 	let initialTone = defaultTone;
@@ -28,6 +47,7 @@
 	}
 
 	let inputValue = $state( '' );
+	let selectedMode = $state( initialMode );
 	let selectedTone = $state( initialTone );
 	let outputHtml = $state( '' );
 	let generationMeta = $state( null );
@@ -167,7 +187,11 @@
 		generating = true;
 		generationMeta = null;
 
-		const body = JSON.stringify( { input: raw, tone: selectedTone } );
+		const body = JSON.stringify( {
+			input: raw,
+			tone: selectedTone,
+			mode: selectedMode,
+		} );
 		const headers = {
 			'Content-Type': 'application/json',
 			'X-WP-Nonce': nonce,
@@ -258,6 +282,34 @@
 		<div class="notira-panel">
 			<div class="notira-input-section">
 				<label for="notira-input-svelte">{i18n.inputLabel}</label>
+
+				<div class="notira-mode-section">
+					<span class="notira-mode-section-label" id="notira-mode-legend"
+						>{i18n.modeLabel}</span
+					>
+					<div
+						class="notira-mode-radios"
+						role="group"
+						aria-labelledby="notira-mode-legend"
+					>
+						{#each modeList as item (item.value)}
+							<label
+								class="notira-mode-option"
+								title={item.help ? item.help : undefined}
+							>
+								<input
+									type="radio"
+									name="notira-mode"
+									value={item.value}
+									bind:group={selectedMode}
+									disabled={! aiUiEnabled}
+								/>
+								<span class="notira-mode-option-label">{item.label}</span>
+							</label>
+						{/each}
+					</div>
+				</div>
+
 				<textarea
 					id="notira-input-svelte"
 					bind:this={textareaEl}
@@ -272,6 +324,7 @@
 						? 'notira-char-count-line notira-input-validation'
 						: 'notira-char-count-line'}
 				></textarea>
+
 				<p
 					id="notira-char-count-line"
 					class="description notira-char-count"
