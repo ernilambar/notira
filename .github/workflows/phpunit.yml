@@ -1,0 +1,89 @@
+name: PHPUnit
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  phpunit:
+    name: PHPUnit (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php:
+          - '7.4'
+          - '8.4'
+
+    services:
+      mysql:
+        image: mariadb:10.11
+        env:
+          MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: 'yes'
+        # Do not set MARIADB_DATABASE: install-wp-tests.sh creates wordpress_test and prompts if it already exists (breaks CI).
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="healthcheck.sh --connect --innodb_initialized"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      # Pinned WordPress package (not trunk) so CI stays stable; bump when you adopt a newer RC or 7.x.y release.
+      WP_VERSION: '7.0-RC2'
+      WP_TESTS_DIR: ${{ github.workspace }}/.cache/wordpress-tests-lib
+      WP_CORE_DIR: ${{ github.workspace }}/.cache/wordpress
+      WP_INSTALL_TESTS_SKIP_UPDATE_CHECK: 'true'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mysqli, zip
+          coverage: none
+          tools: composer:v2
+
+      - name: Cache Composer
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php }}-composer-
+
+      - name: Cache WordPress (core + test library)
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ github.workspace }}/.cache/wordpress
+            ${{ github.workspace }}/.cache/wordpress-tests-lib
+          key: ${{ runner.os }}-wp-${{ env.WP_VERSION }}-v1-${{ hashFiles('bin/install-wp-tests.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-wp-${{ env.WP_VERSION }}-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Install WordPress test environment
+        run: bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 "$WP_VERSION" false
+
+      - name: Run PHPUnit
+        run: composer test
