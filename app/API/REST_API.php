@@ -355,13 +355,16 @@ class REST_API {
 			->using_temperature( 0.5 )
 			->using_max_tokens( 1024 )
 			->using_model_preference(
+				'openai/gpt-4o-mini',
+				'openai/gpt-4o',
+				'openai/gpt-4',
+				'anthropic/claude-3.5-sonnet',
+				'google/gemini-flash-1.5',
 				'gpt-4o-mini',
 				'gpt-4o',
-				'gpt-3.5-turbo',
+				'gpt-4',
 				'claude-3-5-sonnet-20241022',
-				'claude-sonnet-4-5',
-				'gemini-2.0-flash',
-				'gemini-1.5-pro'
+				'gemini-2.0-flash'
 			);
 
 		if ( ! $builder->is_supported_for_text_generation() ) {
