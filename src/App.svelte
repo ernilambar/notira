@@ -14,6 +14,7 @@
 		modes = [],
 		defaultTone = '',
 		tones = [],
+		defaultContent = '',
 	} = cfg;
 
 	/**
@@ -46,7 +47,8 @@
 		initialTone = toneList[ 0 ].value;
 	}
 
-	let inputValue = $state( '' );
+	const initialInput = typeof defaultContent === 'string' ? defaultContent : '';
+	let inputValue = $state( initialInput );
 	let selectedMode = $state( initialMode );
 	let selectedTone = $state( initialTone );
 	let outputHtml = $state( '' );

@@ -52,10 +52,11 @@ class Option {
 	 */
 	public static function get_defaults() {
 		return [
-			'default_mode'   => Mode_Utils::DEFAULT_MODE,
-			'default_tone'   => Tone_Utils::DEFAULT_TONE,
-			'email_greeting' => __( 'Hi,', 'notira' ),
-			'email_signoff'  => __( 'Regards,', 'notira' ),
+			'default_mode'    => Mode_Utils::DEFAULT_MODE,
+			'default_tone'    => Tone_Utils::DEFAULT_TONE,
+			'email_greeting'  => __( 'Hi,', 'notira' ),
+			'email_signoff'   => __( 'Regards,', 'notira' ),
+			'default_content' => '',
 		];
 	}
 
