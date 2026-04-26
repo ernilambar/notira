@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Nilambar\Notira\Core;
 
+use Nilambar\Notira\Utils\Mode_Utils;
+use Nilambar\Notira\Utils\Tone_Utils;
+
 /**
  * Option class.
  *
@@ -49,6 +52,8 @@ class Option {
 	 */
 	public static function get_defaults() {
 		return [
+			'default_mode'   => Mode_Utils::DEFAULT_MODE,
+			'default_tone'   => Tone_Utils::DEFAULT_TONE,
 			'email_greeting' => __( 'Hi,', 'notira' ),
 			'email_signoff'  => __( 'Regards,', 'notira' ),
 		];

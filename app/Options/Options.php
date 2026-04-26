@@ -11,6 +11,8 @@ namespace Nilambar\Notira\Options;
 
 use Nilambar\Notira\Core\Bootstrap;
 use Nilambar\Notira\Core\Option;
+use Nilambar\Notira\Utils\Mode_Utils;
+use Nilambar\Notira\Utils\Tone_Utils;
 use Nilambar\Optioner\Optioner;
 
 /**
@@ -53,6 +55,33 @@ class Options {
 			[
 				'id'    => 'notira_settings',
 				'title' => esc_html__( 'Output', 'notira' ),
+			]
+		);
+
+		$obj->add_field(
+			'notira_settings',
+			[
+				'id'          => 'default_mode',
+				'type'        => 'select',
+				'title'       => esc_html__( 'Default mode', 'notira' ),
+				'description' => esc_html__( 'Initial mode selected when the generator screen loads.', 'notira' ),
+				'choices'     => [
+					Mode_Utils::MODE_EMAIL     => __( 'Email', 'notira' ),
+					Mode_Utils::MODE_PROOFREAD => __( 'Proofread', 'notira' ),
+				],
+				'default'     => (string) Option::defaults( 'default_mode' ),
+			]
+		);
+
+		$obj->add_field(
+			'notira_settings',
+			[
+				'id'          => 'default_tone',
+				'type'        => 'select',
+				'title'       => esc_html__( 'Default tone', 'notira' ),
+				'description' => esc_html__( 'Initial tone selected when the generator screen loads.', 'notira' ),
+				'choices'     => Tone_Utils::get_tone_options(),
+				'default'     => (string) Option::defaults( 'default_tone' ),
 			]
 		);
 
