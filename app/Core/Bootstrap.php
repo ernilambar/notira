@@ -259,13 +259,23 @@ class Bootstrap {
 			],
 		];
 
+		$default_mode = Option::get( 'default_mode' );
+		if ( ! is_string( $default_mode ) || ! in_array( $default_mode, Mode_Utils::get_valid_slugs(), true ) ) {
+			$default_mode = Mode_Utils::DEFAULT_MODE;
+		}
+
+		$default_tone = Option::get( 'default_tone' );
+		if ( ! is_string( $default_tone ) || ! in_array( $default_tone, Tone_Utils::get_valid_slugs(), true ) ) {
+			$default_tone = Tone_Utils::DEFAULT_TONE;
+		}
+
 		$settings = [
 			'apiUrl'      => rest_url( 'notira/v1/generate' ),
 			'nonce'       => wp_create_nonce( 'wp_rest' ),
 			'aiUiEnabled' => $ai_ui_enabled,
-			'defaultMode' => Mode_Utils::DEFAULT_MODE,
+			'defaultMode' => $default_mode,
 			'modes'       => $modes_list,
-			'defaultTone' => Tone_Utils::DEFAULT_TONE,
+			'defaultTone' => $default_tone,
 			'tones'       => $tones_list,
 			'i18n'        => [
 				'inputLabel'         => __( 'Enter draft notes or bullet points', 'notira' ),
