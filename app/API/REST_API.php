@@ -307,20 +307,8 @@ class REST_API {
 	 * @return array{greeting: string, signoff: string}
 	 */
 	private static function get_email_wrapper_lines(): array {
-		$greeting = Option::get( 'email_greeting' );
-		$signoff  = Option::get( 'email_signoff' );
-
-		if ( ! is_string( $greeting ) || '' === trim( $greeting ) ) {
-			$greeting = (string) Option::defaults( 'email_greeting' );
-		} else {
-			$greeting = sanitize_text_field( $greeting );
-		}
-
-		if ( ! is_string( $signoff ) || '' === trim( $signoff ) ) {
-			$signoff = (string) Option::defaults( 'email_signoff' );
-		} else {
-			$signoff = sanitize_text_field( $signoff );
-		}
+		$greeting = sanitize_text_field( (string) Option::get( 'email_greeting' ) );
+		$signoff  = sanitize_text_field( (string) Option::get( 'email_signoff' ) );
 
 		return [
 			'greeting' => $greeting,

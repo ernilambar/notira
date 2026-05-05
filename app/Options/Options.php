@@ -1,6 +1,6 @@
 <?php
 /**
- * Optioner settings registration.
+ * Optiz settings registration.
  *
  * @package Nilambar\Notira
  */
@@ -10,10 +10,9 @@ declare(strict_types=1);
 namespace Nilambar\Notira\Options;
 
 use Nilambar\Notira\Core\Bootstrap;
-use Nilambar\Notira\Core\Option;
 use Nilambar\Notira\Utils\Mode_Utils;
 use Nilambar\Notira\Utils\Tone_Utils;
-use Nilambar\Optioner\Optioner;
+use Nilambar\Optiz\Manager;
 
 /**
  * Options class.
@@ -28,7 +27,7 @@ class Options {
 	 * @since 1.0.0
 	 */
 	public function register() {
-		add_action( 'optioner_admin_init', [ $this, 'register_plugin_options' ] );
+		add_action( 'init', [ $this, 'register_plugin_options' ] );
 	}
 
 	/**
@@ -37,78 +36,61 @@ class Options {
 	 * @since 1.0.0
 	 */
 	public function register_plugin_options() {
-		$obj = new Optioner();
-
-		$obj->set_page(
+		Manager::register(
+			'notira_options',
 			[
-				'page_title'     => esc_html__( 'Notira Settings', 'notira' ),
-				'menu_title'     => esc_html__( 'Settings', 'notira' ),
-				'capability'     => 'manage_options',
-				'menu_slug'      => 'notira-settings',
-				'option_slug'    => 'notira_options',
-				'parent_page'    => Bootstrap::ADMIN_PAGE_SLUG,
-				'top_level_menu' => false,
-			]
-		);
-
-		$obj->add_tab(
-			[
-				'id'    => 'notira_settings',
-				'title' => esc_html__( 'Output', 'notira' ),
-			]
-		);
-
-		$obj->add_field(
-			'notira_settings',
-			[
-				'id'          => 'default_mode',
-				'type'        => 'select',
-				'title'       => esc_html__( 'Default mode', 'notira' ),
-				'description' => esc_html__( 'Initial mode selected when the generator screen loads.', 'notira' ),
-				'choices'     => [
-					Mode_Utils::MODE_EMAIL     => __( 'Email', 'notira' ),
-					Mode_Utils::MODE_PROOFREAD => __( 'Proofread', 'notira' ),
+				'option_key' => 'notira_options',
+				'page'       => [
+					'title'       => esc_html__( 'Notira Settings', 'notira' ),
+					'menu_title'  => esc_html__( 'Settings', 'notira' ),
+					'menu_slug'   => 'notira-settings',
+					'capability'  => 'manage_options',
+					'parent_slug' => Bootstrap::ADMIN_PAGE_SLUG,
 				],
-				'default'     => (string) Option::defaults( 'default_mode' ),
+				'tabs'       => [
+					[
+						'id'     => 'notira_settings',
+						'label'  => esc_html__( 'Output', 'notira' ),
+						'fields' => [
+							[
+								'id'          => 'default_mode',
+								'type'        => 'select',
+								'label'       => esc_html__( 'Default mode', 'notira' ),
+								'description' => esc_html__( 'Initial mode selected when the generator screen loads.', 'notira' ),
+								'choices'     => [
+									Mode_Utils::MODE_EMAIL => __( 'Email', 'notira' ),
+									Mode_Utils::MODE_PROOFREAD => __( 'Proofread', 'notira' ),
+								],
+								'default'     => Mode_Utils::DEFAULT_MODE,
+							],
+							[
+								'id'          => 'default_tone',
+								'type'        => 'select',
+								'label'       => esc_html__( 'Default tone', 'notira' ),
+								'description' => esc_html__( 'Initial tone selected when the generator screen loads.', 'notira' ),
+								'choices'     => Tone_Utils::get_tone_options(),
+								'default'     => Tone_Utils::DEFAULT_TONE,
+							],
+							[
+								'id'          => 'email_greeting',
+								'type'        => 'text',
+								'label'       => esc_html__( 'Opening line', 'notira' ),
+								'description' => esc_html__( 'Used only in Email mode: shown before the generated body (for example: Hi,).', 'notira' ),
+								'placeholder' => __( 'Hi,', 'notira' ),
+								'default'     => __( 'Hi,', 'notira' ),
+							],
+							[
+								'id'          => 'email_signoff',
+								'type'        => 'text',
+								'label'       => esc_html__( 'Closing line', 'notira' ),
+								'description' => esc_html__( 'Used only in Email mode: shown after the generated body (for example: Regards,).', 'notira' ),
+								'placeholder' => __( 'Regards,', 'notira' ),
+								'default'     => __( 'Regards,', 'notira' ),
+							],
+						],
+					],
+				],
 			]
 		);
-
-		$obj->add_field(
-			'notira_settings',
-			[
-				'id'          => 'default_tone',
-				'type'        => 'select',
-				'title'       => esc_html__( 'Default tone', 'notira' ),
-				'description' => esc_html__( 'Initial tone selected when the generator screen loads.', 'notira' ),
-				'choices'     => Tone_Utils::get_tone_options(),
-				'default'     => (string) Option::defaults( 'default_tone' ),
-			]
-		);
-
-		$obj->add_field(
-			'notira_settings',
-			[
-				'id'          => 'email_greeting',
-				'type'        => 'text',
-				'title'       => esc_html__( 'Opening line', 'notira' ),
-				'description' => esc_html__( 'Used only in Email mode: shown before the generated body (for example: Hi,).', 'notira' ),
-				'placeholder' => (string) Option::defaults( 'email_greeting' ),
-				'default'     => (string) Option::defaults( 'email_greeting' ),
-			]
-		);
-
-		$obj->add_field(
-			'notira_settings',
-			[
-				'id'          => 'email_signoff',
-				'type'        => 'text',
-				'title'       => esc_html__( 'Closing line', 'notira' ),
-				'description' => esc_html__( 'Used only in Email mode: shown after the generated body (for example: Regards,).', 'notira' ),
-				'placeholder' => (string) Option::defaults( 'email_signoff' ),
-				'default'     => (string) Option::defaults( 'email_signoff' ),
-			]
-		);
-
-		$obj->run();
 	}
 }

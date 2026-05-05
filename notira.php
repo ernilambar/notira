@@ -31,7 +31,7 @@ define( 'NOTIRA_URL', rtrim( plugin_dir_url( __FILE__ ), '/' ) );
 
 if ( file_exists( NOTIRA_DIR . '/vendor/autoload.php' ) ) {
 	require_once NOTIRA_DIR . '/vendor/autoload.php';
-	require_once NOTIRA_DIR . '/vendor/ernilambar/optioner/optioner.php';
+	require_once NOTIRA_DIR . '/vendor/ernilambar/optiz/init.php';
 }
 
 require_once NOTIRA_DIR . '/app/Core/Bootstrap.php';
