@@ -44,56 +44,58 @@ msgstr ""
 
 #. translators: %d: min character count
 #: app/API/REST_API.php:128
-#: app/API/REST_API.php:228
+#: app/API/REST_API.php:243
 #, php-format
 msgid "Input must be at least %d characters."
 msgstr ""
 
 #. translators: %d: max character count
 #: app/API/REST_API.php:139
-#: app/API/REST_API.php:239
+#: app/API/REST_API.php:254
 #, php-format
 msgid "Input must not exceed %d characters."
 msgstr ""
 
-#: app/API/REST_API.php:161
-#: app/API/REST_API.php:169
-#: app/API/REST_API.php:217
-msgid "A valid mode is required. Use email or proofread."
+#. translators: 1: email mode slug, 2: proofread mode slug.
+#: app/API/REST_API.php:163
+#: app/API/REST_API.php:176
+#: app/API/REST_API.php:229
+#, php-format
+msgid "A valid mode is required. Use %1$s or %2$s."
 msgstr ""
 
-#: app/API/REST_API.php:188
+#: app/API/REST_API.php:198
 msgid "WordPress AI is not available or is disabled on this site."
 msgstr ""
 
-#: app/API/REST_API.php:196
+#: app/API/REST_API.php:206
 msgid "API key is not set."
 msgstr ""
 
-#: app/API/REST_API.php:209
+#: app/API/REST_API.php:219
 msgid "Please enter some text to improve."
 msgstr ""
 
-#: app/API/REST_API.php:336
+#: app/API/REST_API.php:351
 msgid "Prompt templates are missing."
 msgstr ""
 
-#: app/API/REST_API.php:361
-#: app/API/REST_API.php:374
+#: app/API/REST_API.php:376
+#: app/API/REST_API.php:389
 msgid "No AI provider is configured."
 msgstr ""
 
-#: app/API/REST_API.php:379
+#: app/API/REST_API.php:394
 msgid "Invalid API key."
 msgstr ""
 
-#: app/API/REST_API.php:382
+#: app/API/REST_API.php:397
 msgid "API access denied. Check your API key and account."
 msgstr ""
 
-#: app/API/REST_API.php:384
-#: app/API/REST_API.php:390
-#: app/API/REST_API.php:400
+#: app/API/REST_API.php:399
+#: app/API/REST_API.php:405
+#: app/API/REST_API.php:415
 msgid "AI request failed."
 msgstr ""
 

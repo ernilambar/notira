@@ -158,7 +158,12 @@ class REST_API {
 		if ( ! is_string( $value ) || '' === $value ) {
 			return new WP_Error(
 				'notira_invalid_mode',
-				__( 'A valid mode is required. Use email or proofread.', 'notira' ),
+				sprintf(
+					/* translators: 1: email mode slug, 2: proofread mode slug. */
+					__( 'A valid mode is required. Use %1$s or %2$s.', 'notira' ),
+					'email',
+					'proofread'
+				),
 				[ 'status' => 400 ]
 			);
 		}
@@ -166,7 +171,12 @@ class REST_API {
 		if ( ! in_array( $slug, Mode_Utils::get_valid_slugs(), true ) ) {
 			return new WP_Error(
 				'notira_invalid_mode',
-				__( 'A valid mode is required. Use email or proofread.', 'notira' ),
+				sprintf(
+					/* translators: 1: email mode slug, 2: proofread mode slug. */
+					__( 'A valid mode is required. Use %1$s or %2$s.', 'notira' ),
+					'email',
+					'proofread'
+				),
 				[ 'status' => 400 ]
 			);
 		}
@@ -214,7 +224,12 @@ class REST_API {
 		if ( ! in_array( $mode, Mode_Utils::get_valid_slugs(), true ) ) {
 			return new WP_Error(
 				'notira_invalid_mode',
-				__( 'A valid mode is required. Use email or proofread.', 'notira' ),
+				sprintf(
+					/* translators: 1: email mode slug, 2: proofread mode slug. */
+					__( 'A valid mode is required. Use %1$s or %2$s.', 'notira' ),
+					'email',
+					'proofread'
+				),
 				[ 'status' => 400 ]
 			);
 		}

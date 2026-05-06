@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-05-06T10:55:52+00:00\n"
-"PO-Revision-Date: 2026-05-06T10:55:52+00:00\n"
+"PO-Revision-Date: 2026-05-06T16:49:40+00:00\n"
 "Language: ne_NP\n"
 
 #. Plugin Name of the plugin
@@ -41,56 +41,58 @@ msgstr "https://nilambar.net/"
 
 #. translators: %d: min character count
 #: app/API/REST_API.php:128
-#: app/API/REST_API.php:228
+#: app/API/REST_API.php:243
 #, php-format
 msgid "Input must be at least %d characters."
 msgstr "इनपुट कम्तीमा %d अक्षरको हुनुपर्छ।"
 
 #. translators: %d: max character count
 #: app/API/REST_API.php:139
-#: app/API/REST_API.php:239
+#: app/API/REST_API.php:254
 #, php-format
 msgid "Input must not exceed %d characters."
-msgstr "इनपुट %d अक्षरभन्दा बढी हुन हुँदैन।"
+msgstr "इनपुट %d अक्षरभन्दा बढी हुनु हुँदैन।"
 
-#: app/API/REST_API.php:161
-#: app/API/REST_API.php:169
-#: app/API/REST_API.php:217
-msgid "A valid mode is required. Use email or proofread."
-msgstr "मान्य मोड आवश्यक छ। इमेल वा प्रुफरिड प्रयोग गर्नुहोस्।"
+#. translators: 1: email mode slug, 2: proofread mode slug.
+#: app/API/REST_API.php:163
+#: app/API/REST_API.php:176
+#: app/API/REST_API.php:229
+#, php-format
+msgid "A valid mode is required. Use %1$s or %2$s."
+msgstr "एउटा मान्य मोड आवश्यक छ। %1$s वा %2$s प्रयोग गर्नुहोस्।"
 
-#: app/API/REST_API.php:188
+#: app/API/REST_API.php:198
 msgid "WordPress AI is not available or is disabled on this site."
 msgstr "यस साइटमा WordPress AI उपलब्ध छैन वा अक्षम गरिएको छ।"
 
-#: app/API/REST_API.php:196
+#: app/API/REST_API.php:206
 msgid "API key is not set."
 msgstr "API की सेट गरिएको छैन।"
 
-#: app/API/REST_API.php:209
+#: app/API/REST_API.php:219
 msgid "Please enter some text to improve."
 msgstr "सुधार गर्न केही पाठ प्रविष्ट गर्नुहोस्।"
 
-#: app/API/REST_API.php:336
+#: app/API/REST_API.php:351
 msgid "Prompt templates are missing."
 msgstr "प्रम्प्ट टेम्प्लेटहरू फेला परेनन्।"
 
-#: app/API/REST_API.php:361
-#: app/API/REST_API.php:374
+#: app/API/REST_API.php:376
+#: app/API/REST_API.php:389
 msgid "No AI provider is configured."
 msgstr "कुनै AI प्रदायक कन्फिगर गरिएको छैन।"
 
-#: app/API/REST_API.php:379
+#: app/API/REST_API.php:394
 msgid "Invalid API key."
 msgstr "अमान्य API की।"
 
-#: app/API/REST_API.php:382
+#: app/API/REST_API.php:397
 msgid "API access denied. Check your API key and account."
 msgstr "API पहुँच अस्वीकृत। आफ्नो API की र खाता जाँच गर्नुहोस्।"
 
-#: app/API/REST_API.php:384
-#: app/API/REST_API.php:390
-#: app/API/REST_API.php:400
+#: app/API/REST_API.php:399
+#: app/API/REST_API.php:405
+#: app/API/REST_API.php:415
 msgid "AI request failed."
 msgstr "AI अनुरोध असफल भयो।"
 
@@ -115,7 +117,7 @@ msgstr "इमेल"
 
 #: app/Core/Bootstrap.php:263
 msgid "Polish your notes into a clear email body. Opening and closing lines from settings are added around the result."
-msgstr "आफ्ना नोटहरूलाई स्पष्ट इमेल मुख्य भागमा परिमार्जन गर्नुहोस्। सेटिङबाट प्रारम्भिक र अन्तिम पङ्क्तिहरू परिणामको वरिपरि थपिनेछन्।"
+msgstr "आफ्ना नोटहरूलाई स्पष्ट इमेल मुख्य भागमा परिमार्जन गर्नुहोस्। सेटिङबाट सुरुवाती र समापन लाइनहरू परिणामको वरिपरि थपिनेछन्।"
 
 #: app/Core/Bootstrap.php:267
 #: app/Options/Options.php:61
@@ -128,11 +130,11 @@ msgstr "व्याकरण, हिज्जे र विरामचिह�
 
 #: app/Core/Bootstrap.php:299
 msgid "Enter draft notes or bullet points"
-msgstr "ड्राफ्ट नोट वा बुलेट बिन्दुहरू प्रविष्ट गर्नुहोस्"
+msgstr "ड्राफ्ट नोट वा बुलेट बुँदाहरू प्रविष्ट गर्नुहोस्"
 
 #: app/Core/Bootstrap.php:300
 msgid "Paste or type your text here…"
-msgstr "यहाँ आफ्नो पाठ पेस्ट गर्नुहोस् वा टाइप गर्नुहोस्…"
+msgstr "आफ्नो पाठ यहाँ पेस्ट गर्नुहोस् वा टाइप गर्नुहोस्…"
 
 #: app/Core/Bootstrap.php:301
 msgid "Mode"
@@ -270,7 +272,7 @@ msgstr "पूर्वनिर्धारित टोन"
 
 #: app/Options/Options.php:76
 msgid "Opening line"
-msgstr "प्रारम्भिक पङ्क्ति"
+msgstr "सुरुवाती लाइन"
 
 #: app/Options/Options.php:77
 #: app/Options/Options.php:78
@@ -279,7 +281,7 @@ msgstr "नमस्ते,"
 
 #: app/Options/Options.php:83
 msgid "Closing line"
-msgstr "समापन पङ्क्ति"
+msgstr "समापान लाइन"
 
 #: app/Options/Options.php:84
 #: app/Options/Options.php:85
@@ -316,7 +318,7 @@ msgstr "आधिकारिक"
 
 #: app/Utils/Tone_Utils.php:44
 msgid "Commanding"
-msgstr "प्रभावशाली"
+msgstr "आदेशात्मक"
 
 #: app/Utils/Tone_Utils.php:45
 msgid "Assertive"
