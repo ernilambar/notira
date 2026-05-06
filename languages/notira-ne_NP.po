@@ -318,7 +318,7 @@ msgstr "आधिकारिक"
 
 #: app/Utils/Tone_Utils.php:44
 msgid "Commanding"
-msgstr "प्रभावशाली"
+msgstr "प्आदेशात्मक"
 
 #: app/Utils/Tone_Utils.php:45
 msgid "Assertive"
