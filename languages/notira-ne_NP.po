@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-05-06T10:55:52+00:00\n"
-"PO-Revision-Date: 2026-05-06T16:25:07+00:00\n"
+"PO-Revision-Date: 2026-05-06T16:49:40+00:00\n"
 "Language: ne_NP\n"
 
 #. Plugin Name of the plugin
@@ -51,7 +51,7 @@ msgstr "इनपुट कम्तीमा %d अक्षरको हुन
 #: app/API/REST_API.php:254
 #, php-format
 msgid "Input must not exceed %d characters."
-msgstr "इनपुट %d अक्षरभन्दा बढी हुन हुँदैन।"
+msgstr "इनपुट %d अक्षरभन्दा बढी हुनु हुँदैन।"
 
 #. translators: 1: email mode slug, 2: proofread mode slug.
 #: app/API/REST_API.php:163
@@ -59,7 +59,7 @@ msgstr "इनपुट %d अक्षरभन्दा बढी हुन �
 #: app/API/REST_API.php:229
 #, php-format
 msgid "A valid mode is required. Use %1$s or %2$s."
-msgstr ""
+msgstr "एउटा मान्य मोड आवश्यक छ। %1$s वा %2$s प्रयोग गर्नुहोस्।"
 
 #: app/API/REST_API.php:198
 msgid "WordPress AI is not available or is disabled on this site."
@@ -117,7 +117,7 @@ msgstr "इमेल"
 
 #: app/Core/Bootstrap.php:263
 msgid "Polish your notes into a clear email body. Opening and closing lines from settings are added around the result."
-msgstr "आफ्ना नोटहरूलाई स्पष्ट इमेल मुख्य भागमा परिमार्जन गर्नुहोस्। सेटिङबाट प्रारम्भिक र अन्तिम पङ्क्तिहरू परिणामको वरिपरि थपिनेछन्।"
+msgstr "आफ्ना नोटहरूलाई स्पष्ट इमेल मुख्य भागमा परिमार्जन गर्नुहोस्। सेटिङबाट सुरुवाती र समापन लाइनहरू परिणामको वरिपरि थपिनेछन्।"
 
 #: app/Core/Bootstrap.php:267
 #: app/Options/Options.php:61
@@ -130,11 +130,11 @@ msgstr "व्याकरण, हिज्जे र विरामचिह�
 
 #: app/Core/Bootstrap.php:299
 msgid "Enter draft notes or bullet points"
-msgstr "ड्राफ्ट नोट वा बुलेट बिन्दुहरू प्रविष्ट गर्नुहोस्"
+msgstr "ड्राफ्ट नोट वा बुलेट बुँदाहरू प्रविष्ट गर्नुहोस्"
 
 #: app/Core/Bootstrap.php:300
 msgid "Paste or type your text here…"
-msgstr "यहाँ आफ्नो पाठ पेस्ट गर्नुहोस् वा टाइप गर्नुहोस्…"
+msgstr "आफ्नो पाठ यहाँ पेस्ट गर्नुहोस् वा टाइप गर्नुहोस्…"
 
 #: app/Core/Bootstrap.php:301
 msgid "Mode"
@@ -272,7 +272,7 @@ msgstr "पूर्वनिर्धारित टोन"
 
 #: app/Options/Options.php:76
 msgid "Opening line"
-msgstr "प्रारम्भिक पङ्क्ति"
+msgstr "सुरुवाती लाइन"
 
 #: app/Options/Options.php:77
 #: app/Options/Options.php:78
@@ -281,7 +281,7 @@ msgstr "नमस्ते,"
 
 #: app/Options/Options.php:83
 msgid "Closing line"
-msgstr "समापन पङ्क्ति"
+msgstr "समापान लाइन"
 
 #: app/Options/Options.php:84
 #: app/Options/Options.php:85
@@ -318,7 +318,7 @@ msgstr "आधिकारिक"
 
 #: app/Utils/Tone_Utils.php:44
 msgid "Commanding"
-msgstr "प्आदेशात्मक"
+msgstr "आदेशात्मक"
 
 #: app/Utils/Tone_Utils.php:45
 msgid "Assertive"
