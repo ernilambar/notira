@@ -1,0 +1,327 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-05-06T10:55:52+00:00\n"
+"PO-Revision-Date: 2026-05-06T10:55:52+00:00\n"
+"Language: ne_NP\n"
+
+#. Plugin Name of the plugin
+#: notira.php:3
+#: app/Core/Bootstrap.php:199
+#: app/Core/Bootstrap.php:200
+#: templates/admin-page.php:17
+msgid "Notira"
+msgstr "नोटिरा"
+
+#. Plugin URI of the plugin
+#: notira.php:4
+msgid "https://github.com/ernilambar/notira"
+msgstr "https://github.com/ernilambar/notira"
+
+#. Description of the plugin
+#: notira.php:5
+msgid "Improve draft text into email-ready or proofread HTML using AI."
+msgstr "AI प्रयोग गरेर मस्यौदा पाठलाई इमेल-तयार वा प्रूफरिड HTML मा रूपान्तरण गर्नुहोस्।"
+
+#. Author of the plugin
+#: notira.php:9
+msgid "Nilambar Sharma"
+msgstr "निलाम्बर शर्मा"
+
+#. Author URI of the plugin
+#: notira.php:10
+msgid "https://nilambar.net/"
+msgstr "https://nilambar.net/"
+
+#. translators: %d: min character count
+#: app/API/REST_API.php:128
+#: app/API/REST_API.php:228
+#, php-format
+msgid "Input must be at least %d characters."
+msgstr "इनपुट कम्तीमा %d अक्षरको हुनुपर्छ।"
+
+#. translators: %d: max character count
+#: app/API/REST_API.php:139
+#: app/API/REST_API.php:239
+#, php-format
+msgid "Input must not exceed %d characters."
+msgstr "इनपुट %d अक्षरभन्दा बढी हुन हुँदैन।"
+
+#: app/API/REST_API.php:161
+#: app/API/REST_API.php:169
+#: app/API/REST_API.php:217
+msgid "A valid mode is required. Use email or proofread."
+msgstr "मान्य मोड आवश्यक छ। इमेल वा प्रूफरिड प्रयोग गर्नुहोस्।"
+
+#: app/API/REST_API.php:188
+msgid "WordPress AI is not available or is disabled on this site."
+msgstr "यस साइटमा WordPress AI उपलब्ध छैन वा अक्षम गरिएको छ।"
+
+#: app/API/REST_API.php:196
+msgid "API key is not set."
+msgstr "API कुञ्जी सेट गरिएको छैन।"
+
+#: app/API/REST_API.php:209
+msgid "Please enter some text to improve."
+msgstr "सुधार गर्न केही पाठ प्रविष्ट गर्नुहोस्।"
+
+#: app/API/REST_API.php:336
+msgid "Prompt templates are missing."
+msgstr "प्रम्प्ट टेम्प्लेटहरू फेला परेनन्।"
+
+#: app/API/REST_API.php:361
+#: app/API/REST_API.php:374
+msgid "No AI provider is configured."
+msgstr "कुनै AI प्रदायक कन्फिगर गरिएको छैन।"
+
+#: app/API/REST_API.php:379
+msgid "Invalid API key."
+msgstr "अमान्य API कुञ्जी।"
+
+#: app/API/REST_API.php:382
+msgid "API access denied. Check your API key and account."
+msgstr "API पहुँच अस्वीकृत। आफ्नो API कुञ्जी र खाता जाँच गर्नुहोस्।"
+
+#: app/API/REST_API.php:384
+#: app/API/REST_API.php:390
+#: app/API/REST_API.php:400
+msgid "AI request failed."
+msgstr "AI अनुरोध असफल भयो।"
+
+#: app/Core/Bootstrap.php:96
+msgid "Notira requires WordPress AI support (WordPress 7.0+). AI features are unavailable in this installation."
+msgstr "नोटिराका लागि WordPress AI समर्थन आवश्यक छ (WordPress 7.0+)। यस इन्स्टलेसनमा AI सुविधाहरू उपलब्ध छैनन्।"
+
+#: app/Core/Bootstrap.php:98
+msgid "WordPress AI is disabled on this site (for example via the WP_AI_SUPPORT constant or a filter). Notira cannot generate text until AI support is enabled."
+msgstr "यस साइटमा WordPress AI अक्षम गरिएको छ (उदाहरणका लागि WP_AI_SUPPORT स्थिरांक वा फिल्टरद्वारा)। AI समर्थन सक्षम नगरेसम्म नोटिराले पाठ उत्पन्न गर्न सक्दैन।"
+
+#. translators: 1: opening link tag, 2: closing link tag
+#: app/Core/Bootstrap.php:116
+#, php-format
+msgid "Please set your API key in %1$sConnectors%2$s to use this feature."
+msgstr "यो सुविधा प्रयोग गर्न %1$sकनेक्टरहरू%2$s मा आफ्नो API कुञ्जी सेट गर्नुहोस्।"
+
+#: app/Core/Bootstrap.php:262
+#: app/Options/Options.php:60
+msgid "Email"
+msgstr "इमेल"
+
+#: app/Core/Bootstrap.php:263
+msgid "Polish your notes into a clear email body. Opening and closing lines from settings are added around the result."
+msgstr "आफ्ना नोटहरूलाई स्पष्ट इमेल मुख्य भागमा परिमार्जन गर्नुहोस्। सेटिङबाट प्रारम्भिक र अन्तिम पङ्क्तिहरू परिणामको वरिपरि थपिनेछन्।"
+
+#: app/Core/Bootstrap.php:267
+#: app/Options/Options.php:61
+msgid "Proofread"
+msgstr "प्रूफरिड"
+
+#: app/Core/Bootstrap.php:268
+msgid "Grammar, spelling, and punctuation corrections, with clarity improvements only where needed; preserves structure and meaning."
+msgstr "व्याकरण, हिज्जे र विरामचिह्न सुधार, आवश्यक भएकोमा मात्र स्पष्टता सुधारसहित; संरचना र अर्थ सुरक्षित राख्छ।"
+
+#: app/Core/Bootstrap.php:299
+msgid "Enter draft notes or bullet points"
+msgstr "मस्यौदा नोट वा बुलेट बिन्दुहरू प्रविष्ट गर्नुहोस्"
+
+#: app/Core/Bootstrap.php:300
+msgid "Paste or type your text here…"
+msgstr "यहाँ आफ्नो पाठ टाँस्नुहोस् वा टाइप गर्नुहोस्…"
+
+#: app/Core/Bootstrap.php:301
+msgid "Mode"
+msgstr "मोड"
+
+#: app/Core/Bootstrap.php:302
+msgid "Tone"
+msgstr "शैली"
+
+#: app/Core/Bootstrap.php:303
+msgid "Generate"
+msgstr "उत्पन्न गर्नुहोस्"
+
+#: app/Core/Bootstrap.php:304
+msgid "Copy"
+msgstr "प्रतिलिपि गर्नुहोस्"
+
+#: app/Core/Bootstrap.php:305
+msgid "Copied"
+msgstr "प्रतिलिपि गरियो"
+
+#: app/Core/Bootstrap.php:306
+#: app/Options/Options.php:53
+msgid "Output"
+msgstr "आउटपुट"
+
+#: app/Core/Bootstrap.php:307
+msgid "Output will appear here."
+msgstr "आउटपुट यहाँ देखिनेछ।"
+
+#: app/Core/Bootstrap.php:308
+msgid "characters"
+msgstr "अक्षरहरू"
+
+#. translators: Separator between current length and max length in the character counter, e.g. "12 / 500". Include spaces if your language needs them.
+#: app/Core/Bootstrap.php:310
+msgid " / "
+msgstr " / "
+
+#. translators: %d: minimum character count
+#: app/Core/Bootstrap.php:313
+#, php-format
+msgid "Min: %d chars"
+msgstr "न्यूनतम: %d अक्षर"
+
+#: app/Core/Bootstrap.php:316
+msgid "Generating…"
+msgstr "उत्पन्न हुँदैछ…"
+
+#. translators: %d: min character count
+#: app/Core/Bootstrap.php:319
+#, php-format
+msgid "Input is too short. Please enter at least %d characters."
+msgstr "इनपुट धेरै छोटो छ। कृपया कम्तीमा %d अक्षर प्रविष्ट गर्नुहोस्।"
+
+#: app/Core/Bootstrap.php:322
+msgid "Text is too long."
+msgstr "पाठ धेरै लामो छ।"
+
+#: app/Core/Bootstrap.php:323
+msgid "Please enter some text."
+msgstr "कृपया केही पाठ प्रविष्ट गर्नुहोस्।"
+
+#: app/Core/Bootstrap.php:324
+msgid "Nothing to copy."
+msgstr "प्रतिलिपि गर्न केही छैन।"
+
+#: app/Core/Bootstrap.php:325
+msgid "Could not copy. Please select and copy manually."
+msgstr "प्रतिलिपि गर्न सकिएन। कृपया म्यानुअल रूपमा छान्नुहोस् र प्रतिलिपि गर्नुहोस्।"
+
+#: app/Core/Bootstrap.php:326
+msgid "Generated successfully."
+msgstr "सफलतापूर्वक उत्पन्न गरियो।"
+
+#: app/Core/Bootstrap.php:327
+msgid "Request failed."
+msgstr "अनुरोध असफल भयो।"
+
+#: app/Core/Bootstrap.php:328
+msgid "Something went wrong."
+msgstr "केही गडबडी भयो।"
+
+#: app/Core/Bootstrap.php:329
+msgid "Network or server error. Please try again."
+msgstr "नेटवर्क वा सर्भर त्रुटि। कृपया पुनः प्रयास गर्नुहोस्।"
+
+#: app/Core/Bootstrap.php:330
+msgid "Provider"
+msgstr "प्रदायक"
+
+#: app/Core/Bootstrap.php:331
+msgid "Model"
+msgstr "मोडेल"
+
+#: app/Core/Bootstrap.php:332
+msgid "Tokens"
+msgstr "टोकनहरू"
+
+#: app/Core/Bootstrap.php:333
+msgid "Prompt"
+msgstr "प्रम्प्ट"
+
+#: app/Core/Bootstrap.php:334
+msgid "Completion"
+msgstr "पूर्णता"
+
+#: app/Core/Bootstrap.php:335
+msgid "Total"
+msgstr "जम्मा"
+
+#: app/Core/Bootstrap.php:336
+msgid "Thought"
+msgstr "विचार"
+
+#: app/Core/Bootstrap.php:337
+msgid "Served from cache."
+msgstr "क्यासबाट प्रदान गरियो।"
+
+#: app/Options/Options.php:44
+msgid "Notira Settings"
+msgstr "नोटिरा सेटिङहरू"
+
+#: app/Options/Options.php:45
+msgid "Settings"
+msgstr "सेटिङहरू"
+
+#: app/Options/Options.php:58
+msgid "Default mode"
+msgstr "पूर्वनिर्धारित मोड"
+
+#: app/Options/Options.php:69
+msgid "Default tone"
+msgstr "पूर्वनिर्धारित शैली"
+
+#: app/Options/Options.php:76
+msgid "Opening line"
+msgstr "प्रारम्भिक पङ्क्ति"
+
+#: app/Options/Options.php:77
+#: app/Options/Options.php:78
+msgid "Hi,"
+msgstr "नमस्ते,"
+
+#: app/Options/Options.php:83
+msgid "Closing line"
+msgstr "समापन पङ्क्ति"
+
+#: app/Options/Options.php:84
+#: app/Options/Options.php:85
+msgid "Regards,"
+msgstr "धन्यवाद,"
+
+#: app/Utils/Tone_Utils.php:37
+msgid "Professional"
+msgstr "व्यावसायिक"
+
+#: app/Utils/Tone_Utils.php:38
+msgid "Match original"
+msgstr "मूल जस्तै"
+
+#: app/Utils/Tone_Utils.php:39
+msgid "Friendly"
+msgstr "मैत्रीपूर्ण"
+
+#: app/Utils/Tone_Utils.php:40
+msgid "Formal"
+msgstr "औपचारिक"
+
+#: app/Utils/Tone_Utils.php:41
+msgid "Concise"
+msgstr "संक्षिप्त"
+
+#: app/Utils/Tone_Utils.php:42
+msgid "Empathetic"
+msgstr "सहानुभूतिपूर्ण"
+
+#: app/Utils/Tone_Utils.php:43
+msgid "Authoritative"
+msgstr "आधिकारिक"
+
+#: app/Utils/Tone_Utils.php:44
+msgid "Commanding"
+msgstr "प्रभावशाली"
+
+#: app/Utils/Tone_Utils.php:45
+msgid "Assertive"
+msgstr "दृढ"
+
+#: app/Utils/Tone_Utils.php:46
+msgid "Neutral"
+msgstr "तटस्थ"

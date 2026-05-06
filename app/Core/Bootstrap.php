@@ -32,7 +32,7 @@ class Bootstrap {
 	public const ADMIN_PAGE_SLUG = 'notira';
 
 	/**
-	 * Settings submenu slug (Optioner).
+	 * Settings submenu slug.
 	 *
 	 * @since 1.0.0
 	 */
@@ -46,6 +46,7 @@ class Bootstrap {
 	public static function init(): void {
 		( new Options() )->register();
 
+		add_action( 'init', [ __CLASS__, 'load_textdomain' ] );
 		add_action( 'admin_menu', [ __CLASS__, 'register_admin_menu' ] );
 		add_action( 'admin_notices', [ __CLASS__, 'render_credentials_notice' ] );
 		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_admin_assets' ], 10, 1 );
@@ -55,6 +56,15 @@ class Bootstrap {
 		add_filter( 'linkit_admin_links_status', [ __CLASS__, 'disable_linkit_on_notira_page' ], 10, 2 );
 
 		REST_API::init();
+	}
+
+	/**
+	 * Load plugin textdomain.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function load_textdomain() {
+		load_plugin_textdomain( 'notira', false, NOTIRA_BASE_NAME . '/languages' );
 	}
 
 	/**
