@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ernilambar/optiz.git",
-                "reference": "b508e63ff862ce66abac4b2168a32626dcc4235a"
+                "reference": "71d741aea48edb60dd725a27baf36bd328544b4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ernilambar/optiz/zipball/b508e63ff862ce66abac4b2168a32626dcc4235a",
-                "reference": "b508e63ff862ce66abac4b2168a32626dcc4235a",
+                "url": "https://api.github.com/repos/ernilambar/optiz/zipball/71d741aea48edb60dd725a27baf36bd328544b4d",
+                "reference": "71d741aea48edb60dd725a27baf36bd328544b4d",
                 "shasum": ""
             },
             "require": {
@@ -65,7 +65,7 @@
                 "issues": "https://github.com/ernilambar/optiz/issues",
                 "source": "https://github.com/ernilambar/optiz"
             },
-            "time": "2026-05-06T13:07:06+00:00"
+            "time": "2026-05-07T16:25:11+00:00"
         }
     ],
     "packages-dev": [
