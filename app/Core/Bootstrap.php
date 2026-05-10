@@ -279,13 +279,6 @@ class Bootstrap {
 			$default_tone = Tone_Utils::DEFAULT_TONE;
 		}
 
-		$default_content = Option::get( 'default_content' );
-		if ( ! is_string( $default_content ) ) {
-			$default_content = '';
-		} else {
-			$default_content = sanitize_textarea_field( $default_content );
-		}
-
 		$settings = [
 			'apiUrl'         => rest_url( 'notira/v1/generate' ),
 			'nonce'          => wp_create_nonce( 'wp_rest' ),
@@ -294,7 +287,7 @@ class Bootstrap {
 			'modes'          => $modes_list,
 			'defaultTone'    => $default_tone,
 			'tones'          => $tones_list,
-			'defaultContent' => $default_content,
+			'defaultContent' => '',
 			'i18n'           => [
 				'inputLabel'         => __( 'Enter draft notes or bullet points', 'notira' ),
 				'inputPlaceholder'   => __( 'Paste or type your text here…', 'notira' ),
