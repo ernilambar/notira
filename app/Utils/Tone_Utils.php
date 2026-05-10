@@ -23,7 +23,7 @@ class Tone_Utils {
 	 *
 	 * @since 1.0.0
 	 */
-	public const DEFAULT_TONE = 'professional';
+	public const DEFAULT_TONE = 'formal';
 
 	/**
 	 * Get all tone options as slug => translated label.
