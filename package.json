@@ -7,13 +7,13 @@
 	"type": "module",
 	"browserslist": "> 2%, last 2 versions, not dead",
 	"devDependencies": {
-		"@sveltejs/vite-plugin-svelte": "^7.0.0",
-		"@wordpress/prettier-config": "^4.42.0",
+		"@sveltejs/vite-plugin-svelte": "^7.1.2",
+		"@wordpress/prettier-config": "^4.45.0",
 		"browserslist-to-esbuild": "^2.1.1",
 		"prettier": "npm:wp-prettier@^3.0.3",
-		"prettier-plugin-svelte": "^3.5.1",
-		"svelte": "^5.55.0",
-		"vite": "^8.0.3"
+		"prettier-plugin-svelte": "^3.5.2",
+		"svelte": "^5.55.5",
+		"vite": "^8.0.12"
 	},
 	"scripts": {
 		"dev": "vite build --watch",
