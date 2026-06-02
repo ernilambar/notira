@@ -11,6 +11,8 @@ namespace Nilambar\Notira\Core;
 
 use Nilambar\Optiz\Manager;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Option class.
  *

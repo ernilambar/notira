@@ -14,6 +14,8 @@ use Nilambar\Notira\Utils\Mode_Utils;
 use Nilambar\Notira\Utils\Tone_Utils;
 use Nilambar\Optiz\Manager;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Options class.
  *
