@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nilambar\Notira\Options;
 
 use Nilambar\Notira\Core\Bootstrap;
+use Nilambar\Notira\Utils\Credential_Utils;
 use Nilambar\Notira\Utils\Mode_Utils;
 use Nilambar\Notira\Utils\Tone_Utils;
 use Nilambar\Optiz\Manager;
@@ -29,7 +30,7 @@ class Options {
 	 * @since 1.0.0
 	 */
 	public function register() {
-		add_action( 'init', [ $this, 'register_plugin_options' ] );
+		add_action( 'init', [ $this, 'register_plugin_options' ], 20 );
 	}
 
 	/**
@@ -71,6 +72,16 @@ class Options {
 								'label'   => esc_html__( 'Default tone', 'notira' ),
 								'choices' => Tone_Utils::get_tone_options(),
 								'default' => Tone_Utils::DEFAULT_TONE,
+							],
+							[
+								'id'      => 'preferred_provider',
+								'type'    => 'select',
+								'label'   => esc_html__( 'AI provider', 'notira' ),
+								'choices' => array_merge(
+									[ '' => __( '- Select -', 'notira' ) ],
+									Credential_Utils::get_ai_provider_options()
+								),
+								'default' => '',
 							],
 							[
 								'id'          => 'email_greeting',

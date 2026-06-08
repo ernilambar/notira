@@ -260,7 +260,8 @@ class REST_API {
 
 		$valid_slugs = Tone_Utils::get_valid_slugs();
 		$tone        = ( is_string( $tone ) && in_array( $tone, $valid_slugs, true ) ) ? $tone : Tone_Utils::DEFAULT_TONE;
-		$cache_key   = 'notira_' . $mode . '_' . $tone . '_' . md5( $input );
+		$provider    = sanitize_key( (string) Option::get( 'preferred_provider' ) );
+		$cache_key   = 'notira_' . $mode . '_' . $tone . '_' . ( '' !== $provider ? $provider . '_' : '' ) . md5( $input );
 		$cached      = get_transient( $cache_key );
 		if ( false !== $cached ) {
 			$cached_output = '';
@@ -353,11 +354,16 @@ class REST_API {
 			);
 		}
 
+		$preferred_provider = sanitize_key( (string) Option::get( 'preferred_provider' ) );
+
 		$builder = wp_ai_client_prompt( $prompt )
 			->using_system_instruction( $system )
-			->using_temperature( 0.5 )
-			->using_max_tokens( 1024 )
-			->using_model_preference(
+			->using_max_tokens( 1024 );
+
+		if ( '' !== $preferred_provider ) {
+			$builder = $builder->using_provider( $preferred_provider );
+		} else {
+			$builder = $builder->using_model_preference(
 				'openai/gpt-4o-mini',
 				'openai/gpt-4o',
 				'openai/gpt-4',
@@ -369,6 +375,7 @@ class REST_API {
 				'claude-3-5-sonnet-20241022',
 				'gemini-2.0-flash'
 			);
+		}
 
 		if ( ! $builder->is_supported_for_text_generation() ) {
 			return new WP_Error(
