@@ -1,6 +1,6 @@
 {
 	"name": "notira",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"description": "Improve draft text into email-ready or proofread HTML using AI.",
 	"author": "Nilambar Sharma",
 	"license": "GPL-2.0-or-later",
