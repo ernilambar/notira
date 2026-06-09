@@ -168,92 +168,89 @@ msgstr ""
 msgid "Output will appear here."
 msgstr ""
 
-#: app/Core/Bootstrap.php:301
-msgid "characters"
-msgstr ""
-
-#. translators: Separator between current length and max length in the character counter, e.g. "12 / 500". Include spaces if your language needs them.
-#: app/Core/Bootstrap.php:303
-msgid " / "
+#. translators: Character counter format. %1$d: current length, %2$d: max length, e.g. "12 / 500 characters".
+#: app/Core/Bootstrap.php:302
+#, php-format
+msgid "%1$d / %2$d characters"
 msgstr ""
 
 #. translators: %d: minimum character count
-#: app/Core/Bootstrap.php:306
+#: app/Core/Bootstrap.php:305
 #, php-format
 msgid "Min: %d chars"
 msgstr ""
 
-#: app/Core/Bootstrap.php:309
+#: app/Core/Bootstrap.php:308
 msgid "Generating…"
 msgstr ""
 
 #. translators: %d: min character count
-#: app/Core/Bootstrap.php:312
+#: app/Core/Bootstrap.php:311
 #, php-format
 msgid "Input is too short. Please enter at least %d characters."
 msgstr ""
 
-#: app/Core/Bootstrap.php:315
+#: app/Core/Bootstrap.php:314
 msgid "Text is too long."
 msgstr ""
 
-#: app/Core/Bootstrap.php:316
+#: app/Core/Bootstrap.php:315
 msgid "Please enter some text."
 msgstr ""
 
-#: app/Core/Bootstrap.php:317
+#: app/Core/Bootstrap.php:316
 msgid "Nothing to copy."
 msgstr ""
 
-#: app/Core/Bootstrap.php:318
+#: app/Core/Bootstrap.php:317
 msgid "Could not copy. Please select and copy manually."
 msgstr ""
 
-#: app/Core/Bootstrap.php:319
+#: app/Core/Bootstrap.php:318
 msgid "Generated successfully."
 msgstr ""
 
-#: app/Core/Bootstrap.php:320
+#: app/Core/Bootstrap.php:319
 msgid "Request failed."
 msgstr ""
 
-#: app/Core/Bootstrap.php:321
+#: app/Core/Bootstrap.php:320
 msgid "Something went wrong."
 msgstr ""
 
-#: app/Core/Bootstrap.php:322
+#: app/Core/Bootstrap.php:321
 msgid "Network or server error. Please try again."
 msgstr ""
 
-#: app/Core/Bootstrap.php:323
+#: app/Core/Bootstrap.php:322
 msgid "Provider"
 msgstr ""
 
-#: app/Core/Bootstrap.php:324
+#: app/Core/Bootstrap.php:323
 msgid "Model"
 msgstr ""
 
-#: app/Core/Bootstrap.php:325
+#: app/Core/Bootstrap.php:324
 msgid "Tokens"
 msgstr ""
 
-#: app/Core/Bootstrap.php:326
+#: app/Core/Bootstrap.php:325
 msgid "Prompt"
 msgstr ""
 
-#: app/Core/Bootstrap.php:327
+#: app/Core/Bootstrap.php:326
 msgid "Completion"
 msgstr ""
 
-#: app/Core/Bootstrap.php:328
+#: app/Core/Bootstrap.php:327
 msgid "Total"
 msgstr ""
 
-#: app/Core/Bootstrap.php:329
+#: app/Core/Bootstrap.php:328
 msgid "Thought"
 msgstr ""
 
-#: app/Core/Bootstrap.php:330
+#: app/Core/Bootstrap.php:329
 msgid "Served from cache."
 msgstr ""
 

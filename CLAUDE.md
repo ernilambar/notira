@@ -13,7 +13,7 @@ PHP — use Composer scripts, not raw tool invocations:
 - `composer lint` — runs parallel-lint then phpcs (WordPress + PHPCompatibility + Slevomat rules per `.phpcs.xml.dist`)
 - `composer format` — phpcbf auto-fix
 - `composer test` — PHPUnit; needs the WP test suite installed via `bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 <wp-version> false`
-- `composer pot` / `composer make-mo` / `composer update-po` — i18n for `languages/notira.pot`
+- `composer pot` / `composer po` / `composer mo` — i18n: regenerate POT, update PO files, compile MO files. Always use these scripts — never edit `.pot`, `.po`, or `.mo` files by hand.
 
 Single test: `./vendor/bin/phpunit --filter <method_or_class>` (suite is defined as `tests/REST_API_Test.php` in `phpunit.xml.dist`).
 
