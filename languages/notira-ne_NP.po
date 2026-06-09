@@ -8,7 +8,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-05-06T10:55:52+00:00\n"
-"PO-Revision-Date: 2026-06-08T09:22:22+00:00\n"
+"PO-Revision-Date: 2026-06-09T04:11:43+00:00\n"
 "Language: ne_NP\n"
 
 #. Plugin Name of the plugin
@@ -165,92 +165,89 @@ msgstr "आउटपुट"
 msgid "Output will appear here."
 msgstr "आउटपुट यहाँ देखिनेछ।"
 
-#: app/Core/Bootstrap.php:301
-msgid "characters"
-msgstr "अक्षरहरू"
-
-#. translators: Separator between current length and max length in the character counter, e.g. "12 / 500". Include spaces if your language needs them.
-#: app/Core/Bootstrap.php:303
-msgid " / "
-msgstr "/"
+#. translators: Character counter format. %1$d: current length, %2$d: max length, e.g. "12 / 500 characters".
+#: app/Core/Bootstrap.php:302
+#, php-format
+msgid "%1$d / %2$d characters"
+msgstr "%1$d / %2$d अक्षरहरू"
 
 #. translators: %d: minimum character count
-#: app/Core/Bootstrap.php:306
+#: app/Core/Bootstrap.php:305
 #, php-format
 msgid "Min: %d chars"
 msgstr "न्यूनतम: %d अक्षर"
 
-#: app/Core/Bootstrap.php:309
+#: app/Core/Bootstrap.php:308
 msgid "Generating…"
 msgstr "उत्पन्न हुँदैछ…"
 
 #. translators: %d: min character count
-#: app/Core/Bootstrap.php:312
+#: app/Core/Bootstrap.php:311
 #, php-format
 msgid "Input is too short. Please enter at least %d characters."
 msgstr "इनपुट धेरै छोटो छ। कृपया कम्तीमा %d अक्षर प्रविष्ट गर्नुहोस्।"
 
-#: app/Core/Bootstrap.php:315
+#: app/Core/Bootstrap.php:314
 msgid "Text is too long."
 msgstr "पाठ धेरै लामो छ।"
 
-#: app/Core/Bootstrap.php:316
+#: app/Core/Bootstrap.php:315
 msgid "Please enter some text."
 msgstr "कृपया केही पाठ प्रविष्ट गर्नुहोस्।"
 
-#: app/Core/Bootstrap.php:317
+#: app/Core/Bootstrap.php:316
 msgid "Nothing to copy."
 msgstr "कपी गर्न केही छैन।"
 
-#: app/Core/Bootstrap.php:318
+#: app/Core/Bootstrap.php:317
 msgid "Could not copy. Please select and copy manually."
 msgstr "कपी गर्न सकिएन। कृपया म्यानुअल रूपमा छान्नुहोस् र कपी गर्नुहोस्।"
 
-#: app/Core/Bootstrap.php:319
+#: app/Core/Bootstrap.php:318
 msgid "Generated successfully."
 msgstr "सफलतापूर्वक उत्पन्न गरियो।"
 
-#: app/Core/Bootstrap.php:320
+#: app/Core/Bootstrap.php:319
 msgid "Request failed."
 msgstr "अनुरोध असफल भयो।"
 
-#: app/Core/Bootstrap.php:321
+#: app/Core/Bootstrap.php:320
 msgid "Something went wrong."
 msgstr "केही गडबडी भयो।"
 
-#: app/Core/Bootstrap.php:322
+#: app/Core/Bootstrap.php:321
 msgid "Network or server error. Please try again."
 msgstr "नेटवर्क वा सर्भर त्रुटि। कृपया पुनः प्रयास गर्नुहोस्।"
 
-#: app/Core/Bootstrap.php:323
+#: app/Core/Bootstrap.php:322
 msgid "Provider"
 msgstr "प्रदायक"
 
-#: app/Core/Bootstrap.php:324
+#: app/Core/Bootstrap.php:323
 msgid "Model"
 msgstr "मोडेल"
 
-#: app/Core/Bootstrap.php:325
+#: app/Core/Bootstrap.php:324
 msgid "Tokens"
 msgstr "टोकनहरू"
 
-#: app/Core/Bootstrap.php:326
+#: app/Core/Bootstrap.php:325
 msgid "Prompt"
 msgstr "प्रम्प्ट"
 
-#: app/Core/Bootstrap.php:327
+#: app/Core/Bootstrap.php:326
 msgid "Completion"
 msgstr "पूर्णता"
 
-#: app/Core/Bootstrap.php:328
+#: app/Core/Bootstrap.php:327
 msgid "Total"
 msgstr "जम्मा"
 
-#: app/Core/Bootstrap.php:329
+#: app/Core/Bootstrap.php:328
 msgid "Thought"
 msgstr "विचार"
 
-#: app/Core/Bootstrap.php:330
+#: app/Core/Bootstrap.php:329
 msgid "Served from cache."
 msgstr "क्यासबाट प्रदान गरियो।"
 

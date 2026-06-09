@@ -71,6 +71,9 @@
 	const charCount = $derived( inputValue.length );
 	const atLimit = $derived( maxLength > 0 && charCount >= maxLength );
 	const exceedsMax = $derived( maxLength > 0 && charCount > maxLength );
+	const charCountText = $derived(
+		i18n.charCountFormat.replace( '%1$d', charCount ).replace( '%2$d', maxLength )
+	);
 	const metaLines = $derived( buildGenerationMetaLines( generationMeta, i18n ) );
 	const hasOutput = $derived( outputHtml.trim().length > 0 );
 	const noticeVisible = $derived( noticeMessage.trim().length > 0 );
@@ -337,10 +340,7 @@
 						exceedsMax}
 					class:notira-at-limit={atLimit}
 				>
-					{charCount}
-					{i18n.charCountMiddle}
-					{maxLength}
-					{i18n.charactersWord}
+					{charCountText}
 					<span class="notira-char-limits">({i18n.minCharsHint})</span>
 					{#if validationMessage}
 						<span id="notira-input-validation" class="screen-reader-text" role="alert"

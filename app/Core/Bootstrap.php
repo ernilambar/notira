@@ -298,9 +298,8 @@ class Bootstrap {
 				'copiedLabel'        => __( 'Copied', 'notira' ),
 				'outputLabel'        => __( 'Output', 'notira' ),
 				'outputPlaceholder'  => __( 'Output will appear here.', 'notira' ),
-				'charactersWord'     => __( 'characters', 'notira' ),
-				/* translators: Separator between current length and max length in the character counter, e.g. "12 / 500". Include spaces if your language needs them. */
-				'charCountMiddle'    => __( ' / ', 'notira' ),
+				/* translators: Character counter format. %1$d: current length, %2$d: max length, e.g. "12 / 500 characters". */
+				'charCountFormat'    => __( '%1$d / %2$d characters', 'notira' ),
 				'minCharsHint'       => sprintf(
 					/* translators: %d: minimum character count */
 					__( 'Min: %d chars', 'notira' ),
