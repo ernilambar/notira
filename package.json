@@ -2,9 +2,15 @@
 	"name": "notira",
 	"version": "1.1.1",
 	"description": "Improve draft text into email-ready or proofread HTML using AI.",
-	"author": "Nilambar Sharma",
 	"license": "GPL-2.0-or-later",
+	"author": "Nilambar Sharma",
 	"type": "module",
+	"main": "notira.php",
+	"scripts": {
+		"build": "vite build",
+		"dev": "vite build --watch",
+		"format": "prettier \"**/*.{cjs,css,js,json,mjs,svelte}\" --write --log-level warn"
+	},
 	"browserslist": "> 2%, last 2 versions, not dead",
 	"devDependencies": {
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",
@@ -14,10 +20,5 @@
 		"prettier-plugin-svelte": "^3.5.2",
 		"svelte": "^5.55.5",
 		"vite": "^8.0.12"
-	},
-	"scripts": {
-		"dev": "vite build --watch",
-		"build": "vite build",
-		"format": "prettier \"**/*.{cjs,css,js,json,mjs,svelte}\" --write --log-level warn"
 	}
 }
