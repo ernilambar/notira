@@ -59,3 +59,10 @@ Tones: `Tone_Utils::get_tone_options()` is the single source of truth (slug → 
 - REST endpoints follow the `{ success, data }` shape used by `REST_API::generate()`; errors return `WP_Error` with a numeric `status` so the REST server formats them consistently.
 - Package manager is **pnpm**. Do not run `npm install` / `npm run …`; the lockfile is `pnpm-lock.yaml`.
 - When asked architecture, naming, or design questions, recommend and wait for the user's choice before writing code.
+
+## Quality Gate
+
+Every task must end with:
+1. `composer lint` — 0 errors, 0 warnings (run `composer format` to auto-fix first)
+2. `pnpm build` — assets compiled cleanly
+3. `pnpm format` — JS/CSS formatted with Prettier
