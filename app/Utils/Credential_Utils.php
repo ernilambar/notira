@@ -118,10 +118,6 @@ class Credential_Utils {
 				continue;
 			}
 
-			if ( ! self::connector_has_credentials( $connector_data ) ) {
-				continue;
-			}
-
 			$name = ( isset( $connector_data['name'] ) && is_string( $connector_data['name'] ) && '' !== $connector_data['name'] )
 				? $connector_data['name']
 				: $id;
@@ -144,13 +140,13 @@ class Credential_Utils {
 	 */
 	private static function connector_has_credentials( array $connector_data ): bool {
 		if ( ! isset( $connector_data['authentication'] ) || ! is_array( $connector_data['authentication'] ) ) {
-			return false;
+			return true;
 		}
 
 		$auth = $connector_data['authentication'];
 
 		if ( ! isset( $auth['method'] ) || 'api_key' !== $auth['method'] ) {
-			return false;
+			return true;
 		}
 
 		$has_env   = ! empty( $auth['env_var_name'] ) && false !== getenv( $auth['env_var_name'] ) && '' !== getenv( $auth['env_var_name'] );
