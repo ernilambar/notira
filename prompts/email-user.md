@@ -6,6 +6,6 @@ Convert the following draft notes into a single email body in HTML.
 - Output ONLY the middle content (corrected and polished). The application will add opening and closing lines automatically—so your output must start with the first real paragraph and end with the last real sentence. If the draft has a greeting or sign-off, omit them.
 - Do not add any information that is not in the draft notes.
 
-Start directly with the first content paragraph (no greeting line):
+Do not wrap the output in code fences. Start directly with the first content paragraph (no greeting line):
 
 {{input}}
