@@ -16,8 +16,8 @@ msgstr ""
 
 #. Plugin Name of the plugin
 #: notira.php:3
-#: app/Core/Bootstrap.php:199
 #: app/Core/Bootstrap.php:200
+#: app/Core/Bootstrap.php:201
 #: templates/admin-page.php:17
 msgid "Notira"
 msgstr ""
@@ -99,167 +99,168 @@ msgstr ""
 msgid "AI request failed."
 msgstr ""
 
-#: app/Core/Bootstrap.php:96
+#: app/Core/Bootstrap.php:97
 msgid "Notira requires WordPress AI support (WordPress 7.0+). AI features are unavailable in this installation."
 msgstr ""
 
-#: app/Core/Bootstrap.php:98
+#: app/Core/Bootstrap.php:99
 msgid "WordPress AI is disabled on this site (for example via the WP_AI_SUPPORT constant or a filter). Notira cannot generate text until AI support is enabled."
 msgstr ""
 
 #. translators: 1: opening link tag, 2: closing link tag
-#: app/Core/Bootstrap.php:116
+#: app/Core/Bootstrap.php:117
 #, php-format
 msgid "Please set your API key in %1$sConnectors%2$s to use this feature."
 msgstr ""
 
-#: app/Core/Bootstrap.php:262
+#: app/Core/Bootstrap.php:263
 #: app/Options/Options.php:63
 msgid "Email"
 msgstr ""
 
-#: app/Core/Bootstrap.php:263
+#: app/Core/Bootstrap.php:264
 msgid "Polish your notes into a clear email body. Opening and closing lines from settings are added around the result."
 msgstr ""
 
-#: app/Core/Bootstrap.php:267
+#: app/Core/Bootstrap.php:268
 #: app/Options/Options.php:64
 msgid "Proofread"
 msgstr ""
 
-#: app/Core/Bootstrap.php:268
+#: app/Core/Bootstrap.php:269
 msgid "Grammar, spelling, and punctuation corrections, with clarity improvements only where needed; preserves structure and meaning."
 msgstr ""
 
-#: app/Core/Bootstrap.php:292
+#: app/Core/Bootstrap.php:293
 msgid "Enter draft notes or bullet points"
 msgstr ""
 
-#: app/Core/Bootstrap.php:293
+#: app/Core/Bootstrap.php:294
 msgid "Paste or type your text here…"
 msgstr ""
 
-#: app/Core/Bootstrap.php:294
+#: app/Core/Bootstrap.php:295
 msgid "Mode"
 msgstr ""
 
-#: app/Core/Bootstrap.php:295
+#: app/Core/Bootstrap.php:296
 msgid "Tone"
 msgstr ""
 
-#: app/Core/Bootstrap.php:296
+#: app/Core/Bootstrap.php:297
 msgid "Generate"
 msgstr ""
 
-#: app/Core/Bootstrap.php:297
+#: app/Core/Bootstrap.php:298
 msgid "Copy"
 msgstr ""
 
-#: app/Core/Bootstrap.php:298
+#: app/Core/Bootstrap.php:299
 msgid "Copied"
 msgstr ""
 
-#: app/Core/Bootstrap.php:299
+#: app/Core/Bootstrap.php:300
 #: app/Options/Options.php:56
 msgid "Output"
 msgstr ""
 
-#: app/Core/Bootstrap.php:300
+#: app/Core/Bootstrap.php:301
 msgid "Output will appear here."
 msgstr ""
 
 #. translators: Character counter format. %1$d: current length, %2$d: max length, e.g. "12 / 500 characters".
-#: app/Core/Bootstrap.php:302
+#: app/Core/Bootstrap.php:303
 #, php-format
 msgid "%1$d / %2$d characters"
 msgstr ""
 
 #. translators: %d: minimum character count
-#: app/Core/Bootstrap.php:305
+#: app/Core/Bootstrap.php:306
 #, php-format
 msgid "Min: %d chars"
 msgstr ""
 
-#: app/Core/Bootstrap.php:308
+#: app/Core/Bootstrap.php:309
 msgid "Generating…"
 msgstr ""
 
 #. translators: %d: min character count
-#: app/Core/Bootstrap.php:311
+#: app/Core/Bootstrap.php:312
 #, php-format
 msgid "Input is too short. Please enter at least %d characters."
 msgstr ""
 
-#: app/Core/Bootstrap.php:314
+#: app/Core/Bootstrap.php:315
 msgid "Text is too long."
 msgstr ""
 
-#: app/Core/Bootstrap.php:315
+#: app/Core/Bootstrap.php:316
 msgid "Please enter some text."
 msgstr ""
 
-#: app/Core/Bootstrap.php:316
+#: app/Core/Bootstrap.php:317
 msgid "Nothing to copy."
 msgstr ""
 
-#: app/Core/Bootstrap.php:317
+#: app/Core/Bootstrap.php:318
 msgid "Could not copy. Please select and copy manually."
 msgstr ""
 
-#: app/Core/Bootstrap.php:318
+#: app/Core/Bootstrap.php:319
 msgid "Generated successfully."
 msgstr ""
 
-#: app/Core/Bootstrap.php:319
+#: app/Core/Bootstrap.php:320
 msgid "Request failed."
 msgstr ""
 
-#: app/Core/Bootstrap.php:320
+#: app/Core/Bootstrap.php:321
 msgid "Something went wrong."
 msgstr ""
 
-#: app/Core/Bootstrap.php:321
+#: app/Core/Bootstrap.php:322
 msgid "Network or server error. Please try again."
 msgstr ""
 
-#: app/Core/Bootstrap.php:322
+#: app/Core/Bootstrap.php:323
 msgid "Provider"
 msgstr ""
 
-#: app/Core/Bootstrap.php:323
+#: app/Core/Bootstrap.php:324
 msgid "Model"
 msgstr ""
 
-#: app/Core/Bootstrap.php:324
+#: app/Core/Bootstrap.php:325
 msgid "Tokens"
 msgstr ""
 
-#: app/Core/Bootstrap.php:325
+#: app/Core/Bootstrap.php:326
 msgid "Prompt"
 msgstr ""
 
-#: app/Core/Bootstrap.php:326
+#: app/Core/Bootstrap.php:327
 msgid "Completion"
 msgstr ""
 
-#: app/Core/Bootstrap.php:327
+#: app/Core/Bootstrap.php:328
 msgid "Total"
 msgstr ""
 
-#: app/Core/Bootstrap.php:328
+#: app/Core/Bootstrap.php:329
 msgid "Thought"
 msgstr ""
 
-#: app/Core/Bootstrap.php:329
+#: app/Core/Bootstrap.php:330
 msgid "Served from cache."
+msgstr ""
+
+#: app/Core/Bootstrap.php:350
+#: app/Options/Options.php:48
+msgid "Settings"
 msgstr ""
 
 #: app/Options/Options.php:47
 msgid "Notira Settings"
-msgstr ""
-
-#: app/Options/Options.php:48
-msgid "Settings"
 msgstr ""
 
 #: app/Options/Options.php:61

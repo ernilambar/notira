@@ -54,6 +54,7 @@ class Bootstrap {
 		add_action( 'admin_head', [ __CLASS__, 'set_favicon' ], 999 );
 		add_filter( 'site_icon_meta_tags', [ __CLASS__, 'disable_core_favicon' ], 10, 1 );
 		add_filter( 'linkit_admin_links_status', [ __CLASS__, 'disable_linkit_on_notira_page' ], 10, 2 );
+		add_filter( 'plugin_action_links_' . NOTIRA_BASE_FILENAME, [ __CLASS__, 'add_plugin_action_links' ] );
 
 		REST_API::init();
 	}
@@ -334,6 +335,23 @@ class Bootstrap {
 			'window.notiraAdmin = ' . wp_json_encode( $settings ) . ';',
 			[ 'id' => 'notira-admin-settings' ]
 		);
+	}
+
+	/**
+	 * Add Settings link to plugin action links.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $links Existing plugin action links.
+	 * @return array Modified plugin action links.
+	 */
+	public static function add_plugin_action_links( array $links ): array {
+		$settings_url  = admin_url( 'admin.php?page=' . self::SETTINGS_PAGE_SLUG );
+		$settings_link = '<a href="' . esc_url( $settings_url ) . '">' . esc_html__( 'Settings', 'notira' ) . '</a>';
+
+		array_unshift( $links, $settings_link );
+
+		return $links;
 	}
 
 	/**
