@@ -53,7 +53,6 @@ class Bootstrap {
 		add_action( 'admin_footer', [ __CLASS__, 'print_admin_settings' ], 0 );
 		add_action( 'admin_head', [ __CLASS__, 'set_favicon' ], 999 );
 		add_filter( 'site_icon_meta_tags', [ __CLASS__, 'disable_core_favicon' ], 10, 1 );
-		add_filter( 'linkit_admin_links_status', [ __CLASS__, 'disable_linkit_on_notira_page' ], 10, 2 );
 		add_filter( 'plugin_action_links_' . NOTIRA_BASE_FILENAME, [ __CLASS__, 'add_plugin_action_links' ] );
 
 		REST_API::init();
@@ -166,28 +165,6 @@ class Bootstrap {
 		}
 
 		return $meta_tags;
-	}
-
-	/**
-	 * Disable Linkit admin links.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param bool   $show Whether to show Linkit admin UI.
-	 * @param string $hook Current admin page hook suffix.
-	 * @return bool False on Notira page, otherwise the original $show value.
-	 */
-	public static function disable_linkit_on_notira_page( bool $show, string $hook ): bool {
-		$notira_hooks = [
-			'toplevel_page_' . self::ADMIN_PAGE_SLUG,
-			self::ADMIN_PAGE_SLUG . '_page_' . self::SETTINGS_PAGE_SLUG,
-		];
-
-		if ( in_array( $hook, $notira_hooks, true ) ) {
-			return false;
-		}
-
-		return $show;
 	}
 
 	/**
