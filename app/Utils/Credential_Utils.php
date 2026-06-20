@@ -147,6 +147,36 @@ class Credential_Utils {
 	}
 
 	/**
+	 * Return model IDs mapped to display names for a given AI provider.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $provider_id Provider connector ID.
+	 * @return array<string, string>
+	 */
+	public static function get_models_for_provider( string $provider_id ): array {
+		if ( '' === $provider_id || ! class_exists( AiClient::class ) ) {
+			return [];
+		}
+
+		try {
+			$registry       = AiClient::defaultRegistry();
+			$provider_class = $registry->getProviderClassName( $provider_id );
+			$models         = [];
+			foreach ( $provider_class::modelMetadataDirectory()->listModelMetadata() as $model ) {
+				$id   = $model->getId();
+				$name = $model->getName();
+				if ( '' !== $id ) {
+					$models[ $id ] = '' !== $name ? $name : $id;
+				}
+			}
+			return $models;
+		} catch ( Throwable $e ) {
+			return [];
+		}
+	}
+
+	/**
 	 * Whether a single connector data array has a non-empty credential stored.
 	 *
 	 * Checks env var, PHP constant, and database in order.
