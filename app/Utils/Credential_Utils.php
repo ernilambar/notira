@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Nilambar\Notira\Utils;
 
 use Throwable;
+use WordPress\AiClient\AiClient;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -108,6 +109,15 @@ class Credential_Utils {
 			return [];
 		}
 
+		$registry = null;
+		if ( class_exists( AiClient::class ) ) {
+			try {
+				$registry = AiClient::defaultRegistry();
+			} catch ( Throwable $e ) {
+				$registry = null;
+			}
+		}
+
 		$options = [];
 		foreach ( $connectors as $id => $connector_data ) {
 			if ( ! is_string( $id ) || '' === $id || ! is_array( $connector_data ) ) {
@@ -116,6 +126,14 @@ class Credential_Utils {
 
 			if ( ! isset( $connector_data['type'] ) || 'ai_provider' !== $connector_data['type'] ) {
 				continue;
+			}
+
+			if ( null !== $registry ) {
+				try {
+					$registry->getProviderClassName( $id );
+				} catch ( Throwable $e ) {
+					continue;
+				}
 			}
 
 			$name = ( isset( $connector_data['name'] ) && is_string( $connector_data['name'] ) && '' !== $connector_data['name'] )
