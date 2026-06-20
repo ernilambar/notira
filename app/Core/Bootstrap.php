@@ -54,6 +54,8 @@ class Bootstrap {
 		add_action( 'admin_head', [ __CLASS__, 'set_favicon' ], 999 );
 		add_filter( 'site_icon_meta_tags', [ __CLASS__, 'disable_core_favicon' ], 10, 1 );
 		add_filter( 'plugin_action_links_' . NOTIRA_BASE_FILENAME, [ __CLASS__, 'add_plugin_action_links' ] );
+		add_action( 'wp_ajax_notira_get_models', [ __CLASS__, 'handle_get_models_ajax' ] );
+		add_action( 'admin_footer', [ __CLASS__, 'print_settings_inline_js' ] );
 
 		REST_API::init();
 	}
@@ -73,17 +75,8 @@ class Bootstrap {
 	 * @since 1.0.0
 	 */
 	public static function render_credentials_notice(): void {
-		$screen = get_current_screen();
-		if ( ! $screen ) {
-			return;
-		}
-
-		$notira_screens = [
-			'toplevel_page_' . self::ADMIN_PAGE_SLUG,
-			self::ADMIN_PAGE_SLUG . '_page_' . self::SETTINGS_PAGE_SLUG,
-		];
-
-		if ( ! in_array( $screen->id, $notira_screens, true ) ) {
+		$current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		if ( ! in_array( $current_page, [ self::ADMIN_PAGE_SLUG, self::SETTINGS_PAGE_SLUG ], true ) ) {
 			return;
 		}
 
@@ -192,7 +185,8 @@ class Bootstrap {
 	 * @param string $hook_suffix Current admin page hook.
 	 */
 	public static function enqueue_admin_assets( $hook_suffix ): void {
-		if ( 'toplevel_page_' . self::ADMIN_PAGE_SLUG !== $hook_suffix ) {
+		$current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		if ( self::ADMIN_PAGE_SLUG !== $current_page ) {
 			return;
 		}
 
@@ -219,8 +213,8 @@ class Bootstrap {
 	 * @since 1.0.0
 	 */
 	public static function print_admin_settings(): void {
-		$screen = get_current_screen();
-		if ( ! $screen || 'toplevel_page_' . self::ADMIN_PAGE_SLUG !== $screen->id ) {
+		$current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		if ( self::ADMIN_PAGE_SLUG !== $current_page ) {
 			return;
 		}
 
@@ -312,6 +306,79 @@ class Bootstrap {
 			'window.notiraAdmin = ' . wp_json_encode( $settings ) . ';',
 			[ 'id' => 'notira-admin-settings' ]
 		);
+	}
+
+	/**
+	 * Handle AJAX request to return model options for a given provider.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function handle_get_models_ajax(): void {
+		check_ajax_referer( 'notira_get_models', 'nonce' );
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( null, 403 );
+		}
+
+		$provider_id = isset( $_POST['provider'] ) ? sanitize_key( wp_unslash( $_POST['provider'] ) ) : '';
+		wp_send_json_success( Credential_Utils::get_models_for_provider( $provider_id ) );
+	}
+
+	/**
+	 * Print inline JS for the dynamic model dropdown on the settings page.
+	 *
+	 * Fires on admin_footer; repopulates the model select via AJAX when the
+	 * provider select changes. Initial page-load choices are PHP-precomputed.
+	 *
+	 * @since 1.0.0
+	 */
+	public static function print_settings_inline_js(): void {
+		$current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+		if ( self::SETTINGS_PAGE_SLUG !== $current_page ) {
+			return;
+		}
+
+		$data = wp_json_encode(
+			[
+				'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
+				'nonce'        => wp_create_nonce( 'notira_get_models' ),
+				'defaultLabel' => __( '- Default -', 'notira' ),
+				'savedModel'   => sanitize_text_field( (string) Option::get( 'preferred_model' ) ),
+			]
+		);
+
+		$js = '(function(){' .
+			'var d=' . $data . ';' .
+			'var providerSel=document.getElementById("optiz_preferred_provider");' .
+			'var modelSel=document.getElementById("optiz_preferred_model");' .
+			'if(!providerSel||!modelSel){return;}' .
+			'function populateModels(providerId,selectedModel){' .
+				'modelSel.innerHTML="";' .
+				'var defOpt=document.createElement("option");' .
+				'defOpt.value="";defOpt.textContent=d.defaultLabel;' .
+				'modelSel.appendChild(defOpt);' .
+				'if(!providerId){return;}' .
+				'var xhr=new XMLHttpRequest();' .
+				'xhr.open("POST",d.ajaxUrl);' .
+				'xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");' .
+				'xhr.onload=function(){' .
+					'if(200!==xhr.status){return;}' .
+					'try{var res=JSON.parse(xhr.responseText);}catch(e){return;}' .
+					'if(!res.success){return;}' .
+					'Object.keys(res.data).forEach(function(id){' .
+						'var opt=document.createElement("option");' .
+						'opt.value=id;opt.textContent=res.data[id];' .
+						'if(id===selectedModel){opt.selected=true;}' .
+						'modelSel.appendChild(opt);' .
+					'});' .
+				'};' .
+				'xhr.send("action=notira_get_models&nonce="+encodeURIComponent(d.nonce)+"&provider="+encodeURIComponent(providerId));' .
+			'}' .
+			'providerSel.addEventListener("change",function(){populateModels(this.value,"");});' .
+			'if(providerSel.value){populateModels(providerSel.value,d.savedModel);}' .
+		'})();';
+
+		wp_print_inline_script_tag( $js, [ 'id' => 'notira-settings-models' ] );
 	}
 
 	/**

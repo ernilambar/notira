@@ -84,6 +84,14 @@ class Options {
 								'default' => '',
 							],
 							[
+								'id'                => 'preferred_model',
+								'type'              => 'select',
+								'label'             => esc_html__( 'Preferred model', 'notira' ),
+								'choices'           => [ '' => __( '- Default -', 'notira' ) ],
+								'default'           => '',
+								'sanitize_callback' => 'sanitize_text_field',
+							],
+							[
 								'id'          => 'email_greeting',
 								'type'        => 'text',
 								'label'       => esc_html__( 'Opening line', 'notira' ),

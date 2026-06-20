@@ -15,6 +15,7 @@ use Nilambar\Notira\Utils\Mode_Utils;
 use Nilambar\Notira\Utils\Prompt_Utils;
 use Nilambar\Notira\Utils\Tone_Utils;
 use Throwable;
+use WordPress\AiClient\AiClient;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -261,7 +262,11 @@ class REST_API {
 		$valid_slugs = Tone_Utils::get_valid_slugs();
 		$tone        = ( is_string( $tone ) && in_array( $tone, $valid_slugs, true ) ) ? $tone : Tone_Utils::DEFAULT_TONE;
 		$provider    = sanitize_key( (string) Option::get( 'preferred_provider' ) );
-		$cache_key   = 'notira_' . $mode . '_' . $tone . '_' . ( '' !== $provider ? $provider . '_' : '' ) . md5( $input );
+		$model       = sanitize_text_field( (string) Option::get( 'preferred_model' ) );
+		$cache_key   = 'notira_' . $mode . '_' . $tone . '_'
+			. ( '' !== $provider ? $provider . '_' : '' )
+			. ( '' !== $model ? sanitize_key( $model ) . '_' : '' )
+			. md5( $input );
 		$cached      = get_transient( $cache_key );
 		if ( false !== $cached ) {
 			$cached_output = '';
@@ -355,26 +360,24 @@ class REST_API {
 		}
 
 		$preferred_provider = sanitize_key( (string) Option::get( 'preferred_provider' ) );
+		$preferred_model    = sanitize_text_field( (string) Option::get( 'preferred_model' ) );
 
 		$builder = wp_ai_client_prompt( $prompt )
 			->using_system_instruction( $system )
 			->using_max_tokens( 1024 );
 
-		if ( '' !== $preferred_provider ) {
+		if ( '' !== $preferred_provider && '' !== $preferred_model ) {
+			try {
+				$registry  = AiClient::defaultRegistry();
+				$model_obj = $registry->getProviderModel( $preferred_provider, $preferred_model );
+				$builder   = $builder->using_model( $model_obj );
+			} catch ( Throwable $e ) {
+				$builder = $builder->using_provider( $preferred_provider );
+			}
+		} elseif ( '' !== $preferred_provider ) {
 			$builder = $builder->using_provider( $preferred_provider );
-		} else {
-			$builder = $builder->using_model_preference(
-				'openai/gpt-4o-mini',
-				'openai/gpt-4o',
-				'openai/gpt-4',
-				'anthropic/claude-3.5-sonnet',
-				'google/gemini-flash-1.5',
-				'gpt-4o-mini',
-				'gpt-4o',
-				'gpt-4',
-				'claude-3-5-sonnet-20241022',
-				'gemini-2.0-flash'
-			);
+		} elseif ( '' !== $preferred_model ) {
+			$builder = $builder->using_model_preference( $preferred_model );
 		}
 
 		if ( ! $builder->is_supported_for_text_generation() ) {
