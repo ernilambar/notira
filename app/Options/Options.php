@@ -76,7 +76,7 @@ class Options {
 							[
 								'id'      => 'preferred_provider',
 								'type'    => 'select',
-								'label'   => esc_html__( 'AI provider', 'notira' ),
+								'label'   => esc_html__( 'Preferred provider', 'notira' ),
 								'choices' => array_merge(
 									[ '' => __( '- Select -', 'notira' ) ],
 									Credential_Utils::get_ai_provider_options()
