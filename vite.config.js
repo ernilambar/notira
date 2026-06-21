@@ -19,6 +19,7 @@ export default {
 		rollupOptions: {
 			input: {
 				main: 'src/main.js',
+				settings: 'src/settings.js',
 			},
 			output: {
 				entryFileNames: '[name].js',
