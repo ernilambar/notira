@@ -39,8 +39,6 @@ class Credential_Utils {
 	/**
 	 * Check if at least one Connectors AI provider has configured credentials.
 	 *
-	 * Uses `wp_get_connectors()` and per-provider options (e.g. `connectors_ai_openai_api_key`).
-	 *
 	 * @since 1.0.0
 	 *
 	 * @return bool
@@ -59,8 +57,6 @@ class Credential_Utils {
 
 	/**
 	 * Whether stored credentials appear usable for text generation.
-	 *
-	 * Performs a lightweight client check after {@see Credential_Utils::has_ai_credentials()}.
 	 *
 	 * @since 1.0.0
 	 *
@@ -93,7 +89,7 @@ class Credential_Utils {
 	}
 
 	/**
-	 * Return registered AI provider slugs mapped to display names.
+	 * Return active, configured AI provider slugs mapped to display names.
 	 *
 	 * @since 1.0.0
 	 *
@@ -119,6 +115,7 @@ class Credential_Utils {
 		}
 
 		$options = [];
+
 		foreach ( $connectors as $id => $connector_data ) {
 			if ( ! is_string( $id ) || '' === $id || ! is_array( $connector_data ) ) {
 				continue;
@@ -128,12 +125,12 @@ class Credential_Utils {
 				continue;
 			}
 
-			if ( null !== $registry ) {
-				try {
-					$registry->getProviderClassName( $id );
-				} catch ( Throwable $e ) {
-					continue;
-				}
+			if ( ! self::connector_plugin_is_active( $connector_data ) ) {
+				continue;
+			}
+
+			if ( ! self::connector_has_credentials( $connector_data ) ) {
+				continue;
 			}
 
 			$name = ( isset( $connector_data['name'] ) && is_string( $connector_data['name'] ) && '' !== $connector_data['name'] )
@@ -141,6 +138,25 @@ class Credential_Utils {
 				: $id;
 
 			$options[ $id ] = $name;
+		}
+
+		// Providers registered directly in the registry, not via connectors.
+		if ( null !== $registry ) {
+			try {
+				foreach ( $registry->getRegisteredProviderIds() as $id ) {
+					if ( isset( $options[ $id ] ) ) {
+						continue;
+					}
+					if ( ! $registry->isProviderConfigured( $id ) ) {
+						continue;
+					}
+					$provider_class = $registry->getProviderClassName( $id );
+					$name           = $provider_class::metadata()->getName();
+					$options[ $id ] = '' !== $name ? $name : $id;
+				}
+			} catch ( Throwable $e ) {
+				unset( $e );
+			}
 		}
 
 		return $options;
@@ -177,9 +193,27 @@ class Credential_Utils {
 	}
 
 	/**
-	 * Whether a single connector data array has a non-empty credential stored.
+	 * Whether the connector's backing plugin is active.
 	 *
-	 * Checks env var, PHP constant, and database in order.
+	 * @since 1.0.0
+	 *
+	 * @param array $connector_data Connector data from wp_get_connectors().
+	 * @return bool
+	 */
+	private static function connector_plugin_is_active( array $connector_data ): bool {
+		if ( ! isset( $connector_data['plugin']['is_active'] ) || ! is_callable( $connector_data['plugin']['is_active'] ) ) {
+			return true;
+		}
+
+		try {
+			return (bool) ( $connector_data['plugin']['is_active'] )();
+		} catch ( Throwable $e ) {
+			return false;
+		}
+	}
+
+	/**
+	 * Whether a single connector data array has a non-empty credential stored.
 	 *
 	 * @since 1.0.0
 	 *
@@ -222,6 +256,7 @@ class Credential_Utils {
 			if ( is_array( $connector_data )
 				&& isset( $connector_data['type'] )
 				&& 'ai_provider' === $connector_data['type']
+				&& self::connector_plugin_is_active( $connector_data )
 				&& self::connector_has_credentials( $connector_data )
 			) {
 				return true;
