@@ -55,7 +55,7 @@ class Bootstrap {
 		add_filter( 'site_icon_meta_tags', [ __CLASS__, 'disable_core_favicon' ], 10, 1 );
 		add_filter( 'plugin_action_links_' . NOTIRA_BASE_FILENAME, [ __CLASS__, 'add_plugin_action_links' ] );
 		add_action( 'wp_ajax_notira_get_models', [ __CLASS__, 'handle_get_models_ajax' ] );
-		add_action( 'admin_footer', [ __CLASS__, 'print_settings_inline_js' ] );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_settings_assets' ] );
 
 		REST_API::init();
 	}
@@ -325,60 +325,38 @@ class Bootstrap {
 	}
 
 	/**
-	 * Print inline JS for the dynamic model dropdown on the settings page.
-	 *
-	 * Fires on admin_footer; repopulates the model select via AJAX when the
-	 * provider select changes. Initial page-load choices are PHP-precomputed.
+	 * Enqueue settings page scripts.
 	 *
 	 * @since 1.0.0
+	 *
+	 * @param string $hook_suffix Current admin page hook.
 	 */
-	public static function print_settings_inline_js(): void {
+	public static function enqueue_settings_assets( $hook_suffix ): void {
 		$current_page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
 		if ( self::SETTINGS_PAGE_SLUG !== $current_page ) {
 			return;
 		}
 
-		$data = wp_json_encode(
-			[
-				'ajaxUrl'      => admin_url( 'admin-ajax.php' ),
-				'nonce'        => wp_create_nonce( 'notira_get_models' ),
-				'defaultLabel' => __( '- Default -', 'notira' ),
-				'savedModel'   => sanitize_text_field( (string) Option::get( 'preferred_model' ) ),
-			]
+		wp_enqueue_script(
+			'notira-settings',
+			NOTIRA_URL . '/build/settings.js',
+			[],
+			NOTIRA_VERSION,
+			[ 'in_footer' => true ]
 		);
 
-		$js = '(function(){' .
-			'var d=' . $data . ';' .
-			'var providerSel=document.getElementById("optiz_preferred_provider");' .
-			'var modelSel=document.getElementById("optiz_preferred_model");' .
-			'if(!providerSel||!modelSel){return;}' .
-			'function populateModels(providerId,selectedModel){' .
-				'modelSel.innerHTML="";' .
-				'var defOpt=document.createElement("option");' .
-				'defOpt.value="";defOpt.textContent=d.defaultLabel;' .
-				'modelSel.appendChild(defOpt);' .
-				'if(!providerId){return;}' .
-				'var xhr=new XMLHttpRequest();' .
-				'xhr.open("POST",d.ajaxUrl);' .
-				'xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");' .
-				'xhr.onload=function(){' .
-					'if(200!==xhr.status){return;}' .
-					'try{var res=JSON.parse(xhr.responseText);}catch(e){return;}' .
-					'if(!res.success){return;}' .
-					'Object.keys(res.data).forEach(function(id){' .
-						'var opt=document.createElement("option");' .
-						'opt.value=id;opt.textContent=res.data[id];' .
-						'if(id===selectedModel){opt.selected=true;}' .
-						'modelSel.appendChild(opt);' .
-					'});' .
-				'};' .
-				'xhr.send("action=notira_get_models&nonce="+encodeURIComponent(d.nonce)+"&provider="+encodeURIComponent(providerId));' .
-			'}' .
-			'providerSel.addEventListener("change",function(){populateModels(this.value,"");});' .
-			'if(providerSel.value){populateModels(providerSel.value,d.savedModel);}' .
-		'})();';
-
-		wp_print_inline_script_tag( $js, [ 'id' => 'notira-settings-models' ] );
+		wp_add_inline_script(
+			'notira-settings',
+			'window.notiraSettings = ' . wp_json_encode(
+				[
+					'ajax_url'      => admin_url( 'admin-ajax.php' ),
+					'nonce'         => wp_create_nonce( 'notira_get_models' ),
+					'default_label' => __( '- Default -', 'notira' ),
+					'saved_model'   => sanitize_text_field( (string) Option::get( 'preferred_model' ) ),
+				]
+			) . ';',
+			'before'
+		);
 	}
 
 	/**

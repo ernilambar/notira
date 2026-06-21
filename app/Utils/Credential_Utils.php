@@ -96,51 +96,43 @@ class Credential_Utils {
 	 * @return array<string, string>
 	 */
 	public static function get_ai_provider_options(): array {
-		if ( ! function_exists( 'wp_get_connectors' ) ) {
-			return [];
-		}
-
-		$connectors = wp_get_connectors();
-		if ( ! is_array( $connectors ) || [] === $connectors ) {
-			return [];
-		}
-
+		$options  = [];
 		$registry = null;
+
 		if ( class_exists( AiClient::class ) ) {
 			try {
 				$registry = AiClient::defaultRegistry();
-			} catch ( Throwable $e ) {
-				$registry = null;
+			} catch ( Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 			}
 		}
 
-		$options = [];
+		// Pass 1: providers registered via wp_get_connectors() (credential-gated).
+		if ( function_exists( 'wp_get_connectors' ) ) {
+			$connectors = wp_get_connectors();
 
-		foreach ( $connectors as $id => $connector_data ) {
-			if ( ! is_string( $id ) || '' === $id || ! is_array( $connector_data ) ) {
-				continue;
+			if ( is_array( $connectors ) && [] !== $connectors ) {
+				foreach ( $connectors as $id => $connector_data ) {
+					if ( ! is_string( $id ) || '' === $id || ! is_array( $connector_data ) ) {
+						continue;
+					}
+					if ( ! isset( $connector_data['type'] ) || 'ai_provider' !== $connector_data['type'] ) {
+						continue;
+					}
+					if ( ! self::connector_plugin_is_active( $connector_data ) ) {
+						continue;
+					}
+					if ( ! self::connector_has_credentials( $connector_data ) ) {
+						continue;
+					}
+
+					$name           = ( isset( $connector_data['name'] ) && is_string( $connector_data['name'] ) && '' !== $connector_data['name'] ) ? $connector_data['name'] : $id;
+					$options[ $id ] = $name;
+				}
 			}
-
-			if ( ! isset( $connector_data['type'] ) || 'ai_provider' !== $connector_data['type'] ) {
-				continue;
-			}
-
-			if ( ! self::connector_plugin_is_active( $connector_data ) ) {
-				continue;
-			}
-
-			if ( ! self::connector_has_credentials( $connector_data ) ) {
-				continue;
-			}
-
-			$name = ( isset( $connector_data['name'] ) && is_string( $connector_data['name'] ) && '' !== $connector_data['name'] )
-				? $connector_data['name']
-				: $id;
-
-			$options[ $id ] = $name;
 		}
 
-		// Providers registered directly in the registry, not via connectors.
+		// Pass 2: providers registered directly in the registry (e.g. LM Studio) that
+		// bypass wp_get_connectors(). Include them when the provider reports itself configured.
 		if ( null !== $registry ) {
 			try {
 				foreach ( $registry->getRegisteredProviderIds() as $id ) {
@@ -154,8 +146,7 @@ class Credential_Utils {
 					$name           = $provider_class::metadata()->getName();
 					$options[ $id ] = '' !== $name ? $name : $id;
 				}
-			} catch ( Throwable $e ) {
-				unset( $e );
+			} catch ( Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
 			}
 		}
 
@@ -163,12 +154,12 @@ class Credential_Utils {
 	}
 
 	/**
-	 * Return model IDs mapped to display names for a given AI provider.
+	 * Return model IDs and display names for a given AI provider.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @param string $provider_id Provider connector ID.
-	 * @return array<string, string>
+	 * @return list<array{id: string, name: string}>
 	 */
 	public static function get_models_for_provider( string $provider_id ): array {
 		if ( '' === $provider_id || ! class_exists( AiClient::class ) ) {
@@ -183,7 +174,10 @@ class Credential_Utils {
 				$id   = $model->getId();
 				$name = $model->getName();
 				if ( '' !== $id ) {
-					$models[ $id ] = '' !== $name ? $name : $id;
+					$models[] = [
+						'id'   => $id,
+						'name' => '' !== $name ? $name : $id,
+					];
 				}
 			}
 			return $models;
@@ -220,7 +214,7 @@ class Credential_Utils {
 	 * @param array $connector_data Connector data from wp_get_connectors().
 	 * @return bool
 	 */
-	private static function connector_has_credentials( array $connector_data ): bool {
+	public static function connector_has_credentials( array $connector_data ): bool {
 		if ( ! isset( $connector_data['authentication'] ) || ! is_array( $connector_data['authentication'] ) ) {
 			return true;
 		}
