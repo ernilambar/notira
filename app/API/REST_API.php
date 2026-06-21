@@ -196,7 +196,7 @@ class REST_API {
 		if ( ! Credential_Utils::supports_ai() ) {
 			return new WP_Error(
 				'notira_ai_unsupported',
-				__( 'WordPress AI is not available or is disabled on this site.', 'notira' ),
+				__( 'WordPress AI is unavailable.', 'notira' ),
 				[ 'status' => 503 ]
 			);
 		}
@@ -217,7 +217,7 @@ class REST_API {
 		if ( '' === $input ) {
 			return new WP_Error(
 				'notira_empty_input',
-				__( 'Please enter some text to improve.', 'notira' ),
+				__( 'Enter text to improve.', 'notira' ),
 				[ 'status' => 400 ]
 			);
 		}
@@ -404,7 +404,7 @@ class REST_API {
 				return new WP_Error( 'notira_ai_unauthorized', __( 'Invalid API key.', 'notira' ), [ 'status' => 503 ] );
 			}
 			if ( strpos( $msg, '403' ) !== false ) {
-				return new WP_Error( 'notira_ai_forbidden', __( 'API access denied. Check your API key and account.', 'notira' ), [ 'status' => 503 ] );
+				return new WP_Error( 'notira_ai_forbidden', __( 'API access denied.', 'notira' ), [ 'status' => 503 ] );
 			}
 			return new WP_Error( 'notira_ai_error', $msg ? $msg : __( 'AI request failed.', 'notira' ), [ 'status' => 502 ] );
 		}

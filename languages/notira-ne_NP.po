@@ -8,16 +8,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2026-05-06T10:55:52+00:00\n"
-"PO-Revision-Date: 2026-06-20T07:28:44+00:00\n"
+"PO-Revision-Date: 2026-06-21T10:44:29+00:00\n"
 "Language: ne_NP\n"
 
 #. Plugin Name of the plugin
 #: notira.php:3
-#: app/Core/Bootstrap.php:170
-#: app/Core/Bootstrap.php:171
-#: templates/admin-page.php:17
 msgid "Notira"
-msgstr "नोटिरा"
+msgstr "Notira"
 
 #. Plugin URI of the plugin
 #: notira.php:4
@@ -62,16 +59,16 @@ msgid "A valid mode is required. Use %1$s or %2$s."
 msgstr "एउटा मान्य मोड आवश्यक छ। %1$s वा %2$s प्रयोग गर्नुहोस्।"
 
 #: app/API/REST_API.php:199
-msgid "WordPress AI is not available or is disabled on this site."
-msgstr "यस साइटमा WordPress AI उपलब्ध छैन वा अक्षम गरिएको छ।"
+msgid "WordPress AI is unavailable."
+msgstr "वर्डप्रेस एआई उपलब्ध छैन।"
 
 #: app/API/REST_API.php:207
 msgid "API key is not set."
 msgstr "API की सेट गरिएको छैन।"
 
 #: app/API/REST_API.php:220
-msgid "Please enter some text to improve."
-msgstr "सुधार गर्न केही पाठ प्रविष्ट गर्नुहोस्।"
+msgid "Enter text to improve."
+msgstr "सुधार गर्न पाठ प्रविष्ट गर्नुहोस्।"
 
 #: app/API/REST_API.php:357
 msgid "Prompt templates are missing."
@@ -80,183 +77,189 @@ msgstr "प्रम्प्ट टेम्प्लेटहरू फेल�
 #: app/API/REST_API.php:386
 #: app/API/REST_API.php:399
 msgid "No AI provider is configured."
-msgstr "कुनै AI प्रदायक कन्फिगर गरिएको छैन।"
+msgstr "कुनै एआई प्रोभाइडर कन्फिगर गरिएको छैन।"
 
 #: app/API/REST_API.php:404
 msgid "Invalid API key."
 msgstr "अमान्य API की।"
 
 #: app/API/REST_API.php:407
-msgid "API access denied. Check your API key and account."
-msgstr "API पहुँच अस्वीकृत। आफ्नो API की र खाता जाँच गर्नुहोस्।"
+msgid "API access denied."
+msgstr "API पहुँच अस्वीकृत।"
 
 #: app/API/REST_API.php:409
 #: app/API/REST_API.php:415
 #: app/API/REST_API.php:425
 msgid "AI request failed."
-msgstr "AI अनुरोध असफल भयो।"
+msgstr "एआई अनुरोध असफल भयो।"
 
 #: app/Core/Bootstrap.php:89
-msgid "Notira requires WordPress AI support (WordPress 7.0+). AI features are unavailable in this installation."
-msgstr "नोटिराका लागि WordPress AI समर्थन आवश्यक छ (WordPress 7.0+)। यस इन्स्टलेसनमा AI सुविधाहरू उपलब्ध छैनन्।"
-
-#: app/Core/Bootstrap.php:91
-msgid "WordPress AI is disabled on this site (for example via the WP_AI_SUPPORT constant or a filter). Notira cannot generate text until AI support is enabled."
-msgstr "यस साइटमा WordPress AI अक्षम गरिएको छ (उदाहरणका लागि WP_AI_SUPPORT स्थिरांक वा फिल्टरद्वारा)। AI समर्थन सक्षम नगरेसम्म नोटिराले पाठ उत्पन्न गर्न सक्दैन।"
+msgid "WordPress AI is disabled."
+msgstr "वर्डप्रेस एआई अक्षम गरिएको छ।"
 
 #. translators: 1: opening link tag, 2: closing link tag
-#: app/Core/Bootstrap.php:109
+#: app/Core/Bootstrap.php:103
 #, php-format
-msgid "Please set your API key in %1$sConnectors%2$s to use this feature."
-msgstr "यो सुविधा प्रयोग गर्न %1$sकनेक्टरहरू%2$s मा आफ्नो API की सेट गर्नुहोस्।"
+msgid "Set your API key in %1$sConnectors%2$s to use this feature."
+msgstr "तपाईँले यो सुविधा प्रयोग गर्न आफ्नो एपीआई की %1$sConnectors%2$s मा सेट गर्नुहोस्।"
 
-#: app/Core/Bootstrap.php:234
+#: app/Core/Bootstrap.php:164
+msgctxt "page title"
+msgid "Notira"
+msgstr "नोटिरा"
+
+#: app/Core/Bootstrap.php:165
+msgctxt "menu title"
+msgid "Notira"
+msgstr "नोटिरा"
+
+#: app/Core/Bootstrap.php:228
 #: app/Options/Options.php:63
 msgid "Email"
 msgstr "इमेल"
 
-#: app/Core/Bootstrap.php:235
+#: app/Core/Bootstrap.php:229
 msgid "Polish your notes into a clear email body. Opening and closing lines from settings are added around the result."
 msgstr "आफ्ना नोटहरूलाई स्पष्ट इमेल मुख्य भागमा परिमार्जन गर्नुहोस्। सेटिङबाट सुरुवाती र समापन लाइनहरू परिणामको वरिपरि थपिनेछन्।"
 
-#: app/Core/Bootstrap.php:239
+#: app/Core/Bootstrap.php:233
 #: app/Options/Options.php:64
 msgid "Proofread"
 msgstr "प्रुफरिड"
 
-#: app/Core/Bootstrap.php:240
+#: app/Core/Bootstrap.php:234
 msgid "Grammar, spelling, and punctuation corrections, with clarity improvements only where needed; preserves structure and meaning."
 msgstr "व्याकरण, हिज्जे र विरामचिह्न सुधार, आवश्यक भएकोमा मात्र स्पष्टता सुधारसहित; संरचना र अर्थ सुरक्षित राख्छ।"
 
-#: app/Core/Bootstrap.php:264
+#: app/Core/Bootstrap.php:258
 msgid "Enter draft notes or bullet points"
 msgstr "ड्राफ्ट नोट वा बुलेट बुँदाहरू प्रविष्ट गर्नुहोस्"
 
-#: app/Core/Bootstrap.php:265
+#: app/Core/Bootstrap.php:259
 msgid "Paste or type your text here…"
 msgstr "आफ्नो पाठ यहाँ पेस्ट गर्नुहोस् वा टाइप गर्नुहोस्…"
 
-#: app/Core/Bootstrap.php:266
+#: app/Core/Bootstrap.php:260
 msgid "Mode"
 msgstr "मोड"
 
-#: app/Core/Bootstrap.php:267
+#: app/Core/Bootstrap.php:261
 msgid "Tone"
 msgstr "टोन"
 
-#: app/Core/Bootstrap.php:268
+#: app/Core/Bootstrap.php:262
 msgid "Generate"
 msgstr "उत्पन्न गर्नुहोस्"
 
-#: app/Core/Bootstrap.php:269
+#: app/Core/Bootstrap.php:263
 msgid "Copy"
 msgstr "कपी गर्नुहोस्"
 
-#: app/Core/Bootstrap.php:270
+#: app/Core/Bootstrap.php:264
 msgid "Copied"
 msgstr "कपी गरियो"
 
-#: app/Core/Bootstrap.php:271
+#: app/Core/Bootstrap.php:265
 #: app/Options/Options.php:56
 msgid "Output"
 msgstr "आउटपुट"
 
-#: app/Core/Bootstrap.php:272
+#: app/Core/Bootstrap.php:266
 msgid "Output will appear here."
 msgstr "आउटपुट यहाँ देखिनेछ।"
 
 #. translators: Character counter format. %1$d: current length, %2$d: max length, e.g. "12 / 500 characters".
-#: app/Core/Bootstrap.php:274
+#: app/Core/Bootstrap.php:268
 #, php-format
 msgid "%1$d / %2$d characters"
 msgstr "%1$d / %2$d अक्षरहरू"
 
 #. translators: %d: minimum character count
-#: app/Core/Bootstrap.php:277
+#: app/Core/Bootstrap.php:271
 #, php-format
 msgid "Min: %d chars"
 msgstr "न्यूनतम: %d अक्षर"
 
-#: app/Core/Bootstrap.php:280
+#: app/Core/Bootstrap.php:274
 msgid "Generating…"
 msgstr "उत्पन्न हुँदैछ…"
 
 #. translators: %d: min character count
-#: app/Core/Bootstrap.php:283
+#: app/Core/Bootstrap.php:277
 #, php-format
-msgid "Input is too short. Please enter at least %d characters."
-msgstr "इनपुट धेरै छोटो छ। कृपया कम्तीमा %d अक्षर प्रविष्ट गर्नुहोस्।"
+msgid "Input is too short. Enter at least %d characters."
+msgstr "इनपुट धेरै छोटो छ। कम्तिमा %d अक्षरहरू प्रविष्ट गर्नुहोस्।"
 
-#: app/Core/Bootstrap.php:286
+#: app/Core/Bootstrap.php:280
 msgid "Text is too long."
 msgstr "पाठ धेरै लामो छ।"
 
-#: app/Core/Bootstrap.php:287
-msgid "Please enter some text."
-msgstr "कृपया केही पाठ प्रविष्ट गर्नुहोस्।"
+#: app/Core/Bootstrap.php:281
+msgid "Enter text."
+msgstr "पाठ प्रविष्ट गर्नुहोस्।"
 
-#: app/Core/Bootstrap.php:288
+#: app/Core/Bootstrap.php:282
 msgid "Nothing to copy."
 msgstr "कपी गर्न केही छैन।"
 
-#: app/Core/Bootstrap.php:289
-msgid "Could not copy. Please select and copy manually."
-msgstr "कपी गर्न सकिएन। कृपया म्यानुअल रूपमा छान्नुहोस् र कपी गर्नुहोस्।"
+#: app/Core/Bootstrap.php:283
+msgid "Could not copy. Select and copy manually."
+msgstr "कपी गर्न सकिएन। चयन गरी आफैँले कपी गर्नुहोस्।"
 
-#: app/Core/Bootstrap.php:290
-msgid "Generated successfully."
-msgstr "सफलतापूर्वक उत्पन्न गरियो।"
+#: app/Core/Bootstrap.php:284
+msgid "Generated."
+msgstr "उत्पन्न गरियो।"
 
-#: app/Core/Bootstrap.php:291
+#: app/Core/Bootstrap.php:285
 msgid "Request failed."
 msgstr "अनुरोध असफल भयो।"
 
-#: app/Core/Bootstrap.php:292
+#: app/Core/Bootstrap.php:286
 msgid "Something went wrong."
 msgstr "केही गडबडी भयो।"
 
-#: app/Core/Bootstrap.php:293
-msgid "Network or server error. Please try again."
-msgstr "नेटवर्क वा सर्भर त्रुटि। कृपया पुनः प्रयास गर्नुहोस्।"
+#: app/Core/Bootstrap.php:287
+msgid "Network or server error. Try again."
+msgstr "नेटवर्क वा सर्भर त्रुटि। फेरि प्रयास गर्नुहोस्।"
 
-#: app/Core/Bootstrap.php:294
+#: app/Core/Bootstrap.php:288
 msgid "Provider"
 msgstr "प्रदायक"
 
-#: app/Core/Bootstrap.php:295
+#: app/Core/Bootstrap.php:289
 msgid "Model"
 msgstr "मोडेल"
 
-#: app/Core/Bootstrap.php:296
+#: app/Core/Bootstrap.php:290
 msgid "Tokens"
 msgstr "टोकनहरू"
 
-#: app/Core/Bootstrap.php:297
+#: app/Core/Bootstrap.php:291
 msgid "Prompt"
 msgstr "प्रम्प्ट"
 
-#: app/Core/Bootstrap.php:298
+#: app/Core/Bootstrap.php:292
 msgid "Completion"
 msgstr "पूर्णता"
 
-#: app/Core/Bootstrap.php:299
+#: app/Core/Bootstrap.php:293
 msgid "Total"
 msgstr "जम्मा"
 
-#: app/Core/Bootstrap.php:300
+#: app/Core/Bootstrap.php:294
 msgid "Thought"
 msgstr "विचार"
 
-#: app/Core/Bootstrap.php:301
+#: app/Core/Bootstrap.php:295
 msgid "Served from cache."
 msgstr "क्यासबाट प्रदान गरियो।"
 
-#: app/Core/Bootstrap.php:345
+#: app/Core/Bootstrap.php:348
 #: app/Options/Options.php:90
 msgid "- Default -"
 msgstr "- पूर्वनिर्धारित -"
 
-#: app/Core/Bootstrap.php:394
+#: app/Core/Bootstrap.php:366
 #: app/Options/Options.php:48
 msgid "Settings"
 msgstr "सेटिङहरू"

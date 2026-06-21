@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 ?>
 
 <div class="wrap notira-wrap">
-	<h1><?php esc_html_e( 'Notira', 'notira' ); ?></h1>
+	<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 
 	<div class="notira-content">
 		<div

@@ -85,14 +85,8 @@ class Bootstrap {
 		}
 
 		if ( ! Credential_Utils::supports_ai() ) {
-			if ( ! function_exists( 'wp_supports_ai' ) ) {
-				$message = esc_html__( 'Notira requires WordPress AI support (WordPress 7.0+). AI features are unavailable in this installation.', 'notira' );
-			} else {
-				$message = esc_html__( 'WordPress AI is disabled on this site (for example via the WP_AI_SUPPORT constant or a filter). Notira cannot generate text until AI support is enabled.', 'notira' );
-			}
-
 			wp_admin_notice(
-				$message,
+				esc_html__( 'WordPress AI is disabled.', 'notira' ),
 				[
 					'type'        => 'warning',
 					'dismissible' => false,
@@ -106,7 +100,7 @@ class Bootstrap {
 
 		$message = sprintf(
 			/* translators: 1: opening link tag, 2: closing link tag */
-			esc_html__( 'Please set your API key in %1$sConnectors%2$s to use this feature.', 'notira' ),
+			esc_html__( 'Set your API key in %1$sConnectors%2$s to use this feature.', 'notira' ),
 			'<a href="' . esc_url( $connectors_url ) . '">',
 			'</a>'
 		);
@@ -167,8 +161,8 @@ class Bootstrap {
 	 */
 	public static function register_admin_menu(): void {
 		add_menu_page(
-			__( 'Notira', 'notira' ),
-			__( 'Notira', 'notira' ),
+			_x( 'Notira', 'page title', 'notira' ),
+			_x( 'Notira', 'menu title', 'notira' ),
 			'manage_options',
 			self::ADMIN_PAGE_SLUG,
 			[ __CLASS__, 'render_admin_page' ],
@@ -280,17 +274,17 @@ class Bootstrap {
 				'generatingLabel'    => __( 'Generating…', 'notira' ),
 				'inputTooShort'      => sprintf(
 					/* translators: %d: min character count */
-					__( 'Input is too short. Please enter at least %d characters.', 'notira' ),
+					__( 'Input is too short. Enter at least %d characters.', 'notira' ),
 					REST_API::INPUT_MIN_LENGTH
 				),
 				'textTooLong'        => __( 'Text is too long.', 'notira' ),
-				'pleaseEnterText'    => __( 'Please enter some text.', 'notira' ),
+				'pleaseEnterText'    => __( 'Enter text.', 'notira' ),
 				'nothingToCopy'      => __( 'Nothing to copy.', 'notira' ),
-				'copyFailedManual'   => __( 'Could not copy. Please select and copy manually.', 'notira' ),
-				'generatedSuccess'   => __( 'Generated successfully.', 'notira' ),
+				'copyFailedManual'   => __( 'Could not copy. Select and copy manually.', 'notira' ),
+				'generatedSuccess'   => __( 'Generated.', 'notira' ),
 				'requestFailed'      => __( 'Request failed.', 'notira' ),
 				'somethingWentWrong' => __( 'Something went wrong.', 'notira' ),
-				'networkError'       => __( 'Network or server error. Please try again.', 'notira' ),
+				'networkError'       => __( 'Network or server error. Try again.', 'notira' ),
 				'metaProvider'       => __( 'Provider', 'notira' ),
 				'metaModel'          => __( 'Model', 'notira' ),
 				'metaTokens'         => __( 'Tokens', 'notira' ),
