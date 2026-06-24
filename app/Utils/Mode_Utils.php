@@ -37,7 +37,7 @@ class Mode_Utils {
 	 *
 	 * @since 1.1.0
 	 */
-	public const DEFAULT_MODE = self::MODE_EMAIL;
+	public const DEFAULT_MODE = self::MODE_PROOFREAD;
 
 	/**
 	 * Valid mode slugs for REST and validation.

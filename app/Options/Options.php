@@ -60,8 +60,8 @@ class Options {
 								'type'    => 'radio',
 								'label'   => esc_html__( 'Default mode', 'notira' ),
 								'choices' => [
-									Mode_Utils::MODE_EMAIL => __( 'Email', 'notira' ),
 									Mode_Utils::MODE_PROOFREAD => __( 'Proofread', 'notira' ),
+									Mode_Utils::MODE_EMAIL => __( 'Email', 'notira' ),
 								],
 								'default' => Mode_Utils::DEFAULT_MODE,
 								'layout'  => 'horizontal',
