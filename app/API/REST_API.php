@@ -45,13 +45,6 @@ class REST_API {
 	public const INPUT_MAX_LENGTH = 2000;
 
 	/**
-	 * Cache duration for identical requests (seconds).
-	 *
-	 * @since 1.0.0
-	 */
-	private const CACHE_DURATION = 300;
-
-	/**
 	 * Register REST routes.
 	 *
 	 * @since 1.0.0
@@ -261,52 +254,12 @@ class REST_API {
 
 		$valid_slugs = Tone_Utils::get_valid_slugs();
 		$tone        = ( is_string( $tone ) && in_array( $tone, $valid_slugs, true ) ) ? $tone : Tone_Utils::DEFAULT_TONE;
-		$provider    = sanitize_key( (string) Option::get( 'preferred_provider' ) );
-		$model       = sanitize_text_field( (string) Option::get( 'preferred_model' ) );
-		$cache_key   = 'notira_' . $mode . '_' . $tone . '_'
-			. ( '' !== $provider ? $provider . '_' : '' )
-			. ( '' !== $model ? sanitize_key( $model ) . '_' : '' )
-			. md5( $input );
-		$cached      = get_transient( $cache_key );
-		if ( false !== $cached ) {
-			$cached_output = '';
-			$cached_meta   = null;
-			if ( is_array( $cached ) && isset( $cached['output'] ) && is_string( $cached['output'] ) ) {
-				$cached_output = $cached['output'];
-				$cached_meta   = isset( $cached['meta'] ) && is_array( $cached['meta'] ) ? $cached['meta'] : null;
-			} elseif ( is_string( $cached ) ) {
-				$cached_output = $cached;
-			}
-			if ( '' !== $cached_output ) {
-				$meta = is_array( $cached_meta )
-					? array_merge( $cached_meta, [ 'from_cache' => true ] )
-					: [ 'from_cache' => true ];
-				return new WP_REST_Response(
-					[
-						'success' => true,
-						'data'    => [
-							'output' => $cached_output,
-							'meta'   => $meta,
-						],
-					],
-					200
-				);
-			}
-		}
 
 		$result = self::call_ai( $input, $tone, $mode );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
-		set_transient(
-			$cache_key,
-			[
-				'output' => $result['output'],
-				'meta'   => $result['meta'],
-			],
-			self::CACHE_DURATION
-		);
 
 		return new WP_REST_Response(
 			[
