@@ -224,14 +224,14 @@ class Bootstrap {
 
 		$modes_list = [
 			[
-				'value' => Mode_Utils::MODE_EMAIL,
-				'label' => __( 'Email', 'notira' ),
-				'help'  => __( 'Polish your notes into a clear email body. Opening and closing lines from settings are added around the result.', 'notira' ),
-			],
-			[
 				'value' => Mode_Utils::MODE_PROOFREAD,
 				'label' => __( 'Proofread', 'notira' ),
 				'help'  => __( 'Grammar, spelling, and punctuation corrections, with clarity improvements only where needed; preserves structure and meaning.', 'notira' ),
+			],
+			[
+				'value' => Mode_Utils::MODE_EMAIL,
+				'label' => __( 'Email', 'notira' ),
+				'help'  => __( 'Polish your notes into a clear email body. Opening and closing lines from settings are added around the result.', 'notira' ),
 			],
 		];
 
