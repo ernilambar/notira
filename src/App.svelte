@@ -363,7 +363,7 @@
 				<button
 					type="button"
 					class="button button-primary"
-					disabled={! aiUiEnabled}
+					disabled={! aiUiEnabled || generating}
 					aria-busy={generating}
 					onclick={debouncedGenerate}
 				>
