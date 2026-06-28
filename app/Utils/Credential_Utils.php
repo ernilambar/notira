@@ -37,7 +37,7 @@ class Credential_Utils {
 	}
 
 	/**
-	 * Check if at least one Connectors AI provider has configured credentials.
+	 * Check if at least one AI provider has configured credentials.
 	 *
 	 * @since 1.0.0
 	 *
@@ -48,11 +48,24 @@ class Credential_Utils {
 			return false;
 		}
 
-		if ( ! function_exists( 'wp_get_connectors' ) ) {
-			return false;
+		if ( function_exists( 'wp_get_connectors' ) && self::has_connectors_api_credentials() ) {
+			return true;
 		}
 
-		return self::has_connectors_api_credentials();
+		// Some providers register directly in the registry, bypassing wp_get_connectors().
+		if ( class_exists( AiClient::class ) ) {
+			try {
+				$registry = AiClient::defaultRegistry();
+				foreach ( $registry->getRegisteredProviderIds() as $id ) {
+					if ( $registry->isProviderConfigured( $id ) ) {
+						return true;
+					}
+				}
+			} catch ( Throwable $e ) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+			}
+		}
+
+		return false;
 	}
 
 	/**
