@@ -132,7 +132,7 @@ class Generator {
 		if ( Mode_Utils::MODE_PROOFREAD === $mode ) {
 			$output = $body;
 		} else {
-			$output = esc_html( $wrappers['greeting'] ) . '<br>' . $body . '<br>' . esc_html( $wrappers['signoff'] );
+			$output = esc_html( $wrappers['greeting'] ) . '<br><br>' . $body . '<br>' . esc_html( $wrappers['signoff'] );
 		}
 
 		$meta = self::extract_generation_meta_from_result( $result_obj );
