@@ -52,7 +52,8 @@ class Generator {
 
 		$builder = wp_ai_client_prompt( $prompt )
 			->using_system_instruction( $system )
-			->using_max_tokens( 1024 );
+			->using_max_tokens( 1024 )
+			->using_temperature( 0.4 );
 
 		if ( '' !== $preferred_provider && '' !== $preferred_model ) {
 			try {
