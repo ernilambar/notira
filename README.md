@@ -12,7 +12,7 @@ WordPress plugin that turns draft notes into clean HTML with AI—email polish a
 
 ## Requirements
 
-- PHP 7.4+
+- PHP 8.2+
 - WordPress 7.0+
 - API key under **Settings → Connectors**
 

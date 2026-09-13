@@ -30,7 +30,7 @@
 	<config name="minimum_wp_version" value="7.0"/>
 
 	<!-- PHP version check. -->
-	<config name="testVersion" value="7.4-"/>
+	<config name="testVersion" value="8.2-"/>
 
 	<!-- Loads the PHP Compatibility ruleset. -->
 	<rule ref="PHPCompatibility" />

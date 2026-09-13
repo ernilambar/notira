@@ -5,7 +5,7 @@
  * Description: Improve draft text into email-ready or proofread HTML using AI.
  * Version: 1.1.1
  * Requires at least: 7.0
- * Requires PHP: 7.4
+ * Requires PHP: 8.2
  * Author: Nilambar Sharma
  * Author URI: https://nilambar.net/
  * License: GPL v2 or later
