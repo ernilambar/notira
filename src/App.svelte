@@ -327,8 +327,7 @@
 					aria-invalid={inputHasValidationError || exceedsMax}
 					aria-describedby={validationMessage
 						? 'notira-char-count-line notira-input-validation'
-						: 'notira-char-count-line'}
-				></textarea>
+						: 'notira-char-count-line'}></textarea>
 
 				<p
 					id="notira-char-count-line"
