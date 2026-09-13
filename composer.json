@@ -5,6 +5,7 @@
 	"type": "wordpress-plugin",
 	"require": {
 		"php": ">=8.2",
+		"ernilambar/gitvise": "^1.0",
 		"ernilambar/optiz": "^1.0"
 	},
 	"require-dev": {

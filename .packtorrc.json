@@ -4,7 +4,7 @@
 		"languages/**/*",
 		"vendor/**/*",
 		"composer.json",
-		"glotstat.php",
+		"notira.php",
 		"readme.txt",
 		"!**/*.bak"
 	]

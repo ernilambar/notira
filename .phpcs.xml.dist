@@ -48,7 +48,6 @@
 	<rule ref="WordPress">
 		<exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
 		<exclude name="Generic.CodeAnalysis.UnusedFunctionParameter"/>
-		<exclude name="WordPress.WP.I18n.MissingTranslatorsComment"/>
 	</rule>
 
 	<!-- Enforce short arrays. -->
@@ -89,11 +88,6 @@
 
 		<!-- Remove nonce notice -->
 		<exclude name="WordPress.Security.NonceVerification.Recommended"/>
-	</rule>
-
-	<!-- Make missing translator comment a warning. -->
-	<rule ref="WordPress.WP.I18n.MissingTranslatorsComment">
-		<type>warning</type>
 	</rule>
 
 	<!-- Sometimes we need to override globals -->
