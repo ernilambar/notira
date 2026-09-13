@@ -3,9 +3,9 @@
  * Plugin Name: Notira
  * Plugin URI: https://github.com/ernilambar/notira
  * Description: Improve draft text into email-ready or proofread HTML using AI.
- * Version: 1.1.1
+ * Version: 2.0.0
  * Requires at least: 7.0
- * Requires PHP: 7.4
+ * Requires PHP: 8.2
  * Author: Nilambar Sharma
  * Author URI: https://nilambar.net/
  * License: GPL v2 or later
@@ -18,12 +18,13 @@
 
 declare(strict_types=1);
 
+use Nilambar\Gitvise\Updater;
 use Nilambar\Notira\Core\Bootstrap;
 
 defined( 'ABSPATH' ) || exit;
 
 // Define.
-define( 'NOTIRA_VERSION', '1.1.1' );
+define( 'NOTIRA_VERSION', '2.0.0' );
 define( 'NOTIRA_BASE_NAME', basename( __DIR__ ) );
 define( 'NOTIRA_BASE_FILEPATH', __FILE__ );
 define( 'NOTIRA_BASE_FILENAME', plugin_basename( __FILE__ ) );
@@ -33,8 +34,11 @@ define( 'NOTIRA_URL', rtrim( plugin_dir_url( __FILE__ ), '/' ) );
 if ( file_exists( NOTIRA_DIR . '/vendor/autoload.php' ) ) {
 	require_once NOTIRA_DIR . '/vendor/autoload.php';
 	require_once NOTIRA_DIR . '/vendor/ernilambar/optiz/init.php';
+	require_once NOTIRA_DIR . '/vendor/ernilambar/gitvise/init.php';
 }
 
 require_once NOTIRA_DIR . '/app/Core/Bootstrap.php';
 
 Bootstrap::init();
+
+( new Updater( 'ernilambar/notira', __FILE__ ) )->init();

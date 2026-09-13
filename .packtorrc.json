@@ -1,0 +1,11 @@
+{
+	"files": [
+		"build/**/*",
+		"languages/**/*",
+		"vendor/**/*",
+		"composer.json",
+		"notira.php",
+		"readme.txt",
+		"!**/*.bak"
+	]
+}

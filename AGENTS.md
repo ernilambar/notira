@@ -6,7 +6,7 @@ Notira is a WordPress plugin that turns draft notes into clean HTML with AI, pol
 
 ## Setup
 
-- `composer install` — install PHP dependencies (dev tooling pins PHP 8.0).
+- `composer install` — install PHP dependencies (dev tooling pins PHP 8.2).
 - `pnpm install` — install front-end dependencies.
 - `pnpm run build` — compile admin assets into `build/`; the plugin UI needs this to run.
 - `bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 7.0 false` — install the WordPress test suite, required before `composer test`. Honors `WP_TESTS_DIR` if you want a non-default location.
