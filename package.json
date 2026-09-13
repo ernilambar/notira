@@ -2,8 +2,19 @@
 	"name": "notira",
 	"version": "1.1.1",
 	"description": "Improve draft text into email-ready or proofread HTML using AI.",
+	"homepage": "https://github.com/ernilambar/notira#readme",
+	"bugs": {
+		"url": "https://github.com/ernilambar/notira/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ernilambar/notira.git"
+	},
 	"license": "GPL-2.0-or-later",
-	"author": "Nilambar Sharma",
+	"author": {
+		"name": "Nilambar Sharma",
+		"url": "https://nilambar.net/"
+	},
 	"type": "module",
 	"main": "notira.php",
 	"scripts": {
@@ -11,14 +22,12 @@
 		"dev": "vite build --watch",
 		"format": "prettier \"**/*.{cjs,css,js,json,mjs,svelte}\" --write --log-level warn"
 	},
-	"browserslist": "> 2%, last 2 versions, not dead",
 	"devDependencies": {
-		"@sveltejs/vite-plugin-svelte": "^7.1.2",
-		"@wordpress/prettier-config": "^4.45.0",
-		"browserslist-to-esbuild": "^2.1.1",
+		"@sveltejs/vite-plugin-svelte": "^7.3.0",
+		"@wordpress/prettier-config": "^4.54.0",
 		"prettier": "npm:wp-prettier@^3.0.3",
-		"prettier-plugin-svelte": "^3.5.2",
-		"svelte": "^5.55.5",
-		"vite": "^8.0.12"
+		"prettier-plugin-svelte": "^4.1.1",
+		"svelte": "^5.57.0",
+		"vite": "^8.2.2"
 	}
 }

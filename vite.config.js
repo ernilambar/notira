@@ -1,7 +1,6 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
-import browserslistToEsbuild from 'browserslist-to-esbuild';
 
 const __dirname = fileURLToPath( new URL( '.', import.meta.url ) );
 const root = resolve( __dirname, '.' );
@@ -15,7 +14,6 @@ export default {
 		outDir: 'build',
 		emptyOutDir: true,
 		sourcemap: false,
-		target: browserslistToEsbuild(),
 		rollupOptions: {
 			input: {
 				main: 'src/main.js',

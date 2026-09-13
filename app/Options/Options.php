@@ -43,67 +43,70 @@ class Options {
 			'notira_options',
 			[
 				'option_key' => 'notira_options',
-				'page'       => [
-					'title'       => esc_html__( 'Notira Settings', 'notira' ),
-					'menu_title'  => esc_html__( 'Settings', 'notira' ),
-					'menu_slug'   => 'notira-settings',
-					'capability'  => 'manage_options',
-					'parent_slug' => Bootstrap::ADMIN_PAGE_SLUG,
-				],
-				'tabs'       => [
+				'pages'      => [
 					[
-						'id'     => 'notira_settings',
-						'label'  => esc_html__( 'Output', 'notira' ),
-						'fields' => [
+						'id'          => 'notira_settings',
+						'title'       => esc_html__( 'Notira Settings', 'notira' ),
+						'menu_title'  => esc_html__( 'Settings', 'notira' ),
+						'menu_slug'   => Bootstrap::SETTINGS_PAGE_SLUG,
+						'capability'  => 'manage_options',
+						'parent_slug' => Bootstrap::ADMIN_PAGE_SLUG,
+						'tabs'        => [
 							[
-								'id'      => 'default_mode',
-								'type'    => 'radio',
-								'label'   => esc_html__( 'Default mode', 'notira' ),
-								'choices' => [
-									Mode_Utils::MODE_PROOFREAD => __( 'Proofread', 'notira' ),
-									Mode_Utils::MODE_EMAIL => __( 'Email', 'notira' ),
+								'id'     => 'output',
+								'label'  => esc_html__( 'Output', 'notira' ),
+								'fields' => [
+									[
+										'id'      => 'default_mode',
+										'type'    => 'radio',
+										'label'   => esc_html__( 'Default mode', 'notira' ),
+										'choices' => [
+											Mode_Utils::MODE_PROOFREAD => __( 'Proofread', 'notira' ),
+											Mode_Utils::MODE_EMAIL => __( 'Email', 'notira' ),
+										],
+										'default' => Mode_Utils::DEFAULT_MODE,
+										'layout'  => 'horizontal',
+									],
+									[
+										'id'      => 'default_tone',
+										'type'    => 'select',
+										'label'   => esc_html__( 'Default tone', 'notira' ),
+										'choices' => Tone_Utils::get_tone_options(),
+										'default' => Tone_Utils::DEFAULT_TONE,
+									],
+									[
+										'id'      => 'preferred_provider',
+										'type'    => 'select',
+										'label'   => esc_html__( 'Preferred provider', 'notira' ),
+										'choices' => array_merge(
+											[ '' => __( '- Select -', 'notira' ) ],
+											Credential_Utils::get_ai_provider_options()
+										),
+										'default' => '',
+									],
+									[
+										'id'      => 'preferred_model',
+										'type'    => 'select',
+										'label'   => esc_html__( 'Preferred model', 'notira' ),
+										'choices' => [ '' => __( '- Default -', 'notira' ) ],
+										'default' => '',
+										'sanitize_callback' => 'sanitize_text_field',
+									],
+									[
+										'id'          => 'email_greeting',
+										'type'        => 'text',
+										'label'       => esc_html__( 'Opening line', 'notira' ),
+										'placeholder' => __( 'Hi,', 'notira' ),
+										'default'     => __( 'Hi,', 'notira' ),
+									],
+									[
+										'id'          => 'email_signoff',
+										'type'        => 'text',
+										'label'       => esc_html__( 'Closing line', 'notira' ),
+										'placeholder' => __( 'Regards,', 'notira' ),
+										'default'     => __( 'Regards,', 'notira' ),
+									],
 								],
-								'default' => Mode_Utils::DEFAULT_MODE,
-								'layout'  => 'horizontal',
-							],
-							[
-								'id'      => 'default_tone',
-								'type'    => 'select',
-								'label'   => esc_html__( 'Default tone', 'notira' ),
-								'choices' => Tone_Utils::get_tone_options(),
-								'default' => Tone_Utils::DEFAULT_TONE,
-							],
-							[
-								'id'      => 'preferred_provider',
-								'type'    => 'select',
-								'label'   => esc_html__( 'Preferred provider', 'notira' ),
-								'choices' => array_merge(
-									[ '' => __( '- Select -', 'notira' ) ],
-									Credential_Utils::get_ai_provider_options()
-								),
-								'default' => '',
-							],
-							[
-								'id'                => 'preferred_model',
-								'type'              => 'select',
-								'label'             => esc_html__( 'Preferred model', 'notira' ),
-								'choices'           => [ '' => __( '- Default -', 'notira' ) ],
-								'default'           => '',
-								'sanitize_callback' => 'sanitize_text_field',
-							],
-							[
-								'id'          => 'email_greeting',
-								'type'        => 'text',
-								'label'       => esc_html__( 'Opening line', 'notira' ),
-								'placeholder' => __( 'Hi,', 'notira' ),
-								'default'     => __( 'Hi,', 'notira' ),
-							],
-							[
-								'id'          => 'email_signoff',
-								'type'        => 'text',
-								'label'       => esc_html__( 'Closing line', 'notira' ),
-								'placeholder' => __( 'Regards,', 'notira' ),
-								'default'     => __( 'Regards,', 'notira' ),
 							],
 						],
 					],
