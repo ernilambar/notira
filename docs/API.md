@@ -7,7 +7,7 @@ All routes require a user who can **manage options** (typically an administrator
 **Authentication options:**
 
 - **Cookie + nonce** (browser / dashboard context): include the `X-WP-Nonce` header with a nonce from `wp_create_nonce( 'wp_rest' )` alongside the logged-in session cookie.
-- **Application password** (external clients / scripts): use HTTP Basic Auth — username and the application password generated under *Users → Profile → Application Passwords*. WordPress handles the rest.
+- **Application password** (external clients / scripts): use HTTP Basic Auth — username and the application password generated under _Users → Profile → Application Passwords_. WordPress handles the rest.
 
 Unauthenticated requests receive `401`; authenticated but insufficient capability receives `403`.
 
@@ -21,10 +21,10 @@ Runs AI text generation (same logic as the Notira admin screen).
 
 ### Request body (JSON)
 
-| Field   | Type   | Required | Description |
-|---------|--------|----------|-------------|
-| `input` | string | Yes      | Draft text. Length **20–2000** characters (byte length as in PHP `strlen`). |
-| `mode`  | string | Yes      | `email` or `proofread`. |
+| Field   | Type   | Required | Description                                                                       |
+| ------- | ------ | -------- | --------------------------------------------------------------------------------- |
+| `input` | string | Yes      | Draft text. Length **20–2000** characters (byte length as in PHP `strlen`).       |
+| `mode`  | string | Yes      | `email` or `proofread`.                                                           |
 | `tone`  | string | No       | Tone slug; defaults to `match_original`. Must be one of the allowed values below. |
 
 **Allowed `tone` values:** `professional`, `match_original`, `friendly`, `formal`, `concise`, `empathetic`, `authoritative`, `commanding`, `assertive`, `neutral`.
@@ -35,11 +35,11 @@ Runs AI text generation (same logic as the Notira admin screen).
 
 ```json
 {
-  "success": true,
-  "data": {
-    "output": "<!-- HTML string: email includes greeting/signoff from settings; proofread is body only -->",
-    "meta": {}
-  }
+	"success": true,
+	"data": {
+		"output": "<!-- HTML string: email includes greeting/signoff from settings; proofread is body only -->",
+		"meta": {}
+	}
 }
 ```
 
@@ -49,13 +49,13 @@ Runs AI text generation (same logic as the Notira admin screen).
 
 Errors use WordPress REST format (`code`, `message`, `data.status`).
 
-| HTTP | Code (examples) | When |
-|------|-----------------|------|
-| 400 | `notira_input_too_short`, `notira_input_too_long`, `notira_invalid_mode`, `notira_empty_input`, `rest_*` | Invalid or missing parameters. |
-| 401 | `rest_not_logged_in` | Request is not authenticated. |
-| 403 | `rest_forbidden` | Authenticated but insufficient capability. |
-| 502 | `notira_ai_error` | AI call failed or returned unusable output. |
-| 503 | `notira_ai_unsupported`, `notira_no_api_key`, `notira_missing_prompts`, `notira_no_models`, `notira_ai_unauthorized`, `notira_ai_forbidden` | AI unavailable, missing key, bad key, or provider/configuration issues. |
+| HTTP | Code (examples)                                                                                                                             | When                                                                    |
+| ---- | ------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| 400  | `notira_input_too_short`, `notira_input_too_long`, `notira_invalid_mode`, `notira_empty_input`, `rest_*`                                    | Invalid or missing parameters.                                          |
+| 401  | `rest_not_logged_in`                                                                                                                        | Request is not authenticated.                                           |
+| 403  | `rest_forbidden`                                                                                                                            | Authenticated but insufficient capability.                              |
+| 502  | `notira_ai_error`                                                                                                                           | AI call failed or returned unusable output.                             |
+| 503  | `notira_ai_unsupported`, `notira_no_api_key`, `notira_missing_prompts`, `notira_no_models`, `notira_ai_unauthorized`, `notira_ai_forbidden` | AI unavailable, missing key, bad key, or provider/configuration issues. |
 
 ---
 
@@ -104,8 +104,8 @@ curl -s -X POST "https://example.com/wp-json/notira/v1/generate" \
 
 ```json
 {
-  "code": "notira_input_too_short",
-  "message": "Input must be at least 20 characters.",
-  "data": { "status": 400 }
+	"code": "notira_input_too_short",
+	"message": "Input must be at least 20 characters.",
+	"data": { "status": 400 }
 }
 ```

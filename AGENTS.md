@@ -18,7 +18,7 @@ Notira is a WordPress plugin that turns draft notes into clean HTML with AI, pol
 - Test (full suite): `composer test`
 - Test (single case): `./vendor/bin/phpunit --filter <ClassOrMethod>`
 - Lint (PHP: parallel-lint + PHPCS): `composer lint`
-- Lint (front-end: Prettier check): `pnpm exec prettier "**/*.{cjs,css,js,json,mjs,svelte}" --check`
+- Lint (front-end: Prettier check): `pnpm exec prettier . --check --plugin prettier-plugin-svelte`
 - Format (PHP: phpcbf autofix): `composer format`
 - Format (front-end: Prettier write): `pnpm run format`
 - Typecheck: none configured — this project has no TypeScript; `composer lint` and `pnpm run build` are the static checks.
@@ -28,6 +28,7 @@ Notira is a WordPress plugin that turns draft notes into clean HTML with AI, pol
 
 - Access plugin settings only through `Nilambar\Notira\Core\Option::get()` (Optiz-backed); never call `get_option( 'notira_options' )` directly. New options are fields declared in `Options::register_plugin_options()` inside a `pages[].tabs[].fields[]` schema.
 - Use **pnpm** only — never run `npm install` or `npm run …`; `pnpm-lock.yaml` is the lockfile.
+- Front-end formatting uses the uncustomized `@wordpress/prettier-config`, referenced via the `prettier` field in `package.json`; there is no custom `.prettierrc` file, so do not add one.
 - Never hand-edit generated i18n artifacts (`.pot`, `.po`, `.mo`); regenerate them with the Composer scripts.
 - After changing any PHP or Svelte/JS/CSS that ships to the admin, run `pnpm run build` — `Bootstrap::enqueue_admin_assets()` loads `build/main.{js,css}`.
 - Go beyond the linter: Yoda conditions, `WP_Error`/`is_wp_error()` for error flow, `use` imports instead of fully-qualified names, snake_case PHP names, the `notira` textdomain for all user-visible strings, and sanitize input / escape output.
@@ -36,6 +37,7 @@ Notira is a WordPress plugin that turns draft notes into clean HTML with AI, pol
 ## Quality Gate
 
 Every task must end with:
+
 1. `composer lint` — 0 errors, 0 warnings (run `composer format` to auto-fix first)
 2. `pnpm build` — assets compiled cleanly
 3. `pnpm format` — JS/CSS formatted with Prettier
