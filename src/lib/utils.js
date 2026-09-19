@@ -76,7 +76,9 @@ export function copyToClipboard( { text, html } ) {
 	}
 
 	if ( navigator.clipboard?.writeText ) {
-		return navigator.clipboard.writeText( text ).catch( () => copyTextFallback( text ) );
+		return navigator.clipboard
+			.writeText( text )
+			.catch( () => copyTextFallback( text ) );
 	}
 
 	try {
@@ -145,7 +147,9 @@ export function buildGenerationMetaLines( meta, i18n ) {
 			parts.push( `${ i18n.metaPrompt || '' }: ${ tu.promptTokens }` );
 		}
 		if ( typeof tu.completionTokens === 'number' ) {
-			parts.push( `${ i18n.metaCompletion || '' }: ${ tu.completionTokens }` );
+			parts.push(
+				`${ i18n.metaCompletion || '' }: ${ tu.completionTokens }`
+			);
 		}
 		if ( typeof tu.totalTokens === 'number' ) {
 			parts.push( `${ i18n.metaTotal || '' }: ${ tu.totalTokens }` );
@@ -166,5 +170,7 @@ export function buildGenerationMetaLines( meta, i18n ) {
 		}
 	}
 
-	return rows.filter( ( line ) => typeof line === 'string' && line.length > 0 );
+	return rows.filter(
+		( line ) => typeof line === 'string' && line.length > 0
+	);
 }

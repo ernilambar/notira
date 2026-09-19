@@ -22,7 +22,9 @@ if ( providerSel ) {
 			.then( function ( { success, data } ) {
 				if ( ! success || ! Array.isArray( data ) ) return;
 				data.forEach( function ( { id, name } ) {
-					modelSel.add( new Option( name, id, false, id === selectedModel ) );
+					modelSel.add(
+						new Option( name, id, false, id === selectedModel )
+					);
 				} );
 			} )
 			.catch( function () {} );

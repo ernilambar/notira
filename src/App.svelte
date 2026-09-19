@@ -1,7 +1,11 @@
 <script>
 	import { onDestroy, onMount } from 'svelte';
 	import { fade, fly } from 'svelte/transition';
-	import { buildGenerationMetaLines, copyToClipboard, debounce } from './lib/utils.js';
+	import {
+		buildGenerationMetaLines,
+		copyToClipboard,
+		debounce,
+	} from './lib/utils.js';
 
 	const admin = typeof window !== 'undefined' ? window.notiraAdmin : null;
 	const cfg = admin && typeof admin === 'object' ? admin : {};
@@ -47,7 +51,8 @@
 		initialTone = toneList[ 0 ].value;
 	}
 
-	const initialInput = typeof defaultContent === 'string' ? defaultContent : '';
+	const initialInput =
+		typeof defaultContent === 'string' ? defaultContent : '';
 	let inputValue = $state( initialInput );
 	let selectedMode = $state( initialMode );
 	let selectedTone = $state( initialTone );
@@ -72,9 +77,13 @@
 	const atLimit = $derived( maxLength > 0 && charCount >= maxLength );
 	const exceedsMax = $derived( maxLength > 0 && charCount > maxLength );
 	const charCountText = $derived(
-		i18n.charCountFormat.replace( '%1$d', charCount ).replace( '%2$d', maxLength )
+		i18n.charCountFormat
+			.replace( '%1$d', charCount )
+			.replace( '%2$d', maxLength )
 	);
-	const metaLines = $derived( buildGenerationMetaLines( generationMeta, i18n ) );
+	const metaLines = $derived(
+		buildGenerationMetaLines( generationMeta, i18n )
+	);
 	const hasOutput = $derived( outputHtml.trim().length > 0 );
 	const noticeVisible = $derived( noticeMessage.trim().length > 0 );
 
@@ -82,10 +91,10 @@
 		validationIssue === 'empty'
 			? i18n.pleaseEnterText || ''
 			: validationIssue === 'short'
-			? i18n.inputTooShort || ''
-			: validationIssue === 'long'
-			? i18n.textTooLong || ''
-			: ''
+				? i18n.inputTooShort || ''
+				: validationIssue === 'long'
+					? i18n.textTooLong || ''
+					: ''
 	);
 
 	const inputHasValidationError = $derived(
@@ -115,7 +124,11 @@
 			validationIssue = '';
 			return;
 		}
-		if ( validationIssue === 'long' && maxLength > 0 && raw.length <= maxLength ) {
+		if (
+			validationIssue === 'long' &&
+			maxLength > 0 &&
+			raw.length <= maxLength
+		) {
 			validationIssue = '';
 		}
 	} );
@@ -145,8 +158,14 @@
 		if ( ! root ) {
 			return { minCap: 0, maxCap: 0 };
 		}
-		const maxParsed = Number.parseInt( root.getAttribute( 'data-max-length' ) ?? '', 10 );
-		const minParsed = Number.parseInt( root.getAttribute( 'data-min-length' ) ?? '', 10 );
+		const maxParsed = Number.parseInt(
+			root.getAttribute( 'data-max-length' ) ?? '',
+			10
+		);
+		const minParsed = Number.parseInt(
+			root.getAttribute( 'data-min-length' ) ?? '',
+			10
+		);
 		const maxCap = Number.isNaN( maxParsed ) ? 0 : maxParsed;
 		const minCap = Number.isNaN( minParsed ) ? 0 : minParsed;
 		return { minCap, maxCap };
@@ -260,7 +279,9 @@
 			} )
 			.catch( ( err ) => {
 				const msg =
-					err?.code === 'NOTHING_TO_COPY' ? i18n.nothingToCopy : i18n.copyFailedManual;
+					err?.code === 'NOTHING_TO_COPY'
+						? i18n.nothingToCopy
+						: i18n.copyFailedManual;
 				setNotice( msg || '', 'error' );
 			} );
 	}
@@ -289,8 +310,9 @@
 				<label for="notira-input-svelte">{i18n.inputLabel}</label>
 
 				<div class="notira-mode-section">
-					<span class="notira-mode-section-label" id="notira-mode-legend"
-						>{i18n.modeLabel}</span
+					<span
+						class="notira-mode-section-label"
+						id="notira-mode-legend">{i18n.modeLabel}</span
 					>
 					<div
 						class="notira-mode-radios"
@@ -309,7 +331,9 @@
 									bind:group={selectedMode}
 									disabled={! aiUiEnabled}
 								/>
-								<span class="notira-mode-option-label">{item.label}</span>
+								<span class="notira-mode-option-label"
+									>{item.label}</span
+								>
 							</label>
 						{/each}
 					</div>
@@ -319,7 +343,8 @@
 					id="notira-input-svelte"
 					bind:this={textareaEl}
 					class="notira-textarea"
-					class:notira-textarea--error={inputHasValidationError || exceedsMax}
+					class:notira-textarea--error={inputHasValidationError ||
+						exceedsMax}
 					rows="10"
 					bind:value={inputValue}
 					placeholder={i18n.inputPlaceholder}
@@ -340,10 +365,13 @@
 					class:notira-at-limit={atLimit}
 				>
 					{charCountText}
-					<span class="notira-char-limits">({i18n.minCharsHint})</span>
+					<span class="notira-char-limits">({i18n.minCharsHint})</span
+					>
 					{#if validationMessage}
-						<span id="notira-input-validation" class="screen-reader-text" role="alert"
-							>{validationMessage}</span
+						<span
+							id="notira-input-validation"
+							class="screen-reader-text"
+							role="alert">{validationMessage}</span
 						>
 					{/if}
 				</p>
@@ -351,7 +379,11 @@
 
 			<div class="notira-tone-section">
 				<label for="notira-tone-svelte">{i18n.toneLabel}</label>
-				<select id="notira-tone-svelte" bind:value={selectedTone} disabled={! aiUiEnabled}>
+				<select
+					id="notira-tone-svelte"
+					bind:value={selectedTone}
+					disabled={! aiUiEnabled}
+				>
 					{#each toneList as item (item.value)}
 						<option value={item.value}>{item.label}</option>
 					{/each}
@@ -436,7 +468,9 @@
 	<div class="notira-column-right">
 		<div class="notira-output-section">
 			<div class="notira-output-header">
-				<span id="notira-output-title" class="notira-output-title">{i18n.outputLabel}</span>
+				<span id="notira-output-title" class="notira-output-title"
+					>{i18n.outputLabel}</span
+				>
 				<button
 					type="button"
 					class="button notira-copy-btn"
@@ -445,7 +479,9 @@
 				>
 					<span class="notira-copy-label-wrap">
 						<span class="notira-copy-label"
-							>{copyShowingCopied ? i18n.copiedLabel : i18n.copyLabel}</span
+							>{copyShowingCopied
+								? i18n.copiedLabel
+								: i18n.copyLabel}</span
 						>
 					</span>
 				</button>
