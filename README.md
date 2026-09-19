@@ -32,4 +32,4 @@ WordPress plugin that turns draft notes into clean HTML with AI—email polish a
 
 ## License
 
-[GPL-2.0-or-later](https://www.gnu.org/licenses/gpl-2.0.html)
+[GPLv2 or later](LICENSE) © [Nilambar Sharma](https://www.nilambar.net)
