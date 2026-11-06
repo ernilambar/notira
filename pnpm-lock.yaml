@@ -170,8 +170,8 @@ importers:
         specifier: ^7.3.1
         version: 7.3.1(svelte@5.57.3)(vite@8.3.5)
       '@wordpress/prettier-config':
-        specifier: ^4.57.0
-        version: 4.57.0(wp-prettier@3.9.6)
+        specifier: ^5.1.0
+        version: 5.1.0(wp-prettier@3.9.6)
       easy-replace-in-files:
         specifier: ^2.0.0
         version: 2.0.0
@@ -348,9 +348,9 @@ packages:
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
 
-  '@wordpress/prettier-config@4.57.0':
-    resolution: {integrity: sha512-bUL7MI6c6yCKVj2/OBOlFYAJiqozrnBqwQIj+EYMxxjrxnO6ymUvRL8XbqpKHC4xVUBbQ5aw8Sh+zjQ0DaKfaw==}
-    engines: {node: '>=18.12.0'}
+  '@wordpress/prettier-config@5.1.0':
+    resolution: {integrity: sha512-Ep67YhwkEVAO2i+7lbzNqQrvUlSFY1oecth7WehXvp2jq0X2X/aDNEMOPxbY0sf6KKmYaWrRiu5ECOqB2QgJ7w==}
+    engines: {node: '>=22.13.0'}
     peerDependencies:
       prettier: '>=3'
 
@@ -1307,7 +1307,7 @@ snapshots:
 
   '@types/normalize-package-data@2.4.4': {}
 
-  '@wordpress/prettier-config@4.57.0(wp-prettier@3.9.6)':
+  '@wordpress/prettier-config@5.1.0(wp-prettier@3.9.6)':
     dependencies:
       prettier: wp-prettier@3.9.6
 

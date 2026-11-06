@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ed9d931f5a9a385f0cbca5f2a77212be",
+    "content-hash": "57a8eaab60751fecbbdeb90ccd647bef",
     "packages": [
         {
             "name": "ernilambar/gitvise",
@@ -1059,12 +1059,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-parallel-lint/PHP-Parallel-Lint.git",
-                "reference": "f8cb90a"
+                "reference": "186aee3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-parallel-lint/PHP-Parallel-Lint/zipball/f8cb90a",
-                "reference": "f8cb90a",
+                "url": "https://api.github.com/repos/php-parallel-lint/PHP-Parallel-Lint/zipball/186aee3",
+                "reference": "186aee3",
                 "shasum": ""
             },
             "require": {
