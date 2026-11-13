@@ -1,6 +1,6 @@
 {
 	"name": "notira",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"description": "Improve draft text into email-ready or proofread HTML using AI.",
 	"homepage": "https://github.com/ernilambar/notira#readme",
 	"bugs": {
