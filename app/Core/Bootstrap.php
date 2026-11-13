@@ -14,6 +14,7 @@ use Nilambar\Notira\Options\Options;
 use Nilambar\Notira\Utils\Credential_Utils;
 use Nilambar\Notira\Utils\Mode_Utils;
 use Nilambar\Notira\Utils\Tone_Utils;
+use WP_Icons_Registry;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -37,6 +38,20 @@ class Bootstrap {
 	 * @since 1.0.0
 	 */
 	public const SETTINGS_PAGE_SLUG = 'notira-settings';
+
+	/**
+	 * Registered icon used for the admin menu item on WordPress 7.2 and later.
+	 *
+	 * @since 2.0.1
+	 */
+	private const MENU_ICON = 'core-admin/envelope';
+
+	/**
+	 * Dashicon used for the admin menu item on WordPress versions without namespaced icons.
+	 *
+	 * @since 2.0.1
+	 */
+	private const MENU_ICON_FALLBACK = 'dashicons-email-alt';
 
 	/**
 	 * Initialize the plugin.
@@ -155,6 +170,28 @@ class Bootstrap {
 	}
 
 	/**
+	 * Get the admin menu icon.
+	 *
+	 * Uses an icon registered through the Icons API when available (WordPress 7.2+),
+	 * and falls back to a Dashicon class otherwise.
+	 *
+	 * @since 2.0.1
+	 *
+	 * @return string Icon passed to add_menu_page().
+	 */
+	public static function get_admin_menu_icon(): string {
+		if (
+			class_exists( WP_Icons_Registry::class )
+			&& function_exists( 'wp_is_valid_icon_name' )
+			&& WP_Icons_Registry::get_instance()->is_registered( self::MENU_ICON )
+		) {
+			return self::MENU_ICON;
+		}
+
+		return self::MENU_ICON_FALLBACK;
+	}
+
+	/**
 	 * Register admin menu.
 	 *
 	 * @since 1.0.0
@@ -166,7 +203,7 @@ class Bootstrap {
 			'manage_options',
 			self::ADMIN_PAGE_SLUG,
 			[ __CLASS__, 'render_admin_page' ],
-			'dashicons-email-alt',
+			self::get_admin_menu_icon(),
 			58
 		);
 	}
